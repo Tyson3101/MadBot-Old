@@ -11,8 +11,8 @@ const embeds_1 = require("./structures/embeds");
 let prefix = "!";
 client.on("ready", () => {
     console.log("Ready!");
-    client.developers.set("724911238571622422", {
-        id: "724911238571622422",
+    client.developers.set("397737988915724310", {
+        id: "397737988915724310",
         username: "Tyson",
         tag: "Tyson#3101",
         position: 0,
@@ -42,7 +42,14 @@ client.on("message", (message) => {
             return message.channel.send({
                 embed: embeds_1.invaildPermissionsCommandEmbed(client, message.author, command.permissions),
             });
-        client.commands.get(commandName).run(message, client, args);
+        try {
+            command.run(message, client, args);
+        }
+        catch (e) {
+            return message.channel.send({
+                embed: embeds_1.errorCommandEmbed(client, message.author, e),
+            });
+        }
     }
 });
 client.login(token);

@@ -49,3 +49,26 @@ export const invaildPermissionsCommandEmbed = (
     },
   });
 };
+
+//errorCommandEmbed
+
+export const errorCommandEmbed = (
+  client: DiscordBot,
+  user: User,
+  error: any
+) => {
+  return new MessageEmbed({
+    author: {
+      name: user.username,
+      iconURL: user.displayAvatarURL({ format: "png" }),
+    },
+    title: "Error",
+    description: error.message
+      ? `:x: This command experienced an error: ${error.message}. :x:`
+      : `:x: This command experienced an error. :x:`,
+    footer: {
+      text: `© ${client.user.username}`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};

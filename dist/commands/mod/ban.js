@@ -6,7 +6,7 @@ exports.command = {
     description: "Bans a member from the server.",
     usage: "ban [Member] (Reason)",
     args: ["[Member]", "(Reason)"],
-    aliases: [],
+    aliases: ["banmember"],
     guildOnly: true,
     devOnly: true,
     permissions: "BAN_MEMBERS",
