@@ -1,1 +1,1 @@
-{"version":3,"file":"ban.js","sourceRoot":"","sources":["../../../src/commands/mod/ban.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,GAAG;IACf,IAAI,EAAE,KAAK;CACZ,CAAC"}
+{"version":3,"file":"ban.js","sourceRoot":"","sources":["../../../src/commands/mod/ban.ts"],"names":[],"mappings":";;;AAEa,QAAA,OAAO,GAAqB;IACvC,IAAI,EAAE,KAAK;IACX,WAAW,EAAE,gCAAgC;IAC7C,KAAK,EAAE,uBAAuB;IAC9B,IAAI,EAAE,CAAC,UAAU,EAAE,UAAU,CAAC;IAC9B,OAAO,EAAE,EAAE;IACX,SAAS,EAAE,IAAI;IACf,OAAO,EAAE,KAAK;IACd,WAAW,EAAE,CAAC,aAAa,CAAC;IAC5B,GAAG,KAAI,CAAC;CACT,CAAC"}

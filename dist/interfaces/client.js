@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DiscordBot = void 0;
 const discord_js_1 = require("discord.js");
 class DiscordBot extends discord_js_1.Client {
     constructor() {
-        super();
+        super({
+            partials: ["GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION", "REACTION"],
+        });
+        this.commands = new discord_js_1.Collection();
+        this.supportServer = "https://discord.gg/uP5VV6H";
     }
 }
-this.commands = new discord_js_1.Collection();
-DiscordBot;
-//# sourceMappingURL=client.js.map
+exports.DiscordBot = DiscordBot;
+//# sourceMappingURL=Client.js.map
