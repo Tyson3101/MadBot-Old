@@ -27,7 +27,7 @@ client.on("message", (message) => {
         .slice(prefix.length)
         .split(/ +/g);
     const command = client.commands.get(commandName) ||
-        client.commands.find((cmd) => cmd.aliases === commandName); // Type Assertian (Errors if it is empty array)
+        client.commands.find((cmd) => cmd.aliases.includes(commandName));
     if (command) {
         if (command.guildOnly && message.channel.type === "dm")
             return message.channel.send({
