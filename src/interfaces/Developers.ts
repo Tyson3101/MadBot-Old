@@ -1,4 +1,4 @@
-import { Snowflake } from "discord.js";
+import { User } from "discord.js";
 
 enum Position {
   OWNER,
@@ -6,9 +6,7 @@ enum Position {
   TESTER,
 }
 
-export interface developerObject {
-  username: string;
-  id: Snowflake;
-  tag: string;
+export interface developerInterface {
+  User: User;
   position: Position;
 }

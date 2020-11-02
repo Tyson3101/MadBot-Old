@@ -5,13 +5,13 @@ const discord_js_1 = require("discord.js");
 exports.dmCommandEmbed = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Invaild Channel",
         description: ":x: This command cannot be used in a DM Channel. :x:",
         footer: {
-            text: `© ${client.user.username}`,
+            text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
@@ -25,21 +25,21 @@ exports.ownerCommandEmbed = (client, user) => {
         title: "Invaild Permissions",
         description: ":x: This command can only be used by bot developers. :x:",
         footer: {
-            text: `© ${client.user.username}`,
+            text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
 };
-exports.invaildPermissionsCommandEmbed = (client, user, Permission) => {
+exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.username,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Invaild Permissions",
-        description: `:x: You need the "${Permission}" Permission to use this command. :x:`,
+        description: `:x: You need the "${permission}" Permission to use this command. :x:`,
         footer: {
-            text: `© ${client.user.username}`,
+            text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
@@ -56,9 +56,8 @@ exports.errorCommandEmbed = (client, user, error) => {
             ? `:x: This command experienced an error: ${error.message}. :x:`
             : `:x: This command experienced an error. :x:`,
         footer: {
-            text: `© ${client.user.username}`,
+            text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
 };
-//# sourceMappingURL=embeds.js.map

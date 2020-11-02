@@ -6,4 +6,3 @@ var Position;
     Position[Position["DEVELOPER"] = 1] = "DEVELOPER";
     Position[Position["TESTER"] = 2] = "TESTER";
 })(Position || (Position = {}));
-//# sourceMappingURL=Developers.js.map

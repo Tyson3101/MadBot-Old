@@ -8,10 +8,9 @@ exports.command = {
     args: ["[Member]", "(Reason)"],
     aliases: ["banmember"],
     guildOnly: true,
-    devOnly: true,
-    permissions: "BAN_MEMBERS",
+    devOnly: false,
+    permission: "BAN_MEMBERS",
     run(message, client, args) {
         message.channel.send(`Arguments: ${args.join(" ")}`);
     },
 };
-//# sourceMappingURL=ban.js.map

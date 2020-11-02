@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import { commandInterFace } from "../../interfaces/Command";
 
 export const command: commandInterFace = {
@@ -8,8 +7,8 @@ export const command: commandInterFace = {
   args: ["[Member]", "(Reason)"],
   aliases: ["banmember"],
   guildOnly: true,
-  devOnly: true,
-  permissions: "BAN_MEMBERS",
+  devOnly: false,
+  permission: "BAN_MEMBERS",
   run(message, client, args) {
     message.channel.send(`Arguments: ${args.join(" ")}`);
   },

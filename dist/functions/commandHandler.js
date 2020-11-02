@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlerInit = void 0;
+exports.CommandHandlerInit = void 0;
 const fs_1 = __importDefault(require("fs"));
-exports.handlerInit = (client) => {
+exports.CommandHandlerInit = (client) => {
     const catergories = fs_1.default.readdirSync("./dist/commands"); // From root
     let i = 1;
     catergories.forEach((catergory) => {
@@ -24,4 +24,3 @@ exports.handlerInit = (client) => {
         });
     });
 };
-//# sourceMappingURL=commandHandler.js.map
