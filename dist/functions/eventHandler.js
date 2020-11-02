@@ -11,9 +11,9 @@ exports.eventHandlerInit = (client) => {
         .readdirSync("./dist/events")
         .filter((file) => file.endsWith(".js"));
     events.forEach((fileEvent) => {
-        const { event } = require(`../events/${fileEvent}`);
+        const event = require(`../events/${fileEvent}`).event;
         client.events.set(event.event, event);
-        client.on(event.event, event.run);
+        client.on(event.event, event.run.bind(null, client));
         if (i === 1)
             console.log(`-----------------  Events  ----------------`);
         console.log(`Event ${i}: Loaded ${event.event}!`);

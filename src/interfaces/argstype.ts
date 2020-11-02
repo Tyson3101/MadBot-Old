@@ -1,9 +1,11 @@
 export type argsType =
-  | "member"
-  | "id"
-  | "string"
-  | "number"
-  | "time"
-  | "color"
-  | "code"
+  | "Member"
+  | "ID"
+  | "Text"
+  | "Number"
+  | "Time"
+  | "Color"
+  | "Code"
+  | "Reason"
+  | "Prefix"
   | "other"; // Union Types

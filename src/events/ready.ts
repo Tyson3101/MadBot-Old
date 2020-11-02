@@ -1,9 +1,8 @@
-import { DiscordBot, client } from "../structures/Client";
 import { ReadyEventInterface } from "../interfaces/Events";
 
 export const event: ReadyEventInterface = {
   event: "ready",
-  async run() {
+  async run(client) {
     let botDev = await client.users.fetch("397737988915724310");
     client.developers.set(botDev.id, {
       User: botDev,

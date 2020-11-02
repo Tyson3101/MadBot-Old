@@ -4,7 +4,7 @@ exports.event = void 0;
 const prefix = "!";
 exports.event = {
     event: "messageUpdate",
-    run(oldMessage, newMessage) {
+    run(client, oldMessage, newMessage) {
         console.log(newMessage.content);
     },
 };

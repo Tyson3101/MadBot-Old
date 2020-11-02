@@ -1,17 +1,22 @@
 import Discord from "discord.js";
-import { DiscordBot, client } from "../structures/Client";
+import { DiscordBot } from "../structures/Client";
+import { guildDataBase } from "../structures/DataBase";
+import { getGuildDB } from "../functions/getGuildDB";
 import {
   dmCommandEmbed,
   ownerCommandEmbed,
   invaildPermissionsCommandEmbed,
   errorCommandEmbed,
+  noArgsCommandHelpEmbed,
 } from "../structures/embeds";
 import { MessageEventInterface } from "../interfaces/Events";
-let prefix: string = "!";
 export const event: MessageEventInterface = {
   event: "message",
-  run(message: Discord.Message) {
+  async run(client, message) {
     if (message.author.bot) return;
+    let prefix: string = "!";
+    let guildDB = await getGuildDB(client, message.guild, guildDataBase);
+    prefix = guildDB.prefix;
     const [commandName, ...args] = message.content
       .toLowerCase()
       .trim()
@@ -44,6 +49,10 @@ export const event: MessageEventInterface = {
             message.author,
             command.permission
           ),
+        });
+      if (command.args.filter((arg) => arg.required).length > args.length)
+        return message.channel.send({
+          embed: noArgsCommandHelpEmbed(client, message.author, command),
         });
       try {
         command.run(message, client, args);

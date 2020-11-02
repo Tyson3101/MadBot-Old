@@ -4,19 +4,19 @@ exports.command = void 0;
 exports.command = {
     name: "ban",
     description: "Bans a member from the server.",
-    usage: "ban [Member] (Reason)",
+    usage: ["ban [Member] (Reason)"],
     args: [
         {
-            name: "member",
-            type: ["member", "id"],
+            name: "Member",
+            type: ["Member", "ID"],
             description: "Member to ban",
-            example: ["Mention: @Tyson", "ID: 63637347374634"],
+            example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
             required: true,
             order: 1,
         },
         {
-            name: "reason",
-            type: "string",
+            name: "Reason",
+            type: "Reason",
             description: "Reason for the ban",
             example: ["Advertising", "Being Rude"],
             required: false,

@@ -12,7 +12,7 @@ export class DiscordBot extends Client {
   constructor() {
     super({
       // Client
-      partials: ["GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION", "REACTION"], // Client Options (Partials)
+      partials: ["GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION", "USER"], // Client Options (Partials)
     });
     this.commands = new Collection();
     this.supportServer = "https://discord.gg/uP5VV6H";
@@ -20,5 +20,3 @@ export class DiscordBot extends Client {
     this.events = new Collection();
   }
 }
-
-export const client: DiscordBot = new DiscordBot();

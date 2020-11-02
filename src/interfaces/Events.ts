@@ -1,22 +1,27 @@
-import { Message } from "discord.js";
+import { Message, MessageReaction, User, ClientEvents } from "discord.js";
+import { DiscordBot } from "../structures/Client";
 
 export interface MessageUpdateEventInterface {
   event: string;
-  run: (oldMessage: Message, newMessage: Message) => void; // Function typechecking
+  run: (client: DiscordBot, oldMessage: Message, newMessage: Message) => void; // Function typechecking
 }
 
 export interface ReadyEventInterface {
   event: string;
-  run: () => void;
+  run: (client: DiscordBot) => void;
 }
 
 export interface MessageEventInterface {
   event: string;
-  run: (message: Message) => void;
+  run: (client: DiscordBot, message: Message) => void;
 }
 
-export interface EventInterface {
-  MessageUpdateEventInterface;
-  MessageEventInterface;
-  ReadyEventInterface;
+export interface messageReactionAddEventInterface {
+  event: string;
+  run: (client: DiscordBot, reaction: MessageReaction, user: User) => void;
 }
+
+export type EventInterface =
+  | MessageUpdateEventInterface
+  | MessageEventInterface
+  | ReadyEventInterface;

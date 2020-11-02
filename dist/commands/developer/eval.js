@@ -4,14 +4,14 @@ exports.command = void 0;
 exports.command = {
     name: "eval",
     description: "Evals Javascript",
-    usage: "eval ```js code ```",
+    usage: ["eval \\`\\`\\`js code \\`\\`\\`"],
     args: [
         {
             name: "code",
             description: "code to eval",
-            type: "code",
+            type: "Code",
             required: true,
-            example: ["```js console.log(true) ```"],
+            example: ["\\`\\`\\`js console.log(true)\\`\\`\\`"],
             order: 1,
         },
     ],

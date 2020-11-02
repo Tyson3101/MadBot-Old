@@ -5,7 +5,11 @@
     "target": "esnext",
     "moduleResolution": "node",
     "sourceMap": false,
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strictNullChecks": false,
+    "alwaysStrict": true,
     "watch": true
   },
   "lib": ["esnext"]
