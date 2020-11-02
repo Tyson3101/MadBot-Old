@@ -6,11 +6,12 @@ export const eventHandlerInit = (client: DiscordBot) => {
   const events = fs
     .readdirSync("./dist/events")
     .filter((file) => file.endsWith(".js"));
-  events.forEach((event) => {
-    const eventListener = require(`../events/${event}`).event;
-    client.events.set(eventListener.event, eventListener);
-    client.on(eventListener.event, eventListener.run);
-    console.log(`Event ${i}: Loaded ${eventListener.event}!`);
+  events.forEach((fileEvent) => {
+    const { event } = require(`../events/${fileEvent}`);
+    client.events.set(event.event, event);
+    client.on(event.event, event.run);
+    if (i === 1) console.log(`-----------------  Events  ----------------`);
+    console.log(`Event ${i}: Loaded ${event.event}!`);
     i++;
   });
 };

@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 
 export interface MessageUpdateEventInterface {
   event: string;
-  run: (oldMessage: Message, newMessage: Message) => void;
+  run: (oldMessage: Message, newMessage: Message) => void; // Function typechecking
 }
 
 export interface ReadyEventInterface {

@@ -9,7 +9,8 @@ export const event: ReadyEventInterface = {
       User: botDev,
       position: 0,
     });
-    console.log(`\n${client.user.tag} is Ready!
+    console.log(`-----------------  Ready  ----------------
+${client.user.tag} is Ready!
 -----------------  Stats  ----------------
 Developers: ${client.developers.size}
 Guilds: ${client.guilds.cache.size}

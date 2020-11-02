@@ -10,7 +10,8 @@ exports.event = {
             User: botDev,
             position: 0,
         });
-        console.log(`\n${Client_1.client.user.tag} is Ready!
+        console.log(`-----------------  Ready  ----------------
+${Client_1.client.user.tag} is Ready!
 -----------------  Stats  ----------------
 Developers: ${Client_1.client.developers.size}
 Guilds: ${Client_1.client.guilds.cache.size}

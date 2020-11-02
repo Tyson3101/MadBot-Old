@@ -18,6 +18,8 @@ exports.CommandHandlerInit = (client) => {
                 ...command,
                 catergory: catergory,
             };
+            if (i === 1)
+                console.log(`-----------------  Commands  ----------------`);
             console.log(`Command ${i}: Loaded ${addCommand.name}!`);
             i++;
             client.commands.set(addCommand.name, addCommand);
