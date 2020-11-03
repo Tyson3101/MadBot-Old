@@ -9,7 +9,7 @@ export const command: commandInterFace = {
   aliases: [],
   guildOnly: false,
   devOnly: false,
-  run(message, client) {
+  run(client, message) {
     message.channel.send(clientInfo(client, message.author));
   },
 };

@@ -18,7 +18,7 @@ exports.command = {
     aliases: ["evaljs"],
     guildOnly: false,
     devOnly: true,
-    async run(message, client, args) {
+    async run(client, message, args) {
         console.log(this.args);
     },
 };

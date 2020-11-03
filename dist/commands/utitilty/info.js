@@ -10,7 +10,7 @@ exports.command = {
     aliases: [],
     guildOnly: false,
     devOnly: false,
-    run(message, client) {
+    run(client, message) {
         message.channel.send(Embeds_1.clientInfo(client, message.author));
     },
 };

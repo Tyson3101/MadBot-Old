@@ -20,7 +20,7 @@ exports.command = {
             order: 1,
         },
     ],
-    async run(message, client, args) {
+    async run(client, message, args) {
         const guildDB = await getGuildDB_1.getGuildDB(client, message.guild);
         if (!args[0]) {
             message.channel.send({

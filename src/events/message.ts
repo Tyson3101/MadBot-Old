@@ -55,7 +55,7 @@ export const event: MessageEventInterface = {
           embed: noArgsCommandHelpEmbed(client, message.author, command),
         });
       try {
-        command.run(message, client, args);
+        command.run(client, message, args);
       } catch (e) {
         return message.channel.send({
           embed: errorCommandEmbed(client, message.author, e),

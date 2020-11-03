@@ -26,7 +26,7 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: "BAN_MEMBERS",
-  run(message, client, args) {
+  run(client, message, args) {
     message.channel.send(`Arguments: ${args.join(" ")}`);
   },
 };

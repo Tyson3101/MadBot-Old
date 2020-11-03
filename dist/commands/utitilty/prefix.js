@@ -22,7 +22,7 @@ exports.command = {
     guildOnly: true,
     devOnly: false,
     permission: "MANAGE_GUILD",
-    async run(message, client, args) {
+    async run(client, message, args) {
         let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
         console.log(guildDB);
         if (args[0]) {
