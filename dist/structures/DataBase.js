@@ -7,5 +7,5 @@ exports.guildDataBase = void 0;
 const keyv_1 = __importDefault(require("keyv"));
 const dotenv_1 = require("dotenv");
 dotenv_1.config();
-exports.guildDataBase = new keyv_1.default(`mongodb://${process.env.MONGODBNAME}?authSource=admin`);
-console.log(process.env.MONGODBNAME);
+exports.guildDataBase = new keyv_1.default(process.env.MONGODBPassword);
+exports.guildDataBase.on("error", console.error);

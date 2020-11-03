@@ -1,10 +1,13 @@
 import { GuildMember, MessageEmbed, PermissionString, User } from "discord.js";
 import { DiscordBot } from "./Client";
 import { argsInterface } from "../interfaces/Args";
+import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { firstCap } from "../functions/FirstCap";
 import { commandInterFace } from "../interfaces/Command";
 import { duration } from "moment";
+import { catergoryType } from "../interfaces/catergoryType";
 import "moment-duration-format";
+import { ca } from "date-fns/locale";
 
 export const dmCommandEmbed = (
   client: DiscordBot,
@@ -30,7 +33,8 @@ export const ownerCommandEmbed = (
 ): MessageEmbed => {
   return new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
+
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: "Invaild Permissions",
@@ -49,7 +53,7 @@ export const invaildPermissionsCommandEmbed = (
 ): MessageEmbed => {
   return new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: "Invaild Permissions",
@@ -70,7 +74,7 @@ export const errorCommandEmbed = (
 ): MessageEmbed => {
   return new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: "Error",
@@ -92,7 +96,7 @@ export const noArgsCommandHelpEmbed = (
   const { args } = command;
   let embed = new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: "Invaild Arguments",
@@ -141,7 +145,7 @@ export const CommandHelpEmbed = (
   const { args } = command;
   let embed = new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: `${command.name} Help`,
@@ -189,7 +193,7 @@ export const prefixEmbed = (
   let { user } = member;
   return new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: "Prefix",
@@ -206,7 +210,7 @@ export const prefixEmbed = (
 export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
   return new MessageEmbed({
     author: {
-      name: user.username,
+      name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
     title: `${client.user.username} Information`,
@@ -249,4 +253,64 @@ export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
+};
+
+export const helpEmbed = (
+  client: DiscordBot,
+  user: User,
+  DB: GuildDataBaseInterface
+): MessageEmbed => {
+  const embed: MessageEmbed = new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({ format: "png" }),
+    },
+    title: `${client.user.username} Commands`,
+    description: `**[Join Support Server Here](${client.supportServer})**`,
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+  let allReady: string[] = [];
+  client.commands.forEach((command: commandInterFace) => {
+    if (allReady.includes(command.catergory)) return;
+    allReady.push(command.catergory);
+    embed.addField(
+      `${DB.prefix}help ${command.catergory}`,
+      `Shows all commands in the ${firstCap(command.catergory)} Catergory`,
+      true
+    );
+  });
+  return embed;
+};
+
+export const helpCatergoryEmbed = (
+  client: DiscordBot,
+  user: User,
+  catergory: string,
+  DB: GuildDataBaseInterface
+): MessageEmbed => {
+  const embed: MessageEmbed = new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({ format: "png" }),
+    },
+    title: `${client.user.username} ${firstCap(catergory)} Commands`,
+    description: `**[Join Support Server Here](${client.supportServer})**`,
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+  client.commands
+    .filter((cmd) => cmd.catergory === catergory)
+    .forEach((command: commandInterFace) => {
+      embed.addField(
+        `${DB.prefix}help ${command.name}`,
+        `${command.description}`,
+        true
+      );
+    });
+  return embed;
 };

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.event = void 0;
+const DataBase_1 = require("../structures/DataBase");
+const GetGuildDB_1 = require("../functions/GetGuildDB");
 const Embeds_1 = require("../structures/Embeds");
 exports.event = {
     event: "message",
@@ -8,6 +10,10 @@ exports.event = {
         if (message.author.bot)
             return;
         let prefix = "!";
+        let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
+        prefix = guildDB.prefix;
+        if (!message.content.startsWith(prefix))
+            return;
         const [commandName, ...args] = message.content
             .toLowerCase()
             .trim()
@@ -15,7 +21,7 @@ exports.event = {
             .split(/ +/g);
         const command = client.commands.get(commandName)
             ? client.commands.get(commandName)
-            : client.commands.find((cmd) => cmd.aliases.includes(commandName));
+            : client.commands.find((cmd) => cmd.aliases ? cmd.aliases.includes(commandName) : false);
         if (command) {
             if (command.guildOnly && message.channel.type === "dm")
                 return message.channel.send({

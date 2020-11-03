@@ -1,5 +1,5 @@
-/*
 import { commandInterFace } from "../../interfaces/Command";
+import { guildDataBase } from "../../structures/DataBase";
 import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
 import { getGuildDB } from "../../functions/GetGuildDB";
 import { prefixEmbed } from "../../structures/Embeds";
@@ -24,7 +24,7 @@ export const command: commandInterFace = {
   permission: "MANAGE_GUILD",
   async run(message, client, args) {
     let guildDB = await getGuildDB(client, message.guild, guildDataBase);
-    let prefix = guildDB.prefix;
+    console.log(guildDB);
     if (args[0]) {
       guildDB.prefix = args[0];
       let newDBGUILD: GuildDataBaseInterface = {
@@ -50,4 +50,3 @@ export const command: commandInterFace = {
     }
   },
 };
-/*/

@@ -1,5 +1,7 @@
 import Discord from "discord.js";
 import { DiscordBot } from "../structures/Client";
+import { guildDataBase } from "../structures/DataBase";
+import { getGuildDB } from "../functions/GetGuildDB";
 import {
   dmCommandEmbed,
   ownerCommandEmbed,
@@ -13,6 +15,9 @@ export const event: MessageEventInterface = {
   async run(client, message) {
     if (message.author.bot) return;
     let prefix: string = "!";
+    let guildDB = await getGuildDB(client, message.guild, guildDataBase);
+    prefix = guildDB.prefix;
+    if (!message.content.startsWith(prefix)) return;
     const [commandName, ...args] = message.content
       .toLowerCase()
       .trim()
@@ -20,7 +25,9 @@ export const event: MessageEventInterface = {
       .split(/ +/g);
     const command = client.commands.get(commandName)
       ? client.commands.get(commandName)
-      : client.commands.find((cmd) => cmd.aliases.includes(commandName));
+      : client.commands.find((cmd) =>
+          cmd.aliases ? cmd.aliases.includes(commandName) : false
+        );
     if (command) {
       if (command.guildOnly && message.channel.type === "dm")
         return message.channel.send({

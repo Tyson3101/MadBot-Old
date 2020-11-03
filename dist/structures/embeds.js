@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -22,7 +22,7 @@ exports.dmCommandEmbed = (client, user) => {
 exports.ownerCommandEmbed = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Invaild Permissions",
@@ -36,7 +36,7 @@ exports.ownerCommandEmbed = (client, user) => {
 exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Invaild Permissions",
@@ -50,7 +50,7 @@ exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
 exports.errorCommandEmbed = (client, user, error) => {
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Error",
@@ -67,7 +67,7 @@ exports.noArgsCommandHelpEmbed = (client, user, command) => {
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Invaild Arguments",
@@ -100,7 +100,7 @@ exports.CommandHelpEmbed = (client, user, commandName) => {
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: `${command.name} Help`,
@@ -131,7 +131,7 @@ exports.prefixEmbed = (client, member, db, prefix = null) => {
     let { user } = member;
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: "Prefix",
@@ -147,7 +147,7 @@ exports.prefixEmbed = (client, member, db, prefix = null) => {
 exports.clientInfo = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
-            name: user.username,
+            name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
         title: `${client.user.username} Information`,
@@ -179,4 +179,46 @@ exports.clientInfo = (client, user) => {
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
+};
+exports.helpEmbed = (client, user, DB) => {
+    const embed = new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({ format: "png" }),
+        },
+        title: `${client.user.username} Commands`,
+        description: `**[Join Support Server Here](${client.supportServer})**`,
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+    let allReady = [];
+    client.commands.forEach((command) => {
+        if (allReady.includes(command.catergory))
+            return;
+        allReady.push(command.catergory);
+        embed.addField(`${DB.prefix}help ${command.catergory}`, `Shows all commands in the ${FirstCap_1.firstCap(command.catergory)} Catergory`, true);
+    });
+    return embed;
+};
+exports.helpCatergoryEmbed = (client, user, catergory, DB) => {
+    const embed = new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({ format: "png" }),
+        },
+        title: `${client.user.username} ${FirstCap_1.firstCap(catergory)} Commands`,
+        description: `**[Join Support Server Here](${client.supportServer})**`,
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+    client.commands
+        .filter((cmd) => cmd.catergory === catergory)
+        .forEach((command) => {
+        embed.addField(`${DB.prefix}help ${command.name}`, `${command.description}`, true);
+    });
+    return embed;
 };

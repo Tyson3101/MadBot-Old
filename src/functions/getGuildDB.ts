@@ -1,8 +1,15 @@
 import { Guild } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
+import { guildDataBase } from "../structures/DataBase";
 
-export const getGuildDB = async (client: DiscordBot, guild: Guild, DB: any) => {
+export const getGuildDB = async (
+  client: DiscordBot,
+  guild: Guild,
+  InputtedDB: any = null
+): Promise<GuildDataBaseInterface> => {
+  // Says it returns a promise which resloves into a GuildDataBaseInterface>
+  const DB = InputtedDB || guildDataBase;
   let DBguild = await DB.get(guild.id);
   if (DBguild) return DBguild;
   else {
