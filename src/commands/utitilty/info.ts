@@ -6,7 +6,7 @@ export const command: commandInterFace = {
   description: "Shows info of MadBot",
   usage: ["info"],
   args: [],
-  aliases: [],
+  aliases: ["stats"],
   guildOnly: false,
   devOnly: false,
   run(client, message) {

@@ -152,7 +152,7 @@ exports.clientInfo = (client, user) => {
         },
         title: `${client.user.username} Information`,
         url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
-        description: `A Discord Bot written in Node.js with [TypeScript](https://www.typescriptlang.org/) and the NPM Module [discord.js](https://discord.js.org/#/)!`,
+        description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!`,
         fields: [
             {
                 name: `Uptime`,
