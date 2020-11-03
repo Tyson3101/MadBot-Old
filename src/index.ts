@@ -1,6 +1,6 @@
 console.log(`-----------------  Starting Up...  ----------------`);
 import { config } from "dotenv";
-config();
+config(); // Allows for reading .env file
 import { DiscordBot } from "./structures/Client";
 import { CommandHandlerInit } from "./functions/CommandHandler";
 import { EventHandlerInit } from "./functions/EventHandler";
