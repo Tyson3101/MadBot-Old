@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
-const firstCap_1 = require("../functions/firstCap");
-const date_fns_1 = require("date-fns");
+const FirstCap_1 = require("../functions/FirstCap");
+const moment_1 = require("moment");
+require("moment-duration-format");
 exports.dmCommandEmbed = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
@@ -54,7 +55,7 @@ exports.errorCommandEmbed = (client, user, error) => {
         },
         title: "Error",
         description: error.message
-            ? `:x: This command experienced an error: ${error.message}. :x:`
+            ? `:x: **This command experienced an error:** :x:\n${error.message}.`
             : `:x: This command experienced an error. :x:`,
         footer: {
             text: `${client.user.username} ©`,
@@ -74,8 +75,8 @@ exports.noArgsCommandHelpEmbed = (client, user, command) => {
         fields: [
             {
                 name: `Command Help`,
-                value: `**Name:** ${firstCap_1.firstCap(command.name)}
-**Catergory:** ${firstCap_1.firstCap(command.catergory)}
+                value: `**Name:** ${FirstCap_1.firstCap(command.name)}
+**Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
                     : ""}**Usage:** ${command.usage.join(" | ")}
@@ -90,7 +91,7 @@ ${command.permission
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${firstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };
@@ -106,8 +107,8 @@ exports.CommandHelpEmbed = (client, user, commandName) => {
         fields: [
             {
                 name: `Command Help`,
-                value: `**Name:** ${firstCap_1.firstCap(command.name)}
-**Catergory:** ${firstCap_1.firstCap(command.catergory)}
+                value: `**Name:** ${FirstCap_1.firstCap(command.name)}
+**Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
                     : ""}**Usage:** ${command.usage.join(" | ")}
@@ -122,7 +123,7 @@ ${command.permission
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${firstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };
@@ -149,23 +150,28 @@ exports.clientInfo = (client, user) => {
             name: user.username,
             iconURL: user.displayAvatarURL({ format: "png" }),
         },
-        title: `${client.user.username} Stats`,
+        title: `${client.user.username} Information`,
+        url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
         description: `A Discord Bot written in Node.js with [TypeScript](https://www.typescriptlang.org/) and the NPM Module [discord.js](https://discord.js.org/#/)!`,
         fields: [
             {
                 name: `Uptime`,
-                value: `Days: ${date_fns_1.formatDistance(date_fns_1.subDays(Date.now(), client.uptime), Date.now())}}Hours: ${date_fns_1.formatDistance(date_fns_1.subHours(Date.now(), client.uptime), Date.now())}`,
+                value: `${moment_1.duration(client.uptime).format("d[d ]h[h ]m[m ]s[s]")}`,
                 inline: true,
             },
             {
-                name: `Total Users`,
-                value: `${client.guilds.cache.reduce((arr, { memberCount }) => arr + memberCount, 0)}`,
+                name: `Support Server`,
+                value: `[Join Here](${client.supportServer})`,
                 inline: true,
             },
             {
-                name: `Total Servers`,
-                value: `${client.guilds.cache.size}`,
+                name: `Source Code`,
+                value: `[Github Repository](https://github.com/Tyson3101/MadBot/tree/main/src)`,
                 inline: true,
+            },
+            {
+                name: `Stats`,
+                value: `**Servers:** \`${client.guilds.cache.size}\` **| Channels:** \`${client.channels.cache.size}\` **| Users:** \`${client.guilds.cache.reduce((arr, { memberCount }) => arr + memberCount, 0)}\`**| Commands:** \`${client.commands.size}\` **| Developers:** \`${client.developers.size}\``,
             },
         ],
         footer: {

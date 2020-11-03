@@ -1,5 +1,5 @@
 import { commandInterFace } from "../../interfaces/Command";
-import { clientInfo } from "../../structures/embeds";
+import { clientInfo } from "../../structures/Embeds";
 
 export const command: commandInterFace = {
   name: "info",

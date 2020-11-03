@@ -5,4 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.guildDataBase = void 0;
 const keyv_1 = __importDefault(require("keyv"));
-exports.guildDataBase = new keyv_1.default();
+const dotenv_1 = require("dotenv");
+dotenv_1.config();
+exports.guildDataBase = new keyv_1.default(`mongodb://${process.env.MONGODBNAME}?authSource=admin`);
+console.log(process.env.MONGODBNAME);

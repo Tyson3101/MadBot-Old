@@ -1,4 +1,4 @@
-import { Client, Collection, Snowflake } from "discord.js";
+import { Client, Collection, Snowflake, Intents } from "discord.js";
 import { commandInterFace } from "../interfaces/Command";
 import { developerInterface } from "../interfaces/Developers";
 import { EventInterface } from "../interfaces/Events";
@@ -12,11 +12,12 @@ export class DiscordBot extends Client {
   constructor() {
     super({
       // Client
-      partials: ["GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION", "USER"], // Client Options (Partials)
+      ws: { intents: Intents.ALL },
+      partials: ["CHANNEL", "MESSAGE", "REACTION"], // Client Options (Partials)
     });
-    this.commands = new Collection();
     this.supportServer = "https://discord.gg/uP5VV6H";
     this.developers = new Collection();
+    this.commands = new Collection();
     this.events = new Collection();
   }
 }

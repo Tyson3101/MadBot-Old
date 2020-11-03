@@ -1,8 +1,8 @@
+/*
 import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
 import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
-import { getGuildDB } from "../../functions/getGuildDB";
-import { prefixEmbed } from "../../structures/embeds";
+import { getGuildDB } from "../../functions/GetGuildDB";
+import { prefixEmbed } from "../../structures/Embeds";
 
 export const command: commandInterFace = {
   name: "prefix",
@@ -31,22 +31,23 @@ export const command: commandInterFace = {
         ...guildDB,
       };
       await guildDataBase.set(message.guild.id, newDBGUILD);
-      message.channel.send(
-        prefixEmbed(
+      message.channel.send({
+        embed: prefixEmbed(
           client,
           message.member,
           await getGuildDB(client, message.guild, guildDataBase),
           args[0]
-        )
-      );
+        ),
+      });
     } else {
-      message.channel.send(
-        prefixEmbed(
+      message.channel.send({
+        embed: prefixEmbed(
           client,
           message.member,
           await getGuildDB(client, message.guild, guildDataBase)
-        )
-      );
+        ),
+      });
     }
   },
 };
+/*/

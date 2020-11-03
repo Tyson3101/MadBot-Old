@@ -1,6 +1,6 @@
-import { argsType } from "./argstype"; // Import syntax
+import { argsType } from "./Argstype"; // Import syntax
 
-export interface args {
+export interface argsInterface {
   // Interface
   name: string;
   type: argsType | argsType[];

@@ -1,9 +1,10 @@
 import { GuildMember, MessageEmbed, PermissionString, User } from "discord.js";
 import { DiscordBot } from "./Client";
-import { args as ArgsInterface } from "../interfaces/args";
-import { firstCap } from "../functions/firstCap";
+import { argsInterface } from "../interfaces/Args";
+import { firstCap } from "../functions/FirstCap";
 import { commandInterFace } from "../interfaces/Command";
-import { formatDistance, subDays, subHours, subMinutes } from "date-fns";
+import { duration } from "moment";
+import "moment-duration-format";
 
 export const dmCommandEmbed = (
   client: DiscordBot,
@@ -74,7 +75,7 @@ export const errorCommandEmbed = (
     },
     title: "Error",
     description: error.message
-      ? `:x: This command experienced an error: ${error.message}. :x:`
+      ? `:x: **This command experienced an error:** :x:\n${error.message}.`
       : `:x: This command experienced an error. :x:`,
     footer: {
       text: `${client.user.username} ©`,
@@ -115,7 +116,7 @@ ${
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-  args.forEach((argument, i: number) => {
+  args.forEach((argument, i: number): void => {
     i++;
     embed.addField(
       `${i}: ${argument.name}`,
@@ -208,32 +209,39 @@ export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
       name: user.username,
       iconURL: user.displayAvatarURL({ format: "png" }),
     },
-    title: `${client.user.username} Stats`,
+    title: `${client.user.username} Information`,
+    url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
     description: `A Discord Bot written in Node.js with [TypeScript](https://www.typescriptlang.org/) and the NPM Module [discord.js](https://discord.js.org/#/)!`,
     fields: [
       {
         name: `Uptime`,
-        value: `Days: ${formatDistance(
-          subDays(Date.now(), client.uptime),
-          Date.now()
-        )}}Hours: ${formatDistance(
-          subHours(Date.now(), client.uptime),
-          Date.now()
+        value: `${(duration(client.uptime) as any).format(
+          "d[d ]h[h ]m[m ]s[s]"
         )}`,
         inline: true,
       },
       {
-        name: `Total Users`,
-        value: `${client.guilds.cache.reduce(
+        name: `Support Server`,
+        value: `[Join Here](${client.supportServer})`,
+        inline: true,
+      },
+      {
+        name: `Source Code`,
+        value: `[Github Repository](https://github.com/Tyson3101/MadBot/tree/main/src)`,
+        inline: true,
+      },
+      {
+        name: `Stats`,
+        value: `**Servers:** \`${
+          client.guilds.cache.size
+        }\` **| Channels:** \`${
+          client.channels.cache.size
+        }\` **| Users:** \`${client.guilds.cache.reduce(
           (arr: number, { memberCount }) => arr + memberCount,
           0
-        )}`,
-        inline: true,
-      },
-      {
-        name: `Total Servers`,
-        value: `${client.guilds.cache.size}`,
-        inline: true,
+        )}\`**| Commands:** \`${client.commands.size}\` **| Developers:** \`${
+          client.developers.size
+        }\``,
       },
     ],
     footer: {

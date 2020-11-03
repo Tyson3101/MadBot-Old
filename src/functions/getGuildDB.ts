@@ -9,7 +9,7 @@ export const getGuildDB = async (client: DiscordBot, guild: Guild, DB: any) => {
     let guildObj: GuildDataBaseInterface = {
       name: guild.name,
       id: guild.id,
-      ownerID: (await client.users.fetch(guild.ownerID)).username,
+      ownerID: guild.ownerID,
       memberCount: guild.memberCount,
       prefix: "!",
     };

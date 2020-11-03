@@ -1,7 +1,6 @@
 import Discord from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { args } from "./args";
-import { EventInterface } from "./Events";
+import { argsInterface as args } from "./Args";
 
 export interface commandInterFace {
   // Interface
