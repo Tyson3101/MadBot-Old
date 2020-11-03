@@ -5,7 +5,7 @@ export const event: ReadyEventInterface = {
   async run(client) {
     let botDev = await client.users.fetch("397737988915724310");
     client.developers.set(botDev.id, {
-      User: botDev,
+      User: botDev, // Sets the botdevs user object
       position: 0,
     });
     console.log(`-----------------  Ready  ----------------

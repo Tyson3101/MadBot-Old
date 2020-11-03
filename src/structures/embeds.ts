@@ -1,13 +1,12 @@
 import { GuildMember, MessageEmbed, PermissionString, User } from "discord.js";
 import { DiscordBot } from "./Client";
-import { argsInterface } from "../interfaces/Args";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { firstCap } from "../functions/FirstCap";
 import { commandInterFace } from "../interfaces/Command";
 import { duration } from "moment";
-import { catergoryType } from "../interfaces/catergoryType";
 import "moment-duration-format";
-import { ca } from "date-fns/locale";
+
+// All embeds I want to use. (Allows less typing and resuing, also can input stuff in)
 
 export const dmCommandEmbed = (
   client: DiscordBot,

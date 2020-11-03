@@ -5,3 +5,4 @@ export interface GuildDataBaseInterface {
   memberCount: number;
   prefix: string;
 }
+// Setup for GuildDataBase, like Mongoose Schemas

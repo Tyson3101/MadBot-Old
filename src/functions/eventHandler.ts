@@ -3,7 +3,7 @@ import { EventInterface } from "../interfaces/Events";
 import { DiscordBot } from "../structures/Client";
 
 export const EventHandlerInit = (client: DiscordBot) => {
-  let i = 1;
+  let i = 1; // Counter for console logging
   const events = fs
     .readdirSync("./dist/events")
     .filter((file) => file.endsWith(".js"));

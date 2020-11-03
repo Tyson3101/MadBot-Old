@@ -6,7 +6,7 @@ import { guildDataBase } from "../structures/DataBase";
 export const getGuildDB = async (
   client: DiscordBot,
   guild: Guild,
-  InputtedDB: any = null
+  InputtedDB: any = null // Used to check other DB's I may want to use. Defaults to guild
 ): Promise<GuildDataBaseInterface> => {
   // Says it returns a promise which resloves into a GuildDataBaseInterface>
   const DB = InputtedDB || guildDataBase;

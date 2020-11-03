@@ -2,7 +2,7 @@ import { commandInterFace } from "../../interfaces/Command";
 import { guildDataBase } from "../../structures/DataBase";
 import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
 import { getGuildDB } from "../../functions/GetGuildDB";
-import { prefixEmbed } from "../../structures/Embeds";
+import { prefixEmbed } from "../../structures/Embeds"; // Import Syntax
 
 export const command: commandInterFace = {
   name: "prefix",

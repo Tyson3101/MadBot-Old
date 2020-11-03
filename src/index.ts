@@ -8,7 +8,7 @@ const { TOKEN: token } = process.env;
 
 const client: DiscordBot = new DiscordBot(); // Creates the client
 
-CommandHandlerInit(client);
-EventHandlerInit(client);
+CommandHandlerInit(client); // Handles Command
+EventHandlerInit(client); // Handles Events
 
-client.login(token);
+client.login(token); // Logs into the bot

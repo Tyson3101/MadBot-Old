@@ -12,7 +12,7 @@ export const CommandHandlerInit = (client: DiscordBot) => {
       const { command } = require(`../commands/${catergory}/${fileCommand}`); // From File
       const addCommand = {
         ...command,
-        catergory: catergory,
+        catergory: catergory, // Adds catergory property here to make it easier, is the folder name of that command file
       };
       if (i === 1) console.log(`-----------------  Commands  ----------------`);
       console.log(`Command ${i}: Loaded ${addCommand.name}!`);

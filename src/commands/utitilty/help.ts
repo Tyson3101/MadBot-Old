@@ -27,6 +27,7 @@ export const command: commandInterFace = {
   async run(client, message, args) {
     const guildDB = await getGuildDB(client, message.guild);
     if (!args[0]) {
+      // Checks if inputted a command or caterogry
       message.channel.send({
         embed: helpEmbed(client, message.author, guildDB),
       });

@@ -1,4 +1,4 @@
-export type ClientEvents =
+export type ClientEvents =  // List of client events (I may be dumb i couldnt see it in the types of djs)
   | "rateLimit"
   | "ready"
   | "resumed"

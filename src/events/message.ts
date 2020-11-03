@@ -15,9 +15,9 @@ export const event: MessageEventInterface = {
   async run(client, message) {
     if (message.author.bot) return;
     let prefix: string = "!";
-    let guildDB = await getGuildDB(client, message.guild, guildDataBase);
+    let guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
     prefix = guildDB.prefix;
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) return; // Checks Prefix
     const [commandName, ...args] = message.content
       .toLowerCase()
       .trim()

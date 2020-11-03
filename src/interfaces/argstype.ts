@@ -1,4 +1,4 @@
-export type argsType =
+export type argsType =  // ALl possible args type.
   | "Member"
   | "ID"
   | "Text"

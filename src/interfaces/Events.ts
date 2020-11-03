@@ -22,7 +22,7 @@ export interface messageReactionAddEventInterface {
   run: (client: DiscordBot, reaction: MessageReaction, user: User) => void;
 }
 
-export type EventInterface =
+export type EventInterface =  // Union Types, used to check at least event is one of these
   | MessageUpdateEventInterface
   | MessageEventInterface
   | ReadyEventInterface

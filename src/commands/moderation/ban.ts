@@ -28,5 +28,6 @@ export const command: commandInterFace = {
   permission: "BAN_MEMBERS",
   run(client, message, args) {
     message.channel.send(`Arguments: ${args.join(" ")}`);
+    // Need to create Command
   },
 };

@@ -12,10 +12,10 @@ export class DiscordBot extends Client {
   constructor() {
     super({
       // Client
-      ws: { intents: Intents.ALL },
+      ws: { intents: Intents.ALL }, // Intents
       partials: ["CHANNEL", "MESSAGE", "REACTION"], // Client Options (Partials)
     });
-    this.supportServer = "https://discord.gg/uP5VV6H";
+    this.supportServer = "https://discord.gg/uP5VV6H"; // Support Server
     this.developers = new Collection();
     this.commands = new Collection();
     this.events = new Collection();

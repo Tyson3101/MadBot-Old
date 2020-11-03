@@ -20,5 +20,6 @@ export const command: commandInterFace = {
   devOnly: true,
   async run(client, message, args) {
     console.log(this.args);
+    // Need to create Command
   },
 };

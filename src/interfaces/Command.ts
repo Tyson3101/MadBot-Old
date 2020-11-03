@@ -3,6 +3,7 @@ import { DiscordBot } from "../structures/Client";
 import { argsInterface as args } from "./Args";
 
 export interface commandInterFace {
+  // Used to make command setting up easier
   // Interface
   name: string;
   description: string;

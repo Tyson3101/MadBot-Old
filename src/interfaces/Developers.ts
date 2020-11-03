@@ -1,12 +1,12 @@
 import { User } from "discord.js";
 
-enum Position {
-  OWNER,
-  DEVELOPER,
-  TESTER,
+enum Position { // Enum
+  OWNER, // Owner being 0,
+  DEVELOPER, // DEVELOPER being 1,
+  TESTER, // Tester being ...
 }
 
 export interface developerInterface {
-  User: User;
-  position: Position;
+  User: User; // User object of that developer
+  position: Position; // There postion of the enum
 }

@@ -10,6 +10,6 @@ export const command: commandInterFace = {
   guildOnly: false,
   devOnly: false,
   run(client, message) {
-    message.channel.send(clientInfo(client, message.author));
+    message.channel.send(clientInfo(client, message.author)); // Sends Client Info Embed
   },
 };
