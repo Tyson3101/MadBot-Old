@@ -10,7 +10,8 @@ import { catergoryType } from "../../interfaces/catergoryType";
 export const command: commandInterFace = {
   name: "help",
   description: "Help",
-  usage: ["help moderation"],
+  usage: ["help (command/catergory)"],
+  example: ["help moderation", "help"],
   guildOnly: false,
   devOnly: false,
   aliases: [],
@@ -52,7 +53,12 @@ export const command: commandInterFace = {
         }
       } else {
         message.channel.send({
-          embed: CommandHelpEmbed(client, message.author, inputted.name),
+          embed: CommandHelpEmbed(
+            client,
+            message.author,
+            inputted.name,
+            guildDB
+          ),
         });
       }
     }

@@ -52,7 +52,12 @@ export const event: MessageEventInterface = {
         });
       if (command.args.filter((arg) => arg.required).length > args.length)
         return message.channel.send({
-          embed: noArgsCommandHelpEmbed(client, message.author, command),
+          embed: noArgsCommandHelpEmbed(
+            client,
+            message.author,
+            command,
+            guildDB
+          ),
         });
       try {
         command.run(client, message, args);

@@ -63,7 +63,7 @@ exports.errorCommandEmbed = (client, user, error) => {
         },
     });
 };
-exports.noArgsCommandHelpEmbed = (client, user, command) => {
+exports.noArgsCommandHelpEmbed = (client, user, command, db) => {
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
         author: {
@@ -79,8 +79,8 @@ exports.noArgsCommandHelpEmbed = (client, user, command) => {
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
-                    : ""}**Usage:** ${command.usage.join(" | ")}
-**Example:** ${command.usage.join(" | ")}\n
+                    : ""}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
+**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
 **Arguments Info:**`,
             },
         ],
@@ -91,11 +91,11 @@ ${command.permission
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`" | "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };
-exports.CommandHelpEmbed = (client, user, commandName) => {
+exports.CommandHelpEmbed = (client, user, commandName, db) => {
     const command = client.commands.get(commandName);
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
@@ -111,8 +111,8 @@ exports.CommandHelpEmbed = (client, user, commandName) => {
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
-                    : ""}**Usage:** ${command.usage.join(" | ")}
-**Example:** ${command.usage.join(" | ")}\n
+                    : ""}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
+**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
 **Arguments Info:**`,
             },
         ],
@@ -123,7 +123,7 @@ ${command.permission
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`", "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`" | "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };

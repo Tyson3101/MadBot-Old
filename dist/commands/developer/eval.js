@@ -5,6 +5,7 @@ exports.command = {
     name: "eval",
     description: "Evals Javascript",
     usage: ["eval \\`\\`\\`js code \\`\\`\\`"],
+    example: ["eval \\`\\`\\`js console.log(63 + 53) \\`\\`\\`"],
     args: [
         {
             name: "code",

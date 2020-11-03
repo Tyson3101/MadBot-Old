@@ -90,7 +90,8 @@ export const errorCommandEmbed = (
 export const noArgsCommandHelpEmbed = (
   client: DiscordBot,
   user: User,
-  command: commandInterFace
+  command: commandInterFace,
+  db: any
 ): MessageEmbed => {
   const { args } = command;
   let embed = new MessageEmbed({
@@ -109,8 +110,8 @@ ${
   command.permission
     ? `**Required Permissions:** "${command.permission}"\n`
     : ""
-}**Usage:** ${command.usage.join(" | ")}
-**Example:** ${command.usage.join(" | ")}\n
+}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
+**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
 **Arguments Info:**`,
       },
     ],
@@ -128,7 +129,7 @@ ${
       }\n**Description:** ${
         argument.description
       }\n**Example:** "${argument.example.join(
-        `", "`
+        `" | "`
       )}"\n**Required:** ${firstCap(argument.required.toString())}`
     );
   });
@@ -138,7 +139,8 @@ ${
 export const CommandHelpEmbed = (
   client: DiscordBot,
   user: User,
-  commandName: string
+  commandName: string,
+  db: any
 ): MessageEmbed => {
   const command = client.commands.get(commandName);
   const { args } = command;
@@ -157,8 +159,8 @@ ${
   command.permission
     ? `**Required Permissions:** "${command.permission}"\n`
     : ""
-}**Usage:** ${command.usage.join(" | ")}
-**Example:** ${command.usage.join(" | ")}\n
+}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
+**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
 **Arguments Info:**`,
       },
     ],
@@ -176,7 +178,7 @@ ${
       }\n**Description:** ${
         argument.description
       }\n**Example:** "${argument.example.join(
-        `", "`
+        `" | "`
       )}"\n**Required:** ${firstCap(argument.required.toString())}`
     );
   });

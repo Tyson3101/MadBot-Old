@@ -39,7 +39,7 @@ exports.event = {
                 });
             if (command.args.filter((arg) => arg.required).length > args.length)
                 return message.channel.send({
-                    embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command),
+                    embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command, guildDB),
                 });
             try {
                 command.run(client, message, args);

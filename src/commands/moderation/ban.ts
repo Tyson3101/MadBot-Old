@@ -4,6 +4,7 @@ export const command: commandInterFace = {
   name: "ban",
   description: "Bans a member from the server.",
   usage: ["ban [Member] (Reason)"],
+  example: ["ban @Tyson Dm Advertising"],
   args: [
     {
       name: "Member",

@@ -6,7 +6,8 @@ const embeds_1 = require("../../structures/embeds");
 exports.command = {
     name: "help",
     description: "Help",
-    usage: ["help moderation"],
+    usage: ["help (command/catergory)"],
+    example: ["help moderation", "help"],
     guildOnly: false,
     devOnly: false,
     aliases: [],
@@ -42,7 +43,7 @@ exports.command = {
             }
             else {
                 message.channel.send({
-                    embed: embeds_1.CommandHelpEmbed(client, message.author, inputted.name),
+                    embed: embeds_1.CommandHelpEmbed(client, message.author, inputted.name, guildDB),
                 });
             }
         }

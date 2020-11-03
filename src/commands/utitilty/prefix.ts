@@ -8,12 +8,13 @@ export const command: commandInterFace = {
   name: "prefix",
   description: "Gets or changes prefix for a server",
   usage: ["prefix (prefix)"],
+  example: ["prefix ?", "prefix Orange"],
   args: [
     {
       name: "Prefix",
       type: ["Prefix"],
       description: "Prefix to change.",
-      example: ["?"],
+      example: ["$", "%"],
       required: false,
       order: 1,
     },

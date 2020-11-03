@@ -8,6 +8,7 @@ export interface commandInterFace {
   name: string;
   description: string;
   usage: string[];
+  example: string[];
   args: args[];
   catergory?: string;
   aliases: string[];

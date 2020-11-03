@@ -6,6 +6,7 @@ exports.command = {
     name: "info",
     description: "Shows info of MadBot",
     usage: ["info"],
+    example: null,
     args: [],
     aliases: ["stats"],
     guildOnly: false,
