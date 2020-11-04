@@ -8,6 +8,7 @@ import {
   invaildPermissionsCommandEmbed,
   errorCommandEmbed,
   noArgsCommandHelpEmbed,
+  clientInfo,
 } from "../structures/Embeds";
 import { MessageEventInterface } from "../interfaces/Events";
 export const event: MessageEventInterface = {
@@ -19,10 +20,8 @@ export const event: MessageEventInterface = {
     if (message.channel.type !== "dm") {
       guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
       prefix = guildDB.prefix;
-    }
-    if (!message.content.startsWith(prefix)) return; // Checks Prefix
+    } // Checks Prefix
     const [commandName, ...args] = message.content
-      .toLowerCase()
       .trim()
       .slice(prefix.length)
       .split(/ +/g);
@@ -32,6 +31,8 @@ export const event: MessageEventInterface = {
           cmd.aliases ? cmd.aliases.includes(commandName) : false
         );
     if (command) {
+      if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()))
+        return;
       if (command.guildOnly && message.channel.type === "dm")
         return message.channel.send({
           embed: dmCommandEmbed(client, message.author),
@@ -70,5 +71,9 @@ export const event: MessageEventInterface = {
         });
       }
     }
+    if (message.mentions.users.has(client.user.id))
+      return message.channel.send({
+        embed: clientInfo(client, message.author, guildDB.prefix),
+      });
   },
 };

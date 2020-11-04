@@ -14,7 +14,7 @@ export const command: commandInterFace = {
       name: "Prefix",
       type: ["Prefix"],
       description: "Prefix to change.",
-      example: ["$", "%"],
+      example: ["$", "z!"],
       required: false,
       order: 1,
     },
@@ -26,8 +26,12 @@ export const command: commandInterFace = {
   async run(client, message, args) {
     let guildDB = await getGuildDB(client, message.guild, guildDataBase);
     console.log(guildDB);
-    if (args[0]) {
-      guildDB.prefix = args[0];
+    const [, prefix, ..._] = message.content
+      .trim()
+      .slice(guildDB.prefix.length)
+      .split(/ +/g);
+    if (prefix) {
+      guildDB.prefix = prefix;
       let newDBGUILD: GuildDataBaseInterface = {
         ...guildDB,
       };
@@ -37,7 +41,7 @@ export const command: commandInterFace = {
           client,
           message.member,
           await getGuildDB(client, message.guild, guildDataBase),
-          args[0]
+          guildDB.prefix
         ),
       });
     } else {

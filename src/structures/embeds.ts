@@ -15,7 +15,10 @@ export const dmCommandEmbed = (
   return new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Invaild Channel",
     description: ":x: This command cannot be used in a DM Channel. :x:",
@@ -34,7 +37,10 @@ export const ownerCommandEmbed = (
     author: {
       name: user.tag,
 
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Invaild Permissions",
     description: ":x: This command can only be used by bot developers. :x:",
@@ -53,7 +59,10 @@ export const invaildPermissionsCommandEmbed = (
   return new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Invaild Permissions",
     description: `:x: You need the "${permission}" Permission to use this command. :x:`,
@@ -74,7 +83,10 @@ export const errorCommandEmbed = (
   return new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Error",
     description: error.message
@@ -97,7 +109,10 @@ export const noArgsCommandHelpEmbed = (
   let embed = new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Invaild Arguments",
     description: `:x: You are missing arguments for this command. :x:`,
@@ -147,7 +162,10 @@ export const CommandHelpEmbed = (
   let embed = new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: `${command.name} Help`,
     fields: [
@@ -160,7 +178,8 @@ ${
     ? `**Required Permissions:** "${command.permission}"\n`
     : ""
 }**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
-**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"
+**Aliases:** "${command.aliases.join(`" | "`)}"\n
 **Arguments Info:**`,
       },
     ],
@@ -195,7 +214,10 @@ export const prefixEmbed = (
   return new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: "Prefix",
     description: prefix
@@ -208,15 +230,22 @@ export const prefixEmbed = (
   });
 };
 
-export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
+export const clientInfo = (
+  client: DiscordBot,
+  user: User,
+  prefix: string
+): MessageEmbed => {
   return new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: `${client.user.username} Information`,
     url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
-    description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!`,
+    description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${client.supportServer})**`,
     fields: [
       {
         name: `Uptime`,
@@ -226,8 +255,8 @@ export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
         inline: true,
       },
       {
-        name: `Support Server`,
-        value: `[Join Here](${client.supportServer})`,
+        name: `Default Prefix`,
+        value: `\`!\``,
         inline: true,
       },
       {
@@ -244,7 +273,7 @@ export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
         }\` **| Users:** \`${client.guilds.cache.reduce(
           (arr: number, { memberCount }) => arr + memberCount,
           0
-        )}\`**| Commands:** \`${client.commands.size}\` **| Developers:** \`${
+        )}\` **| Commands:** \`${client.commands.size}\` **| Developers:** \`${
           client.developers.size
         }\``,
       },
@@ -264,7 +293,10 @@ export const helpEmbed = (
   const embed: MessageEmbed = new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: `${client.user.username} Commands`,
     description: `**[Join Support Server Here](${client.supportServer})**`,
@@ -295,7 +327,10 @@ export const helpCatergoryEmbed = (
   const embed: MessageEmbed = new MessageEmbed({
     author: {
       name: user.tag,
-      iconURL: user.displayAvatarURL({ format: "png" }),
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
     },
     title: `${client.user.username} ${firstCap(catergory)} Commands`,
     description: `**[Join Support Server Here](${client.supportServer})**`,
@@ -307,12 +342,43 @@ export const helpCatergoryEmbed = (
   client.commands
     .filter((cmd) => cmd.catergory === catergory)
     .filter((cmd) => cmd.name !== "help")
-    .forEach((command: commandInterFace) => {
+    .forEach((command: commandInterFace, commandName: string) => {
       embed.addField(
-        `${prefix}help ${command.name}`,
+        `${prefix}help ${commandName}`,
         `${command.description}`,
         true
       );
     });
   return embed;
+};
+
+export const pingEmbed = (
+  client: DiscordBot,
+  user: User,
+  { latency, ping }
+): MessageEmbed => {
+  return new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({ format: "png", dynamic: true }),
+    },
+    thumbnail: {
+      url: client.user.displayAvatarURL({ format: "png" }),
+    },
+    title: "Pong! 🏓",
+    fields: [
+      {
+        name: "Client",
+        value: `**${ping}**`,
+      },
+      {
+        name: "API",
+        value: `**${latency}**`,
+      },
+    ],
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
 };

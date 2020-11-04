@@ -14,7 +14,7 @@ exports.command = {
             name: "Prefix",
             type: ["Prefix"],
             description: "Prefix to change.",
-            example: ["$", "%"],
+            example: ["$", "z!"],
             required: false,
             order: 1,
         },
@@ -26,14 +26,18 @@ exports.command = {
     async run(client, message, args) {
         let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
         console.log(guildDB);
-        if (args[0]) {
-            guildDB.prefix = args[0];
+        const [, prefix, ..._] = message.content
+            .trim()
+            .slice(guildDB.prefix.length)
+            .split(/ +/g);
+        if (prefix) {
+            guildDB.prefix = prefix;
             let newDBGUILD = {
                 ...guildDB,
             };
             await DataBase_1.guildDataBase.set(message.guild.id, newDBGUILD);
             message.channel.send({
-                embed: Embeds_1.prefixEmbed(client, message.member, await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase), args[0]),
+                embed: Embeds_1.prefixEmbed(client, message.member, await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase), guildDB.prefix),
             });
         }
         else {

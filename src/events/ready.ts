@@ -1,3 +1,4 @@
+import { Collection } from "discord.js";
 import { ReadyEventInterface } from "../interfaces/Events";
 
 export const event: ReadyEventInterface = {
@@ -8,6 +9,11 @@ export const event: ReadyEventInterface = {
       User: botDev, // Sets the botdevs user object
       position: 0,
     });
+    let collection = new Collection([
+      [1, "2"],
+      [2, "3"],
+    ]);
+    console.log(collection);
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 -----------------  Stats  ----------------

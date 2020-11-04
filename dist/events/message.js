@@ -15,10 +15,7 @@ exports.event = {
             guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
             prefix = guildDB.prefix;
         }
-        if (!message.content.startsWith(prefix))
-            return;
         const [commandName, ...args] = message.content
-            .toLowerCase()
             .trim()
             .slice(prefix.length)
             .split(/ +/g);
@@ -26,6 +23,8 @@ exports.event = {
             ? client.commands.get(commandName)
             : client.commands.find((cmd) => cmd.aliases ? cmd.aliases.includes(commandName) : false);
         if (command) {
+            if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()))
+                return;
             if (command.guildOnly && message.channel.type === "dm")
                 return message.channel.send({
                     embed: Embeds_1.dmCommandEmbed(client, message.author),
@@ -53,5 +52,9 @@ exports.event = {
                 });
             }
         }
+        if (message.mentions.users.has(client.user.id))
+            return message.channel.send({
+                embed: Embeds_1.clientInfo(client, message.author, guildDB.prefix),
+            });
     },
 };

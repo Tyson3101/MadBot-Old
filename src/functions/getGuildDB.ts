@@ -10,6 +10,7 @@ export const getGuildDB = async (
 ): Promise<GuildDataBaseInterface> => {
   // Says it returns a promise which resloves into a GuildDataBaseInterface>
   if (guild) {
+    // Checks if guild is null (If is it was sent in dm.)
     const DB = InputtedDB || guildDataBase;
     let DBguild = await DB.get(guild.id);
     if (DBguild) return DBguild;

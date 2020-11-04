@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -9,7 +9,10 @@ exports.dmCommandEmbed = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Invaild Channel",
         description: ":x: This command cannot be used in a DM Channel. :x:",
@@ -23,7 +26,10 @@ exports.ownerCommandEmbed = (client, user) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Invaild Permissions",
         description: ":x: This command can only be used by bot developers. :x:",
@@ -37,7 +43,10 @@ exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Invaild Permissions",
         description: `:x: You need the "${permission}" Permission to use this command. :x:`,
@@ -51,7 +60,10 @@ exports.errorCommandEmbed = (client, user, error) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Error",
         description: error.message
@@ -68,7 +80,10 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
     let embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Invaild Arguments",
         description: `:x: You are missing arguments for this command. :x:`,
@@ -101,7 +116,10 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
     let embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: `${command.name} Help`,
         fields: [
@@ -112,7 +130,8 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
                     : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
-**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"
+**Aliases:** "${command.aliases.join(`" | "`)}"\n
 **Arguments Info:**`,
             },
         ],
@@ -132,7 +151,10 @@ exports.prefixEmbed = (client, member, db, prefix = null) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: "Prefix",
         description: prefix
@@ -144,15 +166,18 @@ exports.prefixEmbed = (client, member, db, prefix = null) => {
         },
     });
 };
-exports.clientInfo = (client, user) => {
+exports.clientInfo = (client, user, prefix) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: `${client.user.username} Information`,
         url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
-        description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!`,
+        description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${client.supportServer})**`,
         fields: [
             {
                 name: `Uptime`,
@@ -160,8 +185,8 @@ exports.clientInfo = (client, user) => {
                 inline: true,
             },
             {
-                name: `Support Server`,
-                value: `[Join Here](${client.supportServer})`,
+                name: `Default Prefix`,
+                value: `\`!\``,
                 inline: true,
             },
             {
@@ -184,7 +209,10 @@ exports.helpEmbed = (client, user, prefix) => {
     const embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: `${client.user.username} Commands`,
         description: `**[Join Support Server Here](${client.supportServer})**`,
@@ -206,7 +234,10 @@ exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
     const embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
-            iconURL: user.displayAvatarURL({ format: "png" }),
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
         },
         title: `${client.user.username} ${FirstCap_1.firstCap(catergory)} Commands`,
         description: `**[Join Support Server Here](${client.supportServer})**`,
@@ -218,8 +249,34 @@ exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
     client.commands
         .filter((cmd) => cmd.catergory === catergory)
         .filter((cmd) => cmd.name !== "help")
-        .forEach((command) => {
-        embed.addField(`${prefix}help ${command.name}`, `${command.description}`, true);
+        .forEach((command, commandName) => {
+        embed.addField(`${prefix}help ${commandName}`, `${command.description}`, true);
     });
     return embed;
+};
+exports.pingEmbed = (client, user, { latency, ping }) => {
+    return new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({ format: "png", dynamic: true }),
+        },
+        thumbnail: {
+            url: client.user.displayAvatarURL({ format: "png" }),
+        },
+        title: "Pong! 🏓",
+        fields: [
+            {
+                name: "Client",
+                value: `**${ping}**`,
+            },
+            {
+                name: "API",
+                value: `**${latency}**`,
+            },
+        ],
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
 };
