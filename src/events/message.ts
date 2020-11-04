@@ -15,8 +15,11 @@ export const event: MessageEventInterface = {
   async run(client, message) {
     if (message.author.bot) return;
     let prefix: string = "!";
-    let guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
-    prefix = guildDB.prefix;
+    let guildDB;
+    if (message.channel.type !== "dm") {
+      guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
+      prefix = guildDB.prefix;
+    }
     if (!message.content.startsWith(prefix)) return; // Checks Prefix
     const [commandName, ...args] = message.content
       .toLowerCase()
@@ -56,7 +59,7 @@ export const event: MessageEventInterface = {
             client,
             message.author,
             command,
-            guildDB
+            prefix
           ),
         });
       try {

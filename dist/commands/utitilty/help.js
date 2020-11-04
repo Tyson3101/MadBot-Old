@@ -23,9 +23,10 @@ exports.command = {
     ],
     async run(client, message, args) {
         const guildDB = await getGuildDB_1.getGuildDB(client, message.guild);
+        const prefix = guildDB.prefix;
         if (!args[0]) {
             message.channel.send({
-                embed: embeds_1.helpEmbed(client, message.author, guildDB),
+                embed: embeds_1.helpEmbed(client, message.author, prefix),
             });
         }
         else {
@@ -37,13 +38,13 @@ exports.command = {
                 if (check) {
                     inputted = args[0];
                     message.channel.send({
-                        embed: embeds_1.helpCatergoryEmbed(client, message.author, args[0].toLowerCase(), guildDB),
+                        embed: embeds_1.helpCatergoryEmbed(client, message.author, args[0].toLowerCase(), prefix),
                     });
                 }
             }
             else {
                 message.channel.send({
-                    embed: embeds_1.CommandHelpEmbed(client, message.author, inputted.name, guildDB),
+                    embed: embeds_1.CommandHelpEmbed(client, message.author, inputted.name, prefix),
                 });
             }
         }

@@ -91,7 +91,7 @@ export const noArgsCommandHelpEmbed = (
   client: DiscordBot,
   user: User,
   command: commandInterFace,
-  db: any
+  prefix: string
 ): MessageEmbed => {
   const { args } = command;
   let embed = new MessageEmbed({
@@ -110,8 +110,8 @@ ${
   command.permission
     ? `**Required Permissions:** "${command.permission}"\n`
     : ""
-}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
-**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
+}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
 **Arguments Info:**`,
       },
     ],
@@ -140,7 +140,7 @@ export const CommandHelpEmbed = (
   client: DiscordBot,
   user: User,
   commandName: string,
-  db: any
+  prefix: string
 ): MessageEmbed => {
   const command = client.commands.get(commandName);
   const { args } = command;
@@ -159,8 +159,8 @@ ${
   command.permission
     ? `**Required Permissions:** "${command.permission}"\n`
     : ""
-}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
-**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
+}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
 **Arguments Info:**`,
       },
     ],
@@ -188,7 +188,7 @@ ${
 export const prefixEmbed = (
   client: DiscordBot,
   member: GuildMember,
-  db,
+  db: GuildDataBaseInterface,
   prefix = null
 ): MessageEmbed => {
   let { user } = member;
@@ -259,7 +259,7 @@ export const clientInfo = (client: DiscordBot, user: User): MessageEmbed => {
 export const helpEmbed = (
   client: DiscordBot,
   user: User,
-  DB: GuildDataBaseInterface
+  prefix: string
 ): MessageEmbed => {
   const embed: MessageEmbed = new MessageEmbed({
     author: {
@@ -278,7 +278,7 @@ export const helpEmbed = (
     if (allReady.includes(command.catergory)) return;
     allReady.push(command.catergory);
     embed.addField(
-      `${DB.prefix}help ${command.catergory}`,
+      `${prefix}help ${command.catergory}`,
       `Shows all commands in the ${firstCap(command.catergory)} Catergory`,
       true
     );
@@ -290,7 +290,7 @@ export const helpCatergoryEmbed = (
   client: DiscordBot,
   user: User,
   catergory: string,
-  DB: GuildDataBaseInterface
+  prefix: string
 ): MessageEmbed => {
   const embed: MessageEmbed = new MessageEmbed({
     author: {
@@ -306,9 +306,10 @@ export const helpCatergoryEmbed = (
   });
   client.commands
     .filter((cmd) => cmd.catergory === catergory)
+    .filter((cmd) => cmd.name !== "help")
     .forEach((command: commandInterFace) => {
       embed.addField(
-        `${DB.prefix}help ${command.name}`,
+        `${prefix}help ${command.name}`,
         `${command.description}`,
         true
       );

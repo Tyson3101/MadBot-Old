@@ -27,10 +27,11 @@ export const command: commandInterFace = {
   ],
   async run(client, message, args) {
     const guildDB = await getGuildDB(client, message.guild);
+    const prefix = guildDB.prefix;
     if (!args[0]) {
       // Checks if inputted a command or caterogry
       message.channel.send({
-        embed: helpEmbed(client, message.author, guildDB),
+        embed: helpEmbed(client, message.author, prefix),
       });
     } else {
       let inputted: any = client.commands.get(args[0].toLowerCase());
@@ -47,7 +48,7 @@ export const command: commandInterFace = {
               client,
               message.author,
               args[0].toLowerCase(),
-              guildDB
+              prefix
             ),
           });
         }
@@ -57,7 +58,7 @@ export const command: commandInterFace = {
             client,
             message.author,
             inputted.name,
-            guildDB
+            prefix
           ),
         });
       }

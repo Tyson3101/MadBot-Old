@@ -63,7 +63,7 @@ exports.errorCommandEmbed = (client, user, error) => {
         },
     });
 };
-exports.noArgsCommandHelpEmbed = (client, user, command, db) => {
+exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
         author: {
@@ -79,8 +79,8 @@ exports.noArgsCommandHelpEmbed = (client, user, command, db) => {
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
-                    : ""}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
-**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
+                    : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
 **Arguments Info:**`,
             },
         ],
@@ -95,7 +95,7 @@ ${command.permission
     });
     return embed;
 };
-exports.CommandHelpEmbed = (client, user, commandName, db) => {
+exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
     const command = client.commands.get(commandName);
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
@@ -111,8 +111,8 @@ exports.CommandHelpEmbed = (client, user, commandName, db) => {
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
-                    : ""}**Usage:** "${db.prefix}${command.usage.join(`" | "${db.prefix}`)}"
-**Example:** "${db.prefix}${command.example.join(`" | "${db.prefix}`)}"\n
+                    : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
 **Arguments Info:**`,
             },
         ],
@@ -180,7 +180,7 @@ exports.clientInfo = (client, user) => {
         },
     });
 };
-exports.helpEmbed = (client, user, DB) => {
+exports.helpEmbed = (client, user, prefix) => {
     const embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
@@ -198,11 +198,11 @@ exports.helpEmbed = (client, user, DB) => {
         if (allReady.includes(command.catergory))
             return;
         allReady.push(command.catergory);
-        embed.addField(`${DB.prefix}help ${command.catergory}`, `Shows all commands in the ${FirstCap_1.firstCap(command.catergory)} Catergory`, true);
+        embed.addField(`${prefix}help ${command.catergory}`, `Shows all commands in the ${FirstCap_1.firstCap(command.catergory)} Catergory`, true);
     });
     return embed;
 };
-exports.helpCatergoryEmbed = (client, user, catergory, DB) => {
+exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
     const embed = new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
@@ -217,8 +217,9 @@ exports.helpCatergoryEmbed = (client, user, catergory, DB) => {
     });
     client.commands
         .filter((cmd) => cmd.catergory === catergory)
+        .filter((cmd) => cmd.name !== "help")
         .forEach((command) => {
-        embed.addField(`${DB.prefix}help ${command.name}`, `${command.description}`, true);
+        embed.addField(`${prefix}help ${command.name}`, `${command.description}`, true);
     });
     return embed;
 };

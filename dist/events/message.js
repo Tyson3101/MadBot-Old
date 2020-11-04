@@ -10,8 +10,11 @@ exports.event = {
         if (message.author.bot)
             return;
         let prefix = "!";
-        let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
-        prefix = guildDB.prefix;
+        let guildDB;
+        if (message.channel.type !== "dm") {
+            guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
+            prefix = guildDB.prefix;
+        }
         if (!message.content.startsWith(prefix))
             return;
         const [commandName, ...args] = message.content
@@ -39,7 +42,7 @@ exports.event = {
                 });
             if (command.args.filter((arg) => arg.required).length > args.length)
                 return message.channel.send({
-                    embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command, guildDB),
+                    embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command, prefix),
                 });
             try {
                 command.run(client, message, args);
