@@ -196,7 +196,7 @@ exports.clientInfo = (client, user, prefix) => {
             },
             {
                 name: `Stats`,
-                value: `**Servers:** \`${client.guilds.cache.size}\` **| Channels:** \`${client.channels.cache.size}\` **| Users:** \`${client.guilds.cache.reduce((arr, { memberCount }) => arr + memberCount, 0)}\`**| Commands:** \`${client.commands.size}\` **| Developers:** \`${client.developers.size}\``,
+                value: `**Servers:** \`${client.guilds.cache.size}\` **| Channels:** \`${client.channels.cache.size}\` **| Users:** \`${client.guilds.cache.reduce((arr, { memberCount }) => arr + memberCount, 0)}\` **| Commands:** \`${client.commands.size}\` **| Developers:** \`${client.developers.size}\``,
             },
         ],
         footer: {
