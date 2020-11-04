@@ -1,8 +1,8 @@
 import fs from "fs";
 import { EventInterface } from "../interfaces/Events";
-import { DiscordBot } from "../structures/Client";
+import { DiscordBot } from "../structures/Client"; // Import Syntax
 
-export const EventHandlerInit = (client: DiscordBot) => {
+export const EventHandlerInit = (client: DiscordBot): void => {
   let i = 1; // Counter for console logging
   const events = fs
     .readdirSync("./dist/events")

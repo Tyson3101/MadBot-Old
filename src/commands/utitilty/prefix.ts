@@ -25,7 +25,6 @@ export const command: commandInterFace = {
   permission: "MANAGE_GUILD",
   async run(client, message, args) {
     let guildDB = await getGuildDB(client, message.guild, guildDataBase);
-    console.log(guildDB);
     const [, prefix, ..._] = message.content
       .trim()
       .slice(guildDB.prefix.length)

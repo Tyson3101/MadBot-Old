@@ -1,7 +1,7 @@
 import fs from "fs";
 import { DiscordBot } from "../structures/Client";
 
-export const CommandHandlerInit = (client: DiscordBot) => {
+export const CommandHandlerInit = (client: DiscordBot): void => {
   const catergories = fs.readdirSync("./dist/commands"); // From root
   let i = 1;
   catergories.forEach((catergory) => {

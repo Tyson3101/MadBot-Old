@@ -95,8 +95,11 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
                     : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
-**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n
-**Arguments Info:**`,
+${command.example
+                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+                    : ""}${command.aliases[0]
+                    ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+                    : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
             },
         ],
         footer: {
@@ -130,9 +133,11 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
 ${command.permission
                     ? `**Required Permissions:** "${command.permission}"\n`
                     : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
-**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"
-**Aliases:** "${command.aliases.join(`" | "`)}"\n
-**Arguments Info:**`,
+${command.example
+                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+                    : ""}${command.aliases[0]
+                    ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+                    : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
             },
         ],
         footer: {

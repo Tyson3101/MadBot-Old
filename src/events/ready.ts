@@ -1,4 +1,3 @@
-import { Collection } from "discord.js";
 import { ReadyEventInterface } from "../interfaces/Events";
 
 export const event: ReadyEventInterface = {

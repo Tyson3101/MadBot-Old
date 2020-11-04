@@ -25,7 +25,6 @@ exports.command = {
     permission: "MANAGE_GUILD",
     async run(client, message, args) {
         let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
-        console.log(guildDB);
         const [, prefix, ..._] = message.content
             .trim()
             .slice(guildDB.prefix.length)
