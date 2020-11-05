@@ -71,6 +71,7 @@ exports.event = {
                 });
             try {
                 command.run(client, message, args);
+                return;
             }
             catch (e) {
                 return message.channel.send({

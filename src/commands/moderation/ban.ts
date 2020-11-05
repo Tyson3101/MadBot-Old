@@ -1,4 +1,6 @@
 import { commandInterFace } from "../../interfaces/Command";
+import { Structures, TextChannel, DMChannel, NewsChannel } from "discord.js";
+import { DiscordBot } from "../../structures/Client";
 
 export const command: commandInterFace = {
   name: "ban",
@@ -27,7 +29,24 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: ["BAN_MEMBERS", true],
-  run(client, message, args) {
+  async run(client, message, args) {
+    (message as any).getMember = async (mentionID: string) => {
+      console.log(mentionID);
+      let idArray = mentionID.match(/\d+/);
+      if (!idArray) throw "No ID!";
+      let id = idArray[0];
+      try {
+        let guildMember = await message.guild.members.fetch(id);
+        return guildMember;
+      } catch (e) {
+        throw e;
+      }
+    };
+    try {
+      console.log(await (message as any).getMember(args[0]));
+    } catch (e) {
+      console.log(e);
+    }
     message.channel.send(`Arguments: ${args.join(" ")}`);
     // Need to create Command
   },
