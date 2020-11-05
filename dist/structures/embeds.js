@@ -109,13 +109,13 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
                 name: `Command Help`,
                 value: `**Name:** ${FirstCap_1.firstCap(command.name)}
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission[0]
-                    ? `**Required Permission:** "${command.permission[0]}"\n`
-                    : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+${command.permission && command.permission[0]
+                    ? `**Required Permission:** ${command.permission[0]}\n`
+                    : ""}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
 ${command.example
-                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
+                    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
                     : ""}${command.aliases[0]
-                    ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+                    ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
                     : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
             },
         ],
@@ -126,7 +126,7 @@ ${command.example
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`" | "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** ${argument.example.join(` **|** `)}\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };
@@ -147,13 +147,13 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
                 name: `Command Help`,
                 value: `**Name:** ${FirstCap_1.firstCap(command.name)}
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission[0]
-                    ? `**Required Permission:** "${command.permission[0]}"\n`
-                    : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+${command.permission && command.permission[0]
+                    ? `**Required Permission:** ${command.permission[0]}\n`
+                    : ""}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
 ${command.example
-                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
+                    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
                     : ""}${command.aliases[0]
-                    ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+                    ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
                     : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
             },
         ],
@@ -164,7 +164,7 @@ ${command.example
     });
     args.forEach((argument, i) => {
         i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** "${argument.example.join(`" | "`)}"\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** ${argument.example.join(` **|** `)}\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
     });
     return embed;
 };

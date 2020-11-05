@@ -1,5 +1,4 @@
 import Discord, { TextChannel } from "discord.js";
-import { DiscordBot } from "../structures/Client";
 import { guildDataBase } from "../structures/DataBase";
 import { getGuildDB } from "../functions/GetGuildDB";
 import {
@@ -34,22 +33,22 @@ export const event: MessageEventInterface = {
         );
       }
     } // Checks Prefix
-    const [commandName, ...args] = message.content
+    const [commandNameUPPERCASE, ...args] = message.content
       .trim()
       .slice(prefix.length)
       .split(/ +/g);
+    const commandName = commandNameUPPERCASE.toLowerCase();
     const command = client.commands.get(commandName)
       ? client.commands.get(commandName)
       : client.commands.find((cmd) =>
           cmd.aliases ? cmd.aliases.includes(commandName) : false
         );
     if (command) {
-      if (command.permission[0]) {
+      if (command.permission && command.permission[0]) {
         if (command.permission[1] === true) {
           command.permission[1] = command.permission[0];
         }
       }
-      console.log(command);
       if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()))
         return;
       if (command.guildOnly && message.channel.type === "dm")
@@ -63,6 +62,7 @@ export const event: MessageEventInterface = {
         });
       if (
         message.channel.type !== "dm" &&
+        command.permission &&
         command.permission[0] &&
         !message.member.hasPermission(command.permission[0]) &&
         !message.channel
@@ -78,6 +78,7 @@ export const event: MessageEventInterface = {
         });
       if (
         message.channel.type !== "dm" &&
+        command.permission &&
         command.permission[1] !== false &&
         !message.guild.me.hasPermission(
           command.permission[1] as Discord.PermissionString

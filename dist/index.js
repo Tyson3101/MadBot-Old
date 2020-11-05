@@ -7,7 +7,6 @@ const Client_1 = require("./structures/Client");
 const CommandHandler_1 = require("./functions/CommandHandler");
 const EventHandler_1 = require("./functions/EventHandler");
 const { TOKEN: token } = process.env;
-process.on("unhandledRejection", console.error);
 const client = new Client_1.DiscordBot();
 CommandHandler_1.CommandHandlerInit(client);
 EventHandler_1.EventHandlerInit(client);

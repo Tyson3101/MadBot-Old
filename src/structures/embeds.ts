@@ -144,17 +144,17 @@ export const noArgsCommandHelpEmbed = (
         value: `**Name:** ${firstCap(command.name)}
 **Catergory:** ${firstCap(command.catergory)}
 ${
-  command.permission[0]
-    ? `**Required Permission:** "${command.permission[0]}"\n`
+  command.permission && command.permission[0]
+    ? `**Required Permission:** ${command.permission[0]}\n`
     : ""
-}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
 ${
   command.example
-    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
+    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
     : ""
 }${
           command.aliases[0]
-            ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : "\n"
         }${command.args[0] ? `**Arguments Info:**` : ""}`,
       },
@@ -172,9 +172,9 @@ ${
         Array.isArray(argument.type) ? argument.type.join(", ") : argument.type
       }\n**Description:** ${
         argument.description
-      }\n**Example:** "${argument.example.join(
-        `" | "`
-      )}"\n**Required:** ${firstCap(argument.required.toString())}`
+      }\n**Example:** ${argument.example.join(
+        ` **|** `
+      )}\n**Required:** ${firstCap(argument.required.toString())}`
     );
   });
   return embed;
@@ -203,17 +203,17 @@ export const CommandHelpEmbed = (
         value: `**Name:** ${firstCap(command.name)}
 **Catergory:** ${firstCap(command.catergory)}
 ${
-  command.permission[0]
-    ? `**Required Permission:** "${command.permission[0]}"\n`
+  command.permission && command.permission[0]
+    ? `**Required Permission:** ${command.permission[0]}\n`
     : ""
-}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
+}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
 ${
   command.example
-    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
+    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
     : ""
 }${
           command.aliases[0]
-            ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
+            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : "\n"
         }${command.args[0] ? `**Arguments Info:**` : ""}`,
       },
@@ -231,9 +231,9 @@ ${
         Array.isArray(argument.type) ? argument.type.join(", ") : argument.type
       }\n**Description:** ${
         argument.description
-      }\n**Example:** "${argument.example.join(
-        `" | "`
-      )}"\n**Required:** ${firstCap(argument.required.toString())}`
+      }\n**Example:** ${argument.example.join(
+        ` **|** `
+      )}\n**Required:** ${firstCap(argument.required.toString())}`
     );
   });
   return embed;

@@ -21,20 +21,20 @@ exports.event = {
           *(Do !)*`);
             }
         }
-        const [commandName, ...args] = message.content
+        const [commandNameUPPERCASE, ...args] = message.content
             .trim()
             .slice(prefix.length)
             .split(/ +/g);
+        const commandName = commandNameUPPERCASE.toLowerCase();
         const command = client.commands.get(commandName)
             ? client.commands.get(commandName)
             : client.commands.find((cmd) => cmd.aliases ? cmd.aliases.includes(commandName) : false);
         if (command) {
-            if (command.permission[0]) {
+            if (command.permission && command.permission[0]) {
                 if (command.permission[1] === true) {
                     command.permission[1] = command.permission[0];
                 }
             }
-            console.log(command);
             if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()))
                 return;
             if (command.guildOnly && message.channel.type === "dm")
@@ -46,6 +46,7 @@ exports.event = {
                     embed: Embeds_1.ownerCommandEmbed(client, message.author),
                 });
             if (message.channel.type !== "dm" &&
+                command.permission &&
                 command.permission[0] &&
                 !message.member.hasPermission(command.permission[0]) &&
                 !message.channel
@@ -55,6 +56,7 @@ exports.event = {
                     embed: Embeds_1.invaildPermissionsMemberCommandEmbed(client, message.author, command.permission[0]),
                 });
             if (message.channel.type !== "dm" &&
+                command.permission &&
                 command.permission[1] !== false &&
                 !message.guild.me.hasPermission(command.permission[1]) &&
                 !message.channel
