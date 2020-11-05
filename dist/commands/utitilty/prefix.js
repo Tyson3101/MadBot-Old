@@ -22,7 +22,7 @@ exports.command = {
     aliases: [],
     guildOnly: true,
     devOnly: false,
-    permission: "MANAGE_GUILD",
+    permission: ["MANAGE_GUILD", false],
     async run(client, message, args) {
         let guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
         const [, prefix, ..._] = message.content

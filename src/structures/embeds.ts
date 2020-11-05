@@ -51,7 +51,7 @@ export const ownerCommandEmbed = (
   });
 };
 
-export const invaildPermissionsCommandEmbed = (
+export const invaildPermissionsMemberCommandEmbed = (
   client: DiscordBot,
   user: User,
   permission: PermissionString
@@ -66,6 +66,28 @@ export const invaildPermissionsCommandEmbed = (
     },
     title: "Invaild Permissions",
     description: `:x: You need the "${permission}" Permission to use this command. :x:`,
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};
+
+export const invaildPermissionsBotCommandEmbed = (
+  client: DiscordBot,
+  user: User,
+  permission: PermissionString
+): MessageEmbed => {
+  return new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    title: "Invaild Permissions",
+    description: `:x: I need the "${permission}" Permission to execute this command. :x:`,
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -122,13 +144,13 @@ export const noArgsCommandHelpEmbed = (
         value: `**Name:** ${firstCap(command.name)}
 **Catergory:** ${firstCap(command.catergory)}
 ${
-  command.permission
-    ? `**Required Permissions:** "${command.permission}"\n`
+  command.permission[0]
+    ? `**Required Permission:** "${command.permission[0]}"\n`
     : ""
 }**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
 ${
   command.example
-    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
     : ""
 }${
           command.aliases[0]
@@ -181,13 +203,13 @@ export const CommandHelpEmbed = (
         value: `**Name:** ${firstCap(command.name)}
 **Catergory:** ${firstCap(command.catergory)}
 ${
-  command.permission
-    ? `**Required Permissions:** "${command.permission}"\n`
+  command.permission[0]
+    ? `**Required Permission:** "${command.permission[0]}"\n`
     : ""
 }**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
 ${
   command.example
-    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
     : ""
 }${
           command.aliases[0]

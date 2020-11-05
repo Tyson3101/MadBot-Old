@@ -22,7 +22,7 @@ export const command: commandInterFace = {
   aliases: [],
   guildOnly: true,
   devOnly: false,
-  permission: "MANAGE_GUILD",
+  permission: ["MANAGE_GUILD", false],
   async run(client, message, args) {
     let guildDB = await getGuildDB(client, message.guild, guildDataBase);
     const [, prefix, ..._] = message.content

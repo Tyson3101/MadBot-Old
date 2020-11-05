@@ -1,11 +1,12 @@
-import Discord from "discord.js";
+import Discord, { TextChannel } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import { guildDataBase } from "../structures/DataBase";
 import { getGuildDB } from "../functions/GetGuildDB";
 import {
   dmCommandEmbed,
   ownerCommandEmbed,
-  invaildPermissionsCommandEmbed,
+  invaildPermissionsMemberCommandEmbed,
+  invaildPermissionsBotCommandEmbed,
   errorCommandEmbed,
   noArgsCommandHelpEmbed,
   clientInfo,
@@ -20,6 +21,18 @@ export const event: MessageEventInterface = {
     if (message.channel.type !== "dm") {
       guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
       prefix = guildDB.prefix;
+      if (
+        !message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"])
+      )
+        return;
+      else if (
+        !message.channel.permissionsFor(message.guild.me).has(["EMBED_LINKS"])
+      ) {
+        return message.channel.send(
+          `:x: I need the "EMBED_LINKS" Permission to send embeds! :x:
+          *(Do !)*`
+        );
+      }
     } // Checks Prefix
     const [commandName, ...args] = message.content
       .trim()
@@ -31,6 +44,12 @@ export const event: MessageEventInterface = {
           cmd.aliases ? cmd.aliases.includes(commandName) : false
         );
     if (command) {
+      if (command.permission[0]) {
+        if (command.permission[1] === true) {
+          command.permission[1] = command.permission[0];
+        }
+      }
+      console.log(command);
       if (!message.content.toLowerCase().startsWith(prefix.toLowerCase()))
         return;
       if (command.guildOnly && message.channel.type === "dm")
@@ -44,14 +63,34 @@ export const event: MessageEventInterface = {
         });
       if (
         message.channel.type !== "dm" &&
-        !message.member.hasPermission(command.permission) &&
-        !message.channel.permissionsFor(message.member).has(command.permission)
+        command.permission[0] &&
+        !message.member.hasPermission(command.permission[0]) &&
+        !message.channel
+          .permissionsFor(message.member)
+          .has(command.permission[0])
       )
         return message.channel.send({
-          embed: invaildPermissionsCommandEmbed(
+          embed: invaildPermissionsMemberCommandEmbed(
             client,
             message.author,
-            command.permission
+            command.permission[0]
+          ),
+        });
+      if (
+        message.channel.type !== "dm" &&
+        command.permission[1] !== false &&
+        !message.guild.me.hasPermission(
+          command.permission[1] as Discord.PermissionString
+        ) &&
+        !message.channel
+          .permissionsFor(message.guild.me)
+          .has(command.permission[1] as Discord.PermissionString)
+      )
+        return message.channel.send({
+          embed: invaildPermissionsBotCommandEmbed(
+            client,
+            message.author,
+            command.permission[1] as Discord.PermissionString
           ),
         });
       if (command.args.filter((arg) => arg.required).length > args.length)

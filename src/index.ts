@@ -6,6 +6,8 @@ import { CommandHandlerInit } from "./functions/CommandHandler";
 import { EventHandlerInit } from "./functions/EventHandler";
 const { TOKEN: token } = process.env;
 
+process.on("unhandledRejection", console.error);
+
 const client: DiscordBot = new DiscordBot(); // Creates the client
 
 CommandHandlerInit(client); // Handles Command

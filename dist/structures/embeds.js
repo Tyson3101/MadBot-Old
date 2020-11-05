@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -39,7 +39,7 @@ exports.ownerCommandEmbed = (client, user) => {
         },
     });
 };
-exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
+exports.invaildPermissionsMemberCommandEmbed = (client, user, permission) => {
     return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
@@ -50,6 +50,23 @@ exports.invaildPermissionsCommandEmbed = (client, user, permission) => {
         },
         title: "Invaild Permissions",
         description: `:x: You need the "${permission}" Permission to use this command. :x:`,
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+};
+exports.invaildPermissionsBotCommandEmbed = (client, user, permission) => {
+    return new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
+        },
+        title: "Invaild Permissions",
+        description: `:x: I need the "${permission}" Permission to execute this command. :x:`,
         footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -92,11 +109,11 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
                 name: `Command Help`,
                 value: `**Name:** ${FirstCap_1.firstCap(command.name)}
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission
-                    ? `**Required Permissions:** "${command.permission}"\n`
+${command.permission[0]
+                    ? `**Required Permission:** "${command.permission[0]}"\n`
                     : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
 ${command.example
-                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
                     : ""}${command.aliases[0]
                     ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
                     : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
@@ -130,11 +147,11 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
                 name: `Command Help`,
                 value: `**Name:** ${FirstCap_1.firstCap(command.name)}
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission
-                    ? `**Required Permissions:** "${command.permission}"\n`
+${command.permission[0]
+                    ? `**Required Permission:** "${command.permission[0]}"\n`
                     : ""}**Usage:** "${prefix}${command.usage.join(`" | "${prefix}`)}"
 ${command.example
-                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"`
+                    ? `**Example:** "${prefix}${command.example.join(`" | "${prefix}`)}"\n`
                     : ""}${command.aliases[0]
                     ? `**Aliases:** "${command.aliases.join(`" | "`)}"\n`
                     : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,

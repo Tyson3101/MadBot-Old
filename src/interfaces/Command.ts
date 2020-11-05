@@ -14,6 +14,6 @@ export interface commandInterFace {
   aliases: string[];
   guildOnly: boolean;
   devOnly: boolean;
-  permission?: Discord.PermissionString;
+  permission?: [Discord.PermissionString, boolean | Discord.PermissionString];
   run: (client: DiscordBot, message: Discord.Message, args?: string[]) => void;
 }
