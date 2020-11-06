@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const embeds_1 = require("../structures/embeds");
 function setUpArgs(client, message, DB) {
     const [commandNameUPPERCASE, ...argsArray] = message.content
         .trim()
         .slice(DB.prefix.length)
         .split(/ +/g);
     const UtilArgs = {
+        client: client,
+        message: message,
         args: argsArray,
         DB: DB,
         prefix: DB.prefix,
@@ -23,7 +26,10 @@ function setUpArgs(client, message, DB) {
                 return User;
             }
             catch (e) {
-                throw e;
+                this.message.channel.send({
+                    embed: embeds_1.noArgsCommandHelpEmbed(client, message.author, this.command, this.prefix),
+                });
+                return null;
             }
         },
         async getMember(mentionID) {
@@ -37,7 +43,27 @@ function setUpArgs(client, message, DB) {
                 return guildMember;
             }
             catch (e) {
-                throw e;
+                this.message.channel.send({
+                    embed: embeds_1.noArgsCommandHelpEmbed(client, message.author, this.command, this.prefix),
+                });
+                return null;
+            }
+        },
+        compareRolePostion(commandRole, otherRole, toReturnMsg) {
+            let { author } = this.message;
+            if (toReturnMsg) {
+                if (commandRole.position <= otherRole.position ||
+                    otherRole.permissions.has("BAN_MEMBERS"))
+                    return false;
+                else
+                    return true;
+            }
+            else {
+                if (commandRole.position <= otherRole.position ||
+                    otherRole.permissions.has("BAN_MEMBERS"))
+                    this.message.channel.send({
+                        embed: embeds_1.invaildPermissionsCustom(client, author, `You can't kick a Moderator.`),
+                    });
             }
         },
     };

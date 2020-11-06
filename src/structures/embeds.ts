@@ -75,6 +75,30 @@ export const invaildPermissionsMemberCommandEmbed = (
   });
 };
 
+export const invaildPermissionsCustom = (
+  client: DiscordBot,
+  user: User,
+  msg: string,
+  note?: string
+): MessageEmbed => {
+  return new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    color: "DARK_VIVID_PINK",
+    title: "Invaild Permissions",
+    description: `:x: ${msg} :x:${note ? `\n${note}` : ""}`,
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};
+
 export const invaildPermissionsBotCommandEmbed = (
   client: DiscordBot,
   user: User,

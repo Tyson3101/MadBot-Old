@@ -13,7 +13,10 @@ exports.EventHandlerInit = (client) => {
     events.forEach((fileEvent) => {
         const event = require(`../events/${fileEvent}`).event;
         client.events.set(event.event, event);
-        client.on(event.event, event.run.bind(null, client));
+        if (event.event === "ready")
+            client.once(event.event, event.run.bind(null, client));
+        else
+            client.on(event.event, event.run.bind(null, client));
         if (i === 1)
             console.log(`-----------------  Events  ----------------`);
         console.log(`Event ${i}: Loaded ${event.event}!`);

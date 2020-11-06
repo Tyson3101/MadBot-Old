@@ -1,4 +1,12 @@
-import { Channel, GuildChannel, GuildMember, User } from "discord.js";
+import {
+  Channel,
+  GuildChannel,
+  GuildMember,
+  Message,
+  Role,
+  User,
+} from "discord.js";
+import { DiscordBot } from "../structures/Client";
 import { argsType } from "./Argstype"; // Import syntax
 import { commandInterFace } from "./Command";
 import { GuildDataBaseInterface } from "./GuildDataBase";
@@ -15,6 +23,8 @@ export interface argsInterface {
 }
 
 export interface utilObjInterface {
+  client: DiscordBot;
+  message: Message;
   args: string[];
   DB: GuildDataBaseInterface;
   prefix: string;
@@ -22,4 +32,9 @@ export interface utilObjInterface {
   isDM: boolean;
   getMember: (id: string) => Promise<GuildMember>;
   getUser: (id: string) => Promise<User>;
+  compareRolePostion: (
+    checkHighestRole: Role,
+    CheckLowestRole: Role,
+    toReturnMsg?: boolean
+  ) => boolean;
 }

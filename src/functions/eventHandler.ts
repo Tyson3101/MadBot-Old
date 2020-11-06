@@ -10,7 +10,9 @@ export const EventHandlerInit = (client: DiscordBot): void => {
   events.forEach((fileEvent) => {
     const event: EventInterface = require(`../events/${fileEvent}`).event;
     client.events.set(event.event, event);
-    client.on(<any>event.event, event.run.bind(null, client)); // Type Casting (Can also do `(event as any).event`) and Function Bind() <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind>
+    if (event.event === "ready")
+      client.once(<any>event.event, event.run.bind(null, client));
+    else client.on(<any>event.event, event.run.bind(null, client)); // Type Casting (Can also do `(event as any).event`) and Function Bind() <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind>
     if (i === 1) console.log(`-----------------  Events  ----------------`);
     console.log(`Event ${i}: Loaded ${event.event}!`);
     i++;

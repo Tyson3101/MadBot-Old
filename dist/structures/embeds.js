@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsCustom = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -53,6 +53,24 @@ exports.invaildPermissionsMemberCommandEmbed = (client, user, permission) => {
         color: "DARK_VIVID_PINK",
         title: "Invaild Permissions",
         description: `:x: You need the "${permission}" Permission to use this command. :x:`,
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+};
+exports.invaildPermissionsCustom = (client, user, msg, note) => {
+    return new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
+        },
+        color: "DARK_VIVID_PINK",
+        title: "Invaild Permissions",
+        description: `:x: ${msg} :x:${note ? `\n${note}` : ""}`,
         footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),

@@ -1,14 +1,5 @@
 import { commandInterFace } from "../../interfaces/Command";
-import {
-  Structures,
-  TextChannel,
-  DMChannel,
-  NewsChannel,
-  User,
-} from "discord.js";
-import { DiscordBot } from "../../structures/Client";
-import { noArgsCommandHelpEmbed } from "../../structures/embeds";
-import { getGuildDB } from "../../functions/getGuildDB";
+import { GuildMember } from "discord.js";
 
 export const command: commandInterFace = {
   name: "ban",
@@ -38,20 +29,14 @@ export const command: commandInterFace = {
   devOnly: false,
   permission: ["BAN_MEMBERS", true],
   async run(client, message, { args, ...util }) {
-    let user: User;
-    try {
-      user = await util.getUser(args[0]);
-    } catch {
-      return message.channel.send({
-        embed: noArgsCommandHelpEmbed(
-          client,
-          message.author,
-          util.command,
-          util.prefix
-        ),
-      });
-    }
-    message.channel.send(`Arguments: ${user}`);
-    // Need to create Command
+    let member: GuildMember = await util.getMember(args[0]);
+    if (!member) return;
+    if (
+      !util.compareRolePostion(
+        message.member.roles.highest,
+        member.roles.highest
+      )
+    )
+      return;
   },
 };
