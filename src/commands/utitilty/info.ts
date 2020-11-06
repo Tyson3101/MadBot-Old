@@ -12,8 +12,8 @@ export const command: commandInterFace = {
   aliases: ["stats"],
   guildOnly: false,
   devOnly: false,
-  async run(client, message) {
-    let { prefix } = await getGuildDB(client, message.guild);
+  async run(client, message, util) {
+    const { prefix } = util;
     message.channel.send(clientInfo(client, message.author, prefix)); // Sends Client Info Embed
   },
 };

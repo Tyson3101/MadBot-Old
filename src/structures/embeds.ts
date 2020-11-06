@@ -20,6 +20,7 @@ export const dmCommandEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Invaild Channel",
     description: ":x: This command cannot be used in a DM Channel. :x:",
     footer: {
@@ -36,12 +37,12 @@ export const ownerCommandEmbed = (
   return new MessageEmbed({
     author: {
       name: user.tag,
-
       iconURL: user.displayAvatarURL({
         format: "png",
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Invaild Permissions",
     description: ":x: This command can only be used by bot developers. :x:",
     footer: {
@@ -64,6 +65,7 @@ export const invaildPermissionsMemberCommandEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Invaild Permissions",
     description: `:x: You need the "${permission}" Permission to use this command. :x:`,
     footer: {
@@ -86,6 +88,7 @@ export const invaildPermissionsBotCommandEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Invaild Permissions",
     description: `:x: I need the "${permission}" Permission to execute this command. :x:`,
     footer: {
@@ -110,6 +113,7 @@ export const errorCommandEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Error",
     description: error.message
       ? `:x: **This command experienced an error:** :x:\n${error.message}.`
@@ -127,8 +131,7 @@ export const noArgsCommandHelpEmbed = (
   command: commandInterFace,
   prefix: string
 ): MessageEmbed => {
-  const { args } = command;
-  let embed = new MessageEmbed({
+  return new MessageEmbed({
     author: {
       name: user.tag,
       iconURL: user.displayAvatarURL({
@@ -136,48 +139,14 @@ export const noArgsCommandHelpEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Invaild Arguments",
-    description: `:x: You are missing arguments for this command. :x:`,
-    fields: [
-      {
-        name: `Command Help`,
-        value: `**Name:** ${firstCap(command.name)}
-**Catergory:** ${firstCap(command.catergory)}
-${
-  command.permission && command.permission[0]
-    ? `**Required Permission:** ${command.permission[0]}\n`
-    : ""
-}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
-${
-  command.example
-    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
-    : ""
-}${
-          command.aliases[0]
-            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-            : "\n"
-        }${command.args[0] ? `**Arguments Info:**` : ""}`,
-      },
-    ],
+    description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-  args.forEach((argument, i: number): void => {
-    i++;
-    embed.addField(
-      `${i}: ${argument.name}`,
-      `**Type:** ${
-        Array.isArray(argument.type) ? argument.type.join(", ") : argument.type
-      }\n**Description:** ${
-        argument.description
-      }\n**Example:** ${argument.example.join(
-        ` **|** `
-      )}\n**Required:** ${firstCap(argument.required.toString())}`
-    );
-  });
-  return embed;
 };
 
 export const CommandHelpEmbed = (
@@ -196,7 +165,9 @@ export const CommandHelpEmbed = (
         dynamic: true,
       }),
     },
-    title: `${command.name} Help`,
+    color: "DARK_VIVID_PINK", //"FD0061",
+    title: `${firstCap(command.name)} Help`,
+    description: `Join My **[Support Server](${client.supportServer})** for more help.`,
     fields: [
       {
         name: `Command Help`,
@@ -254,6 +225,7 @@ export const prefixEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: "Prefix",
     description: prefix
       ? `Prefix for ${member.guild.name} is now \`${prefix}\``
@@ -278,6 +250,7 @@ export const clientInfo = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: `${client.user.username} Information`,
     url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
     description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${client.supportServer})**`,
@@ -333,6 +306,7 @@ export const helpEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: `${client.user.username} Commands`,
     description: `**[Join Support Server Here](${client.supportServer})**`,
     footer: {
@@ -367,6 +341,7 @@ export const helpCatergoryEmbed = (
         dynamic: true,
       }),
     },
+    color: "DARK_VIVID_PINK",
     title: `${client.user.username} ${firstCap(catergory)} Commands`,
     description: `**[Join Support Server Here](${client.supportServer})**`,
     footer: {
@@ -397,6 +372,7 @@ export const pingEmbed = (
       name: user.tag,
       iconURL: user.displayAvatarURL({ format: "png", dynamic: true }),
     },
+    color: "DARK_VIVID_PINK",
     thumbnail: {
       url: client.user.displayAvatarURL({ format: "png" }),
     },

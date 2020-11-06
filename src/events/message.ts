@@ -11,6 +11,7 @@ import {
   clientInfo,
 } from "../structures/Embeds";
 import { MessageEventInterface } from "../interfaces/Events";
+import setUpArgs from "../functions/SetUpArgs";
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
@@ -28,15 +29,15 @@ export const event: MessageEventInterface = {
         !message.channel.permissionsFor(message.guild.me).has(["EMBED_LINKS"])
       ) {
         return message.channel.send(
-          `:x: I need the "EMBED_LINKS" Permission to send embeds! :x:
-          *(Do !)*`
+          `:x: I need the "EMBED_LINKS" Permission to send embeds! :x:`
         );
       }
     } // Checks Prefix
-    const [commandNameUPPERCASE, ...args] = message.content
-      .trim()
-      .slice(prefix.length)
-      .split(/ +/g);
+    const [commandNameUPPERCASE, args, Util] = setUpArgs(
+      client,
+      message,
+      guildDB
+    );
     const commandName = commandNameUPPERCASE.toLowerCase();
     const command = client.commands.get(commandName)
       ? client.commands.get(commandName)
@@ -104,7 +105,7 @@ export const event: MessageEventInterface = {
           ),
         });
       try {
-        command.run(client, message, args);
+        command.run(client, message, Util);
         return;
       } catch (e) {
         return message.channel.send({

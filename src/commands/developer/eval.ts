@@ -1,6 +1,5 @@
+/*
 import { commandInterFace } from "../../interfaces/Command";
-import Discord from "discord.js";
-import util, { inspect } from "util";
 export const command: commandInterFace = {
   name: "eval",
   description: "Evals Javascript",
@@ -19,8 +18,8 @@ export const command: commandInterFace = {
   aliases: ["evaljs"],
   guildOnly: false,
   devOnly: true,
-  async run(client, message, args) {
-    console.log(this.args);
-    // Need to create Command
+  async run(client, message, { args, ...util }) {
+  
   },
 };
+*/

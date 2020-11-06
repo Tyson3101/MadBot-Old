@@ -1,6 +1,6 @@
 import Discord from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { argsInterface as args } from "./Args";
+import { argsInterface as args, utilObjInterface } from "./Args";
 
 export interface commandInterFace {
   // Used to make command setting up easier
@@ -15,5 +15,9 @@ export interface commandInterFace {
   guildOnly: boolean;
   devOnly: boolean;
   permission?: [Discord.PermissionString, boolean | Discord.PermissionString];
-  run: (client: DiscordBot, message: Discord.Message, args?: string[]) => void;
+  run: (
+    client: DiscordBot,
+    message: Discord.Message,
+    args: utilObjInterface
+  ) => void;
 }

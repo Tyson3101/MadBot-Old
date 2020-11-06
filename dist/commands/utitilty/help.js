@@ -21,7 +21,7 @@ exports.command = {
             order: 1,
         },
     ],
-    async run(client, message, args) {
+    async run(client, message, { args, ...util }) {
         const guildDB = await getGuildDB_1.getGuildDB(client, message.guild);
         const prefix = guildDB.prefix;
         if (!args[0]) {

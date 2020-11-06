@@ -1,6 +1,14 @@
 import { commandInterFace } from "../../interfaces/Command";
-import { Structures, TextChannel, DMChannel, NewsChannel } from "discord.js";
+import {
+  Structures,
+  TextChannel,
+  DMChannel,
+  NewsChannel,
+  User,
+} from "discord.js";
 import { DiscordBot } from "../../structures/Client";
+import { noArgsCommandHelpEmbed } from "../../structures/embeds";
+import { getGuildDB } from "../../functions/getGuildDB";
 
 export const command: commandInterFace = {
   name: "ban",
@@ -29,25 +37,21 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: ["BAN_MEMBERS", true],
-  async run(client, message, args) {
-    (message as any).getMember = async (mentionID: string) => {
-      console.log(mentionID);
-      let idArray = mentionID.match(/\d+/);
-      if (!idArray) throw "No ID!";
-      let id = idArray[0];
-      try {
-        let guildMember = await message.guild.members.fetch(id);
-        return guildMember;
-      } catch (e) {
-        throw e;
-      }
-    };
+  async run(client, message, { args, ...util }) {
+    let user: User;
     try {
-      console.log(await (message as any).getMember(args[0]));
-    } catch (e) {
-      console.log(e);
+      user = await util.getUser(args[0]);
+    } catch {
+      return message.channel.send({
+        embed: noArgsCommandHelpEmbed(
+          client,
+          message.author,
+          util.command,
+          util.prefix
+        ),
+      });
     }
-    message.channel.send(`Arguments: ${args.join(" ")}`);
+    message.channel.send(`Arguments: ${user}`);
     // Need to create Command
   },
 };

@@ -11,7 +11,7 @@ exports.command = {
     aliases: ["latency"],
     guildOnly: false,
     devOnly: false,
-    async run(client, message, args) {
+    async run(client, message) {
         let latency = Date.now() - message.createdTimestamp + "ms";
         let ping = client.ws.ping + "ms";
         message.channel.send({

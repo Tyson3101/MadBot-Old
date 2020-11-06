@@ -23,12 +23,12 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: ["MANAGE_GUILD", false],
-  async run(client, message, args) {
-    let guildDB = await getGuildDB(client, message.guild, guildDataBase);
-    const [, prefix, ..._] = message.content
+  async run(client, message, { args, ...util }) {
+    let guildDB = util.DB;
+    const prefix = message.content
       .trim()
       .slice(guildDB.prefix.length)
-      .split(/ +/g);
+      .split(/ +/g)[1];
     if (prefix) {
       guildDB.prefix = prefix;
       let newDBGUILD: GuildDataBaseInterface = {
@@ -36,20 +36,11 @@ export const command: commandInterFace = {
       };
       await guildDataBase.set(message.guild.id, newDBGUILD);
       message.channel.send({
-        embed: prefixEmbed(
-          client,
-          message.member,
-          await getGuildDB(client, message.guild, guildDataBase),
-          guildDB.prefix
-        ),
+        embed: prefixEmbed(client, message.member, util.DB, guildDB.prefix),
       });
     } else {
       message.channel.send({
-        embed: prefixEmbed(
-          client,
-          message.member,
-          await getGuildDB(client, message.guild, guildDataBase)
-        ),
+        embed: prefixEmbed(client, message.member, util.DB),
       });
     }
   },

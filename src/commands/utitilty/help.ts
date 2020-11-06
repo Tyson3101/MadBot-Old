@@ -25,7 +25,7 @@ export const command: commandInterFace = {
       order: 1,
     },
   ],
-  async run(client, message, args) {
+  async run(client, message, { args, ...util }) {
     const guildDB = await getGuildDB(client, message.guild);
     const prefix = guildDB.prefix;
     if (!args[0]) {

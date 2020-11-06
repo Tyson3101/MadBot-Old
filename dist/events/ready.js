@@ -9,6 +9,10 @@ exports.event = {
             User: botDev,
             position: 0,
         });
+        await client.user.setActivity({
+            name: `!help`,
+            type: "COMPETING",
+        });
         console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 -----------------  Stats  ----------------

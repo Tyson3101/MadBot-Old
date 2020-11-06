@@ -8,6 +8,10 @@ export const event: ReadyEventInterface = {
       User: botDev, // Sets the botdevs user object
       position: 0,
     });
+    await client.user.setActivity({
+      name: `!help`,
+      type: "COMPETING",
+    });
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 -----------------  Stats  ----------------

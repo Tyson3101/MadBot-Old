@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
+const embeds_1 = require("../../structures/embeds");
 exports.command = {
     name: "ban",
     description: "Bans a member from the server.",
@@ -28,27 +29,16 @@ exports.command = {
     guildOnly: true,
     devOnly: false,
     permission: ["BAN_MEMBERS", true],
-    async run(client, message, args) {
-        message.getMember = async (mentionID) => {
-            console.log(mentionID);
-            let idArray = mentionID.match(/\d+/);
-            if (!idArray)
-                throw "No ID!";
-            let id = idArray[0];
-            try {
-                let guildMember = await message.guild.members.fetch(id);
-                return guildMember;
-            }
-            catch (e) {
-                throw e;
-            }
-        };
+    async run(client, message, { args, ...util }) {
+        let user;
         try {
-            console.log(await message.getMember(args[0]));
+            user = await util.getUser(args[0]);
         }
-        catch (e) {
-            console.log(e);
+        catch {
+            return message.channel.send({
+                embed: embeds_1.noArgsCommandHelpEmbed(client, message.author, util.command, util.prefix),
+            });
         }
-        message.channel.send(`Arguments: ${args.join(" ")}`);
+        message.channel.send(`Arguments: ${user}`);
     },
 };

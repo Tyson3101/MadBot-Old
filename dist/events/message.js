@@ -1,9 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.event = void 0;
 const DataBase_1 = require("../structures/DataBase");
 const GetGuildDB_1 = require("../functions/GetGuildDB");
 const Embeds_1 = require("../structures/Embeds");
+const SetUpArgs_1 = __importDefault(require("../functions/SetUpArgs"));
 exports.event = {
     event: "message",
     async run(client, message) {
@@ -17,14 +21,10 @@ exports.event = {
             if (!message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"]))
                 return;
             else if (!message.channel.permissionsFor(message.guild.me).has(["EMBED_LINKS"])) {
-                return message.channel.send(`:x: I need the "EMBED_LINKS" Permission to send embeds! :x:
-          *(Do !)*`);
+                return message.channel.send(`:x: I need the "EMBED_LINKS" Permission to send embeds! :x:`);
             }
         }
-        const [commandNameUPPERCASE, ...args] = message.content
-            .trim()
-            .slice(prefix.length)
-            .split(/ +/g);
+        const [commandNameUPPERCASE, args, Util] = SetUpArgs_1.default(client, message, guildDB);
         const commandName = commandNameUPPERCASE.toLowerCase();
         const command = client.commands.get(commandName)
             ? client.commands.get(commandName)
@@ -70,7 +70,7 @@ exports.event = {
                     embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command, prefix),
                 });
             try {
-                command.run(client, message, args);
+                command.run(client, message, Util);
                 return;
             }
             catch (e) {

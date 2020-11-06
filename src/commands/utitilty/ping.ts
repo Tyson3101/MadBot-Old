@@ -10,7 +10,7 @@ export const command: commandInterFace = {
   aliases: ["latency"],
   guildOnly: false,
   devOnly: false,
-  async run(client, message, args) {
+  async run(client, message) {
     let latency: string = Date.now() - message.createdTimestamp + "ms";
     let ping: string = client.ws.ping + "ms";
     message.channel.send({

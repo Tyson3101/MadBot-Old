@@ -14,6 +14,7 @@ exports.dmCommandEmbed = (client, user) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Invaild Channel",
         description: ":x: This command cannot be used in a DM Channel. :x:",
         footer: {
@@ -31,6 +32,7 @@ exports.ownerCommandEmbed = (client, user) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Invaild Permissions",
         description: ":x: This command can only be used by bot developers. :x:",
         footer: {
@@ -48,6 +50,7 @@ exports.invaildPermissionsMemberCommandEmbed = (client, user, permission) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Invaild Permissions",
         description: `:x: You need the "${permission}" Permission to use this command. :x:`,
         footer: {
@@ -65,6 +68,7 @@ exports.invaildPermissionsBotCommandEmbed = (client, user, permission) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Invaild Permissions",
         description: `:x: I need the "${permission}" Permission to execute this command. :x:`,
         footer: {
@@ -82,6 +86,7 @@ exports.errorCommandEmbed = (client, user, error) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Error",
         description: error.message
             ? `:x: **This command experienced an error:** :x:\n${error.message}.`
@@ -93,8 +98,7 @@ exports.errorCommandEmbed = (client, user, error) => {
     });
 };
 exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
-    const { args } = command;
-    let embed = new discord_js_1.MessageEmbed({
+    return new discord_js_1.MessageEmbed({
         author: {
             name: user.tag,
             iconURL: user.displayAvatarURL({
@@ -102,33 +106,14 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Invaild Arguments",
-        description: `:x: You are missing arguments for this command. :x:`,
-        fields: [
-            {
-                name: `Command Help`,
-                value: `**Name:** ${FirstCap_1.firstCap(command.name)}
-**Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission && command.permission[0]
-                    ? `**Required Permission:** ${command.permission[0]}\n`
-                    : ""}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
-${command.example
-                    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
-                    : ""}${command.aliases[0]
-                    ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-                    : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
-            },
-        ],
+        description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
         footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
-    args.forEach((argument, i) => {
-        i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** ${argument.example.join(` **|** `)}\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
-    });
-    return embed;
 };
 exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
     const command = client.commands.get(commandName);
@@ -141,7 +126,9 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
                 dynamic: true,
             }),
         },
-        title: `${command.name} Help`,
+        color: "DARK_VIVID_PINK",
+        title: `${FirstCap_1.firstCap(command.name)} Help`,
+        description: `Join My **[Support Server](${client.supportServer})** for more help.`,
         fields: [
             {
                 name: `Command Help`,
@@ -178,6 +165,7 @@ exports.prefixEmbed = (client, member, db, prefix = null) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: "Prefix",
         description: prefix
             ? `Prefix for ${member.guild.name} is now \`${prefix}\``
@@ -197,6 +185,7 @@ exports.clientInfo = (client, user, prefix) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: `${client.user.username} Information`,
         url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
         description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${client.supportServer})**`,
@@ -236,6 +225,7 @@ exports.helpEmbed = (client, user, prefix) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: `${client.user.username} Commands`,
         description: `**[Join Support Server Here](${client.supportServer})**`,
         footer: {
@@ -261,6 +251,7 @@ exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
                 dynamic: true,
             }),
         },
+        color: "DARK_VIVID_PINK",
         title: `${client.user.username} ${FirstCap_1.firstCap(catergory)} Commands`,
         description: `**[Join Support Server Here](${client.supportServer})**`,
         footer: {
@@ -282,6 +273,7 @@ exports.pingEmbed = (client, user, { latency, ping }) => {
             name: user.tag,
             iconURL: user.displayAvatarURL({ format: "png", dynamic: true }),
         },
+        color: "DARK_VIVID_PINK",
         thumbnail: {
             url: client.user.displayAvatarURL({ format: "png" }),
         },
