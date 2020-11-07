@@ -34,9 +34,11 @@ function setUpArgs(client, message, DB) {
         },
         async getMember(mentionID) {
             let idArray = mentionID.match(/\d+/);
-            if (!idArray)
-                throw "No ID!";
+            if (!idArray[0])
+                return null;
             let id = idArray[0];
+            if (!id)
+                return null;
             try {
                 let guildMember = await message.guild.members.fetch(id);
                 return guildMember;
@@ -61,7 +63,7 @@ function setUpArgs(client, message, DB) {
                 if (commandRole.position <= otherRole.position ||
                     otherRole.permissions.has("BAN_MEMBERS"))
                     this.message.channel.send({
-                        embed: embeds_1.invaildPermissionsCustom(client, author, `You can't kick a Moderator.`),
+                        embed: embeds_1.invaildPermissionsCustom(client, author, `You can't perform this action on this member.`),
                     });
             }
         },

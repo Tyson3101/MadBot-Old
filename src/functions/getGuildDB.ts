@@ -1,4 +1,4 @@
-import { Guild } from "discord.js";
+import { Collection, Guild } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
@@ -21,6 +21,15 @@ export const getGuildDB = async (
         ownerID: guild.ownerID,
         memberCount: guild.memberCount,
         prefix: "!",
+        moderation: {
+          bans: new Collection(),
+          kicks: new Collection(),
+          mutes: new Collection(),
+          warns: new Collection(),
+          all: new Collection(),
+          activeCases: 0,
+          caseCount: 0,
+        },
       };
       await DB.set(guild.id, guildObj);
       return await DB.get(guild.id);
@@ -32,6 +41,7 @@ export const getGuildDB = async (
       id: null,
       memberCount: 0,
       prefix: "!",
+      moderation: null,
     };
     return guildObj;
   }

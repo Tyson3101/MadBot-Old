@@ -32,7 +32,7 @@ export default function (
     return message.channel.send({
       embed: dmCommandEmbed(client, message.author),
     });
-  if (command.nsfw)
+  if (message.channel.type !== "dm" && command.nsfw && message.channel.nsfw)
     return message.channel.send({
       embed: nsfwCommandEmbed(client, message.author),
     });

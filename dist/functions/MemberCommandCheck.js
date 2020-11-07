@@ -17,7 +17,7 @@ function default_1(client, message, util, command) {
         return message.channel.send({
             embed: Embeds_1.dmCommandEmbed(client, message.author),
         });
-    if (command.nsfw)
+    if (message.channel.type !== "dm" && command.nsfw && message.channel.nsfw)
         return message.channel.send({
             embed: Embeds_1.nsfwCommandEmbed(client, message.author),
         });

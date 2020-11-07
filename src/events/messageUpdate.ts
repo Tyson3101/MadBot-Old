@@ -1,5 +1,3 @@
-import { DiscordBot } from "../structures/Client";
-import { Message } from "discord.js";
 import { MessageUpdateEventInterface } from "../interfaces/Events";
 const prefix: string = "!";
 
