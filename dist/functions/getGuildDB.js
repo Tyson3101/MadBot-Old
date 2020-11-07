@@ -1,14 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getGuildDB = void 0;
-const discord_js_1 = require("discord.js");
 const DataBase_1 = require("../structures/DataBase");
 exports.getGuildDB = async (client, guild, InputtedDB = null) => {
+    const DB = InputtedDB || DataBase_1.guildDataBase;
     if (guild) {
-        const DB = InputtedDB || DataBase_1.guildDataBase;
-        let DBguild = await DB.get(guild.id);
-        if (DBguild)
+        let DBguildRaw = await DB.get(guild.id);
+        if (DBguildRaw) {
+            const DBguild = {
+                ...DBguildRaw,
+                ownerID: guild.ownerID,
+                memberCount: guild.memberCount,
+                name: guild.name,
+            };
+            console.log(DBguild);
             return DBguild;
+        }
         else {
             let guildObj = {
                 name: guild.name,
@@ -17,11 +24,11 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
                 memberCount: guild.memberCount,
                 prefix: "!",
                 moderation: {
-                    bans: new discord_js_1.Collection(),
-                    kicks: new discord_js_1.Collection(),
-                    mutes: new discord_js_1.Collection(),
-                    warns: new discord_js_1.Collection(),
-                    all: new discord_js_1.Collection(),
+                    bans: new Map(),
+                    kicks: new Map(),
+                    mutes: new Map(),
+                    warns: new Map(),
+                    all: new Map(),
                     activeCases: 0,
                     caseCount: 0,
                 },
@@ -31,14 +38,21 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
         }
     }
     else {
-        let guildObj = {
-            name: null,
-            ownerID: null,
+        return {
+            name: guild.name,
             id: null,
-            memberCount: 0,
+            ownerID: null,
+            memberCount: null,
             prefix: "!",
-            moderation: null,
+            moderation: {
+                bans: null,
+                kicks: null,
+                mutes: null,
+                warns: null,
+                all: null,
+                activeCases: 0,
+                caseCount: 0,
+            },
         };
-        return guildObj;
     }
 };

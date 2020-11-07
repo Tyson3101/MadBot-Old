@@ -1,5 +1,7 @@
-import { GuildMember, Message, Role } from "discord.js";
+import { GuildMember, Message, Role, User } from "discord.js";
 import { utilObjInterface } from "../interfaces/Args";
+import { commandInterFace } from "../interfaces/Command";
+import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { DiscordBot } from "../structures/Client";
 import {
   noArgsCommandHelpEmbed,
@@ -7,10 +9,10 @@ import {
 } from "../structures/embeds";
 import { getGuildDB } from "./getGuildDB";
 
-function setUpArgs(
+export function setUpArgs(
   client: DiscordBot,
   message: Message,
-  DB: any
+  DB: GuildDataBaseInterface
 ): [string, string[], utilObjInterface] {
   const [commandNameUPPERCASE, ...argsArray] = message.content
     .trim()
@@ -30,12 +32,12 @@ function setUpArgs(
       ? client.commands.get(commandNameUPPERCASE.toLowerCase())
       : null,
 
-    async getUser(mentionID: string) {
+    async getUser(mentionID: string): Promise<User> {
       let idArray = mentionID.match(/\d+/);
       if (!idArray) throw "No ID!";
       let id = idArray[0];
       try {
-        let User = await message.client.users.fetch(id);
+        let User = await this.client.users.fetch(id);
         return User;
       } catch (e) {
         this.message.channel.send({
@@ -49,14 +51,13 @@ function setUpArgs(
         return null;
       }
     },
-
-    async getMember(mentionID: string) {
+    async getMember(mentionID: string): Promise<GuildMember> {
       let idArray = mentionID.match(/\d+/);
       if (!idArray[0]) return null;
       let id = idArray[0];
       if (!id) return null;
       try {
-        let guildMember = await message.guild.members.fetch(id);
+        let guildMember = await this.message.guild.members.fetch(id);
         return guildMember;
       } catch (e) {
         this.message.channel.send({
@@ -71,7 +72,11 @@ function setUpArgs(
       }
     },
 
-    compareRolePostion(commandRole, otherRole, toReturnMsg): boolean {
+    compareRolePostion(
+      commandRole: Role,
+      otherRole: Role,
+      toReturnMsg: boolean
+    ): boolean {
       let { author } = this.message;
       if (toReturnMsg) {
         if (
@@ -99,5 +104,3 @@ function setUpArgs(
   // Return
   return [commandNameUPPERCASE, argsArray, UtilArgs];
 }
-
-export default setUpArgs;

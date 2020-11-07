@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.setUpArgs = void 0;
 const embeds_1 = require("../structures/embeds");
 function setUpArgs(client, message, DB) {
     const [commandNameUPPERCASE, ...argsArray] = message.content
@@ -22,7 +23,7 @@ function setUpArgs(client, message, DB) {
                 throw "No ID!";
             let id = idArray[0];
             try {
-                let User = await message.client.users.fetch(id);
+                let User = await this.client.users.fetch(id);
                 return User;
             }
             catch (e) {
@@ -40,7 +41,7 @@ function setUpArgs(client, message, DB) {
             if (!id)
                 return null;
             try {
-                let guildMember = await message.guild.members.fetch(id);
+                let guildMember = await this.message.guild.members.fetch(id);
                 return guildMember;
             }
             catch (e) {
@@ -70,4 +71,4 @@ function setUpArgs(client, message, DB) {
     };
     return [commandNameUPPERCASE, argsArray, UtilArgs];
 }
-exports.default = setUpArgs;
+exports.setUpArgs = setUpArgs;

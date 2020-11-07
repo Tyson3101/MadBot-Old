@@ -2,7 +2,10 @@ import { commandInterFace } from "../../interfaces/Command";
 import { GuildMember } from "discord.js";
 import { invaildPermissionsCustom } from "../../structures/embeds";
 import { guildDataBase } from "../../structures/DataBase";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
+import {
+  GuildDataBaseInterface,
+  infringementInterface,
+} from "../../interfaces/GuildDataBase";
 
 export const command: commandInterFace = {
   name: "ban",
@@ -33,6 +36,7 @@ export const command: commandInterFace = {
   async run(client, message, { args, ...util }) {
     let member: GuildMember = await util.getMember(args[0]);
     if (!member) return;
+    console.log("Command ran");
     if (member.id === message.guild.ownerID)
       return message.channel.send({
         embed: invaildPermissionsCustom(
@@ -41,6 +45,7 @@ export const command: commandInterFace = {
           `I can't perform this action on this member.`
         ),
       });
+    console.log("First if statement");
     if (member.id === client.user.id)
       return message.channel.send({
         embed: invaildPermissionsCustom(
@@ -49,6 +54,7 @@ export const command: commandInterFace = {
           `I can't perform this action on this member.`
         ),
       });
+    console.log("2nd if statement");
     if (message.member.id !== message.guild.ownerID) {
       if (
         !util.compareRolePostion(
@@ -72,13 +78,32 @@ export const command: commandInterFace = {
             `I can't perform this action on this member.`
           ),
         });
+      console.log("3rd if statement");
     }
+    console.log("4th if statement");
     let reason = "[BAN] No reason provided.";
     if (args[1]) reason = args[1];
-    util.DB;
-    const newDB: GuildDataBaseInterface = {
-      ...util.DB,
+    // infringementInterface>
+    let banCaseCount = util.DB.moderation.bans.size;
+    let caseCaseCount = util.DB.moderation.all.size;
+    const moderationDB: infringementInterface = {
+      victim: member.user,
+      moderator: message.author,
+      reason: reason,
+      banCaseCount: banCaseCount + 1,
+      caseCount: caseCaseCount + 1,
+      infringementType: "BAN",
     };
-    await guildDataBase.set(message.guild.id, newDB);
+    console.log(util.DB.moderation.all);
+    console.log(util.DB.moderation.bans);
+    console.log(util.DB.moderation.kicks);
+    //util.DB.moderation.all.set(member.id, moderationDB);
+    //util.DB.moderation.bans.set(member.id, moderationDB);
+    //util.DB.moderation.caseCount += 1;
+    //await guildDataBase.set(message.guild.id, { ...util.DB });
+    member
+      .send(`You have been banned from ${message.guild.name} for "${reason}".`)
+      .catch((e) => e);
+    //await member.ban({ reason: reason, days: 7 });
   },
 };

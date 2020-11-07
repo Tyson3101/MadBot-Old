@@ -8,7 +8,7 @@ const MemberCommandCheck_1 = __importDefault(require("../functions/MemberCommand
 const DataBase_1 = require("../structures/DataBase");
 const GetGuildDB_1 = require("../functions/GetGuildDB");
 const Embeds_1 = require("../structures/Embeds");
-const SetUpArgs_1 = __importDefault(require("../functions/SetUpArgs"));
+const SetUpArgs_1 = require("../functions/SetUpArgs");
 exports.event = {
     event: "message",
     async run(client, message) {
@@ -22,7 +22,7 @@ exports.event = {
             if (!message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"]))
                 return;
         }
-        const [commandNameUPPERCASE, args, Util] = SetUpArgs_1.default(client, message, guildDB);
+        const [commandNameUPPERCASE, args, Util] = SetUpArgs_1.setUpArgs(client, message, guildDB);
         const commandName = commandNameUPPERCASE.toLowerCase();
         const command = client.commands.get(commandName)
             ? client.commands.get(commandName)

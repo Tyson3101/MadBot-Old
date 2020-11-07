@@ -1,7 +1,7 @@
 import { Collection, Snowflake, User } from "discord.js";
 
-type infringementType = "BAN" | "KICK" | "WARN" | "MUTE";
-interface infringementInterface {
+export type infringementType = "BAN" | "KICK" | "WARN" | "MUTE";
+export interface infringementInterface {
   victim: User;
   moderator: User;
   reason: string;
@@ -11,12 +11,12 @@ interface infringementInterface {
   endDate?: Date;
 }
 
-interface moderationInterface {
-  bans: Collection<Snowflake, infringementInterface>;
-  kicks: Collection<Snowflake, infringementInterface>;
-  warns: Collection<Snowflake, infringementInterface>;
-  mutes: Collection<Snowflake, infringementInterface>;
-  all: Collection<Snowflake, infringementInterface>;
+export interface moderationInterface {
+  bans: Map<Snowflake, infringementInterface>;
+  kicks: Map<Snowflake, infringementInterface>;
+  warns: Map<Snowflake, infringementInterface>;
+  mutes: Map<Snowflake, infringementInterface>;
+  all: Map<Snowflake, infringementInterface>;
   caseCount: number;
   activeCases: number;
 }

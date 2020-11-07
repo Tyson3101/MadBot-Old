@@ -2,6 +2,7 @@ import { Collection, Guild } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
+import { gu } from "date-fns/locale";
 
 export const getGuildDB = async (
   client: DiscordBot,
@@ -9,12 +10,20 @@ export const getGuildDB = async (
   InputtedDB: any = null // Used to check other DB's I may want to use. Defaults to guild
 ): Promise<GuildDataBaseInterface> => {
   // Says it returns a promise which resloves into a GuildDataBaseInterface>
+  const DB = InputtedDB || guildDataBase;
+  // Checks if guild is null (If is it was sent in dm.)
   if (guild) {
-    // Checks if guild is null (If is it was sent in dm.)
-    const DB = InputtedDB || guildDataBase;
-    let DBguild = await DB.get(guild.id);
-    if (DBguild) return DBguild;
-    else {
+    let DBguildRaw: GuildDataBaseInterface = await DB.get(guild.id);
+    if (DBguildRaw) {
+      const DBguild: GuildDataBaseInterface = {
+        ...DBguildRaw,
+        ownerID: guild.ownerID,
+        memberCount: guild.memberCount,
+        name: guild.name,
+      };
+      console.log(DBguild);
+      return DBguild;
+    } else {
       let guildObj: GuildDataBaseInterface = {
         name: guild.name,
         id: guild.id,
@@ -22,11 +31,11 @@ export const getGuildDB = async (
         memberCount: guild.memberCount,
         prefix: "!",
         moderation: {
-          bans: new Collection(),
-          kicks: new Collection(),
-          mutes: new Collection(),
-          warns: new Collection(),
-          all: new Collection(),
+          bans: new Map(),
+          kicks: new Map(),
+          mutes: new Map(),
+          warns: new Map(),
+          all: new Map(),
           activeCases: 0,
           caseCount: 0,
         },
@@ -35,14 +44,21 @@ export const getGuildDB = async (
       return await DB.get(guild.id);
     }
   } else {
-    let guildObj: GuildDataBaseInterface = {
-      name: null,
-      ownerID: null,
+    return {
+      name: guild.name,
       id: null,
-      memberCount: 0,
+      ownerID: null,
+      memberCount: null,
       prefix: "!",
-      moderation: null,
+      moderation: {
+        bans: null,
+        kicks: null,
+        mutes: null,
+        warns: null,
+        all: null,
+        activeCases: 0,
+        caseCount: 0,
+      },
     };
-    return guildObj;
   }
 };

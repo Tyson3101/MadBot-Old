@@ -4,7 +4,7 @@ import { guildDataBase } from "../structures/DataBase";
 import { getGuildDB } from "../functions/GetGuildDB";
 import { errorCommandEmbed, clientInfo } from "../structures/Embeds";
 import { MessageEventInterface } from "../interfaces/Events";
-import setUpArgs from "../functions/SetUpArgs";
+import { setUpArgs } from "../functions/SetUpArgs";
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
