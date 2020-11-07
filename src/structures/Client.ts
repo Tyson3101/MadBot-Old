@@ -1,4 +1,10 @@
-import { Client, Collection, Snowflake, Intents } from "discord.js";
+import {
+  Client,
+  Collection,
+  Snowflake,
+  Intents,
+  ClientOptions,
+} from "discord.js";
 import { commandInterFace } from "../interfaces/Command";
 import { developerInterface } from "../interfaces/Developers";
 import { EventInterface } from "../interfaces/Events";
@@ -9,12 +15,9 @@ export class DiscordBot extends Client {
   commands: Collection<string, commandInterFace>; // Key, Value
   developers: Collection<Snowflake, developerInterface>; // Key, Value
   supportServer: string;
-  constructor() {
-    super({
-      // Client
-      ws: { intents: Intents.ALL }, // Intents
-      partials: ["CHANNEL", "MESSAGE", "REACTION"], // Client Options (Partials)
-    });
+  constructor(clientOptions?: ClientOptions) {
+    super(clientOptions);
+
     this.supportServer = "https://discord.gg/uP5VV6H"; // Support Server
     this.developers = new Collection();
     this.commands = new Collection();

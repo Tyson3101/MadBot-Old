@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsCustom = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsCustom = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.nsfwCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -17,6 +17,24 @@ exports.dmCommandEmbed = (client, user) => {
         color: "DARK_VIVID_PINK",
         title: "Invaild Channel",
         description: ":x: This command cannot be used in a DM Channel. :x:",
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+};
+exports.nsfwCommandEmbed = (client, user) => {
+    return new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
+        },
+        color: "DARK_VIVID_PINK",
+        title: "Invaild Channel",
+        description: ":x: This command can only be used in a NSFW Channel. :x:",
         footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),

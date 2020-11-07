@@ -12,6 +12,8 @@ exports.EventHandlerInit = (client) => {
         .filter((file) => file.endsWith(".js"));
     events.forEach((fileEvent) => {
         const event = require(`../events/${fileEvent}`).event;
+        if (!event || client.events.has(event.event))
+            return;
         client.events.set(event.event, event);
         if (event.event === "ready")
             client.once(event.event, event.run.bind(null, client));

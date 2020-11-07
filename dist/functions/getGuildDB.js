@@ -21,12 +21,13 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
         }
     }
     else {
-        return {
+        let guildObj = {
             name: null,
             ownerID: null,
             id: null,
             memberCount: 0,
             prefix: "!",
         };
+        return guildObj;
     }
 };

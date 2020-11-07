@@ -26,12 +26,13 @@ export const getGuildDB = async (
       return await DB.get(guild.id);
     }
   } else {
-    return {
+    let guildObj: GuildDataBaseInterface = {
       name: null,
       ownerID: null,
       id: null,
       memberCount: 0,
       prefix: "!",
     };
+    return guildObj;
   }
 };

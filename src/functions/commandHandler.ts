@@ -1,4 +1,5 @@
 import fs from "fs";
+import { commandInterFace } from "../interfaces/Command";
 import { DiscordBot } from "../structures/Client";
 
 export const CommandHandlerInit = (client: DiscordBot): void => {
@@ -10,6 +11,7 @@ export const CommandHandlerInit = (client: DiscordBot): void => {
       .filter((filename) => filename.endsWith(".js"));
     commands.forEach((fileCommand) => {
       const { command } = require(`../commands/${catergory}/${fileCommand}`); // From File
+      if (!command || client.commands.has(command.name)) return;
       const addCommand = {
         ...command,
         catergory: catergory, // Adds catergory property here to make it easier, is the folder name of that command file

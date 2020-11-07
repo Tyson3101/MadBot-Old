@@ -14,6 +14,8 @@ exports.CommandHandlerInit = (client) => {
             .filter((filename) => filename.endsWith(".js"));
         commands.forEach((fileCommand) => {
             const { command } = require(`../commands/${catergory}/${fileCommand}`);
+            if (!command || client.commands.has(command.name))
+                return;
             const addCommand = {
                 ...command,
                 catergory: catergory,

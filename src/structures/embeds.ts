@@ -30,6 +30,28 @@ export const dmCommandEmbed = (
   });
 };
 
+export const nsfwCommandEmbed = (
+  client: DiscordBot,
+  user: User
+): MessageEmbed => {
+  return new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    color: "DARK_VIVID_PINK",
+    title: "Invaild Channel",
+    description: ":x: This command can only be used in a NSFW Channel. :x:",
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};
+
 export const ownerCommandEmbed = (
   client: DiscordBot,
   user: User

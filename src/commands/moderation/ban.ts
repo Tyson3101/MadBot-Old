@@ -6,6 +6,7 @@ export const command: commandInterFace = {
   description: "Bans a member from the server.",
   usage: ["ban [Member] (Reason)"],
   example: ["ban @Tyson Dm Advertising"],
+  nsfw: true,
   args: [
     {
       name: "Member",
@@ -25,8 +26,6 @@ export const command: commandInterFace = {
     },
   ],
   aliases: [],
-  guildOnly: true,
-  devOnly: false,
   permission: ["BAN_MEMBERS", true],
   async run(client, message, { args, ...util }) {
     let member: GuildMember = await util.getMember(args[0]);

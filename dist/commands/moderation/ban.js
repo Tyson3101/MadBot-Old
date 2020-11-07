@@ -6,6 +6,7 @@ exports.command = {
     description: "Bans a member from the server.",
     usage: ["ban [Member] (Reason)"],
     example: ["ban @Tyson Dm Advertising"],
+    nsfw: true,
     args: [
         {
             name: "Member",
@@ -25,8 +26,6 @@ exports.command = {
         },
     ],
     aliases: [],
-    guildOnly: true,
-    devOnly: false,
     permission: ["BAN_MEMBERS", true],
     async run(client, message, { args, ...util }) {
         let member = await util.getMember(args[0]);

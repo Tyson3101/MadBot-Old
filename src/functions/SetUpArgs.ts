@@ -51,7 +51,6 @@ function setUpArgs(
     },
 
     async getMember(mentionID: string) {
-      console.log(mentionID);
       let idArray = mentionID.match(/\d+/);
       if (!idArray) throw "No ID!";
       let id = idArray[0];

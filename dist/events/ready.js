@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.event = void 0;
+function returnMultiple(stringToRepeat, timesToRepeat) {
+    let array = [];
+    for (let i = 0; i < timesToRepeat; i++)
+        array.push(stringToRepeat);
+    return array.join("");
+}
 exports.event = {
     event: "ready",
     async run(client) {
@@ -15,6 +21,7 @@ exports.event = {
         });
         console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
+Loggen in with the token ${client.token.slice(0, 34)}${returnMultiple("x", client.token.slice(34).length)}
 -----------------  Stats  ----------------
 Developers: ${client.developers.size}
 Guilds: ${client.guilds.cache.size}

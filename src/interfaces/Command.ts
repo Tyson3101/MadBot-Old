@@ -8,12 +8,13 @@ export interface commandInterFace {
   name: string;
   description: string;
   usage: string[];
-  example: string[];
+  example?: string[];
   args: args[];
   catergory?: string;
-  aliases: string[];
-  guildOnly: boolean;
-  devOnly: boolean;
+  aliases?: string[];
+  guildOnly?: boolean;
+  devOnly?: boolean;
+  nsfw?: boolean;
   permission?: [Discord.PermissionString, boolean | Discord.PermissionString];
   run: (
     client: DiscordBot,

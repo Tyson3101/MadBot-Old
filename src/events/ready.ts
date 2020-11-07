@@ -1,5 +1,11 @@
 import { ReadyEventInterface } from "../interfaces/Events";
 
+function returnMultiple(stringToRepeat: string, timesToRepeat: number): string {
+  let array = [];
+  for (let i = 0; i < timesToRepeat; i++) array.push(stringToRepeat);
+  return array.join("");
+}
+
 export const event: ReadyEventInterface = {
   event: "ready",
   async run(client) {
@@ -14,6 +20,10 @@ export const event: ReadyEventInterface = {
     });
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
+Loggen in with the token ${client.token.slice(0, 34)}${returnMultiple(
+      "x",
+      client.token.slice(34).length
+    )}
 -----------------  Stats  ----------------
 Developers: ${client.developers.size}
 Guilds: ${client.guilds.cache.size}

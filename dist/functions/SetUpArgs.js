@@ -33,7 +33,6 @@ function setUpArgs(client, message, DB) {
             }
         },
         async getMember(mentionID) {
-            console.log(mentionID);
             let idArray = mentionID.match(/\d+/);
             if (!idArray)
                 throw "No ID!";
