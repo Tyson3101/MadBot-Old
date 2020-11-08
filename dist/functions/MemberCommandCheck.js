@@ -39,7 +39,7 @@ function default_1(client, message, util, command) {
         return message.channel.send({
             embed: Embeds_1.invaildPermissionsBotCommandEmbed(client, message.author, command.permission[1]),
         });
-    if (command.args.filter((arg) => arg.required).length > util.args.length)
+    if (command.args?.filter((arg) => arg.required).length > util.args.length)
         return message.channel.send({
             embed: Embeds_1.noArgsCommandHelpEmbed(client, message.author, command, util.prefix),
         });

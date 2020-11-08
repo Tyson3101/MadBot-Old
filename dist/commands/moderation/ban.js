@@ -2,20 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
 const embeds_1 = require("../../structures/embeds");
+const DataBase_1 = require("../../structures/DataBase");
 exports.command = {
     name: "ban",
     description: "Bans a member from the server.",
     usage: ["ban [Member] (Reason)"],
     example: ["ban @Tyson Dm Advertising"],
-    nsfw: true,
     args: [
         {
             name: "Member",
-            type: ["Member", "ID"],
+            type: ["User Mention", "UserID"],
             description: "Member to ban",
             example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
             required: true,
-            order: 1,
         },
         {
             name: "Reason",
@@ -23,7 +22,6 @@ exports.command = {
             description: "Reason for the ban",
             example: ["Advertising", "Being Rude"],
             required: false,
-            order: 2,
         },
     ],
     aliases: [],
@@ -69,7 +67,11 @@ exports.command = {
         };
         console.log(util.DB.moderation.all);
         console.log(util.DB.moderation.bans);
-        console.log(util.DB.moderation.kicks);
+        console.log(util.DB.moderation.kicks.has("4"));
+        util.DB.moderation.bans.set(member.id, moderationDB);
+        util.DB.moderation.all.set(member.id, moderationDB);
+        util.DB.moderation.caseCount += 1;
+        await DataBase_1.guildDataBase.set(message.guild.id, { ...util.DB });
         member
             .send(`You have been banned from ${message.guild.name} for "${reason}".`)
             .catch((e) => e);

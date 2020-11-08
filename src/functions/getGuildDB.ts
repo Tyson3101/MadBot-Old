@@ -21,7 +21,6 @@ export const getGuildDB = async (
         memberCount: guild.memberCount,
         name: guild.name,
       };
-      console.log(DBguild);
       return DBguild;
     } else {
       let guildObj: GuildDataBaseInterface = {
@@ -41,7 +40,7 @@ export const getGuildDB = async (
         },
       };
       await DB.set(guild.id, guildObj);
-      return await DB.get(guild.id);
+      return guildObj;
     }
   } else {
     return {

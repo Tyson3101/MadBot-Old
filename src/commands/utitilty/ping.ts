@@ -6,7 +6,6 @@ export const command: commandInterFace = {
   description: "Shows the API Latency.",
   usage: ["ping"],
   example: ["ping"],
-  args: [],
   aliases: ["latency"],
   guildOnly: false,
   devOnly: false,

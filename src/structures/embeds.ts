@@ -202,6 +202,7 @@ export const CommandHelpEmbed = (
   prefix: string
 ): MessageEmbed => {
   const command = client.commands.get(commandName);
+  if (command.public === false && !client.developers.has(user.id)) return;
   const { args } = command;
   let embed = new MessageEmbed({
     author: {
@@ -223,16 +224,21 @@ ${
   command.permission && command.permission[0]
     ? `**Required Permission:** ${command.permission[0]}\n`
     : ""
-}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
-${
-  command.example
-    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
-    : ""
 }${
-          command.aliases[0]
+          command.usage
+            ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
+            : ""
+        }${
+          command.example
+            ? `**Example:** ${prefix}${command.example.join(
+                ` **|** ${prefix}`
+              )}\n`
+            : ""
+        }${
+          command.aliases?.length
             ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : "\n"
-        }${command.args[0] ? `**Arguments Info:**` : ""}`,
+        }${command.args?.length ? `**Arguments Info:**` : ""}`,
       },
     ],
     footer: {
@@ -240,19 +246,27 @@ ${
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-  args.forEach((argument, i: number) => {
-    i++;
-    embed.addField(
-      `${i}: ${argument.name}`,
-      `**Type:** ${
-        Array.isArray(argument.type) ? argument.type.join(", ") : argument.type
-      }\n**Description:** ${
-        argument.description
-      }\n**Example:** ${argument.example.join(
-        ` **|** `
-      )}\n**Required:** ${firstCap(argument.required.toString())}`
-    );
-  });
+  if (command.args?.length) {
+    args.forEach((argument, i: number) => {
+      i++;
+      embed.addField(
+        `${i}: ${argument.name}`,
+        `**Type:** ${
+          Array.isArray(argument.type)
+            ? argument.type.join(", ")
+            : argument.type
+        }\n${
+          argument.description
+            ? `**Description:** ${argument.description}\n`
+            : ""
+        }${
+          argument.example?.length
+            ? `**Example:** ${argument.example.join(` **|** `)}\n`
+            : ""
+        }**Required:** ${firstCap(argument.required.toString())}`
+      );
+    });
+  }
   return embed;
 };
 
@@ -397,14 +411,19 @@ export const helpCatergoryEmbed = (
   });
   client.commands
     .filter((cmd) => cmd.catergory === catergory)
-    .filter((cmd) => cmd.name !== "help")
+    .filter((cmd) => cmd.public !== false)
     .forEach((command: commandInterFace, commandName: string) => {
       embed.addField(
         `${prefix}help ${commandName}`,
-        `${command.description}`,
+        `${
+          command.description
+            ? command.description
+            : `Help for ${firstCap(commandName)}`
+        }`,
         true
       );
     });
+  if (embed.fields?.length) return helpEmbed(client, user, prefix);
   return embed;
 };
 

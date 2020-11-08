@@ -153,6 +153,8 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
 };
 exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
     const command = client.commands.get(commandName);
+    if (command.public === false && !client.developers.has(user.id))
+        return;
     const { args } = command;
     let embed = new discord_js_1.MessageEmbed({
         author: {
@@ -172,12 +174,13 @@ exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
 **Catergory:** ${FirstCap_1.firstCap(command.catergory)}
 ${command.permission && command.permission[0]
                     ? `**Required Permission:** ${command.permission[0]}\n`
-                    : ""}**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}
-${command.example
+                    : ""}${command.usage
+                    ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
+                    : ""}${command.example
                     ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
-                    : ""}${command.aliases[0]
+                    : ""}${command.aliases?.length
                     ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-                    : "\n"}${command.args[0] ? `**Arguments Info:**` : ""}`,
+                    : "\n"}${command.args?.length ? `**Arguments Info:**` : ""}`,
             },
         ],
         footer: {
@@ -185,10 +188,18 @@ ${command.example
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
-    args.forEach((argument, i) => {
-        i++;
-        embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type) ? argument.type.join(", ") : argument.type}\n**Description:** ${argument.description}\n**Example:** ${argument.example.join(` **|** `)}\n**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
-    });
+    if (command.args?.length) {
+        args.forEach((argument, i) => {
+            i++;
+            embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type)
+                ? argument.type.join(", ")
+                : argument.type}\n${argument.description
+                ? `**Description:** ${argument.description}\n`
+                : ""}${argument.example?.length
+                ? `**Example:** ${argument.example.join(` **|** `)}\n`
+                : ""}**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        });
+    }
     return embed;
 };
 exports.prefixEmbed = (client, member, db, prefix = null) => {
@@ -297,10 +308,14 @@ exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
     });
     client.commands
         .filter((cmd) => cmd.catergory === catergory)
-        .filter((cmd) => cmd.name !== "help")
+        .filter((cmd) => cmd.public !== false)
         .forEach((command, commandName) => {
-        embed.addField(`${prefix}help ${commandName}`, `${command.description}`, true);
+        embed.addField(`${prefix}help ${commandName}`, `${command.description
+            ? command.description
+            : `Help for ${FirstCap_1.firstCap(commandName)}`}`, true);
     });
+    if (embed.fields?.length)
+        return exports.helpEmbed(client, user, prefix);
     return embed;
 };
 exports.pingEmbed = (client, user, { latency, ping }) => {

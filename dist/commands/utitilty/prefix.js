@@ -10,12 +10,11 @@ exports.command = {
     example: ["prefix ?", "prefix Orange"],
     args: [
         {
-            name: "Prefix",
+            name: "New Prefix",
             type: ["Prefix"],
             description: "Prefix to change.",
             example: ["$", "z!"],
             required: false,
-            order: 1,
         },
     ],
     aliases: [],

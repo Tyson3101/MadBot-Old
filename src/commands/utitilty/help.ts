@@ -9,20 +9,17 @@ import { catergoryType } from "../../interfaces/catergoryType";
 
 export const command: commandInterFace = {
   name: "help",
-  description: "Help",
   usage: ["help (command/catergory)"],
-  example: ["help moderation", "help"],
-  guildOnly: false,
-  devOnly: false,
+  example: ["help moderation", "help", "help info"],
   aliases: [],
+  public: false,
   args: [
     {
-      name: "Command/Catergory",
+      name: `Command/Catergory`,
       required: false,
       example: ["ban", "moderation"],
       description: "Command Or Catergory to help with",
       type: "Text",
-      order: 1,
     },
   ],
   async run(client, message, { args, ...util }) {

@@ -13,7 +13,6 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
                 memberCount: guild.memberCount,
                 name: guild.name,
             };
-            console.log(DBguild);
             return DBguild;
         }
         else {
@@ -34,7 +33,7 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
                 },
             };
             await DB.set(guild.id, guildObj);
-            return await DB.get(guild.id);
+            return guildObj;
         }
     }
     else {

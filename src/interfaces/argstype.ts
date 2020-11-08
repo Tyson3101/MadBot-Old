@@ -1,6 +1,11 @@
 export type argsType =  // ALl possible args type.
-  | "Member"
-  | "ID"
+  | "User Mention"
+  | "Role Mention"
+  | "Channel Mention"
+  | "GuildID"
+  | "UserID"
+  | "ChannelID"
+  | "RoleID"
   | "Text"
   | "Number"
   | "Time"

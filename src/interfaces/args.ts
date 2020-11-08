@@ -17,9 +17,8 @@ export interface argsInterface {
   name: string;
   type: argsType | argsType[];
   required: boolean;
-  description: string;
-  example: string[];
-  order: number;
+  description?: string;
+  example?: string[];
 }
 
 export interface utilObjInterface {

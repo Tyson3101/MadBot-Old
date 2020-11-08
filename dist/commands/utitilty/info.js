@@ -5,14 +5,9 @@ const Embeds_1 = require("../../structures/Embeds");
 exports.command = {
     name: "info",
     description: "Shows info of MadBot",
-    usage: ["info"],
-    example: null,
-    args: [],
     aliases: ["stats"],
-    guildOnly: false,
-    devOnly: false,
     async run(client, message, util) {
         const { prefix } = util;
-        message.channel.send(Embeds_1.clientInfo(client, message.author, prefix));
+        message.channel.send({ embed: Embeds_1.clientInfo(client, message.author, prefix) });
     },
 };

@@ -12,15 +12,13 @@ export const command: commandInterFace = {
   description: "Bans a member from the server.",
   usage: ["ban [Member] (Reason)"],
   example: ["ban @Tyson Dm Advertising"],
-  nsfw: true,
   args: [
     {
       name: "Member",
-      type: ["Member", "ID"],
+      type: ["User Mention", "UserID"],
       description: "Member to ban",
       example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
       required: true,
-      order: 1,
     },
     {
       name: "Reason",
@@ -28,7 +26,6 @@ export const command: commandInterFace = {
       description: "Reason for the ban",
       example: ["Advertising", "Being Rude"],
       required: false,
-      order: 2,
     },
   ],
   aliases: [],
@@ -96,11 +93,11 @@ export const command: commandInterFace = {
     };
     console.log(util.DB.moderation.all);
     console.log(util.DB.moderation.bans);
-    console.log(util.DB.moderation.kicks);
-    //util.DB.moderation.all.set(member.id, moderationDB);
-    //util.DB.moderation.bans.set(member.id, moderationDB);
-    //util.DB.moderation.caseCount += 1;
-    //await guildDataBase.set(message.guild.id, { ...util.DB });
+    console.log(util.DB.moderation.kicks.has("4"));
+    util.DB.moderation.bans.set(member.id, moderationDB);
+    util.DB.moderation.all.set(member.id, moderationDB);
+    util.DB.moderation.caseCount += 1;
+    await guildDataBase.set(message.guild.id, { ...util.DB });
     member
       .send(`You have been banned from ${message.guild.name} for "${reason}".`)
       .catch((e) => e);
