@@ -5,33 +5,37 @@ import {
   invaildPermissionsCustom,
   sucessPunishEmbed,
 } from "../../structures/embeds";
+import { getTypeCaseCount as kickCaseCount } from "../../functions/GetGuildDB";
 import { guildDataBase } from "../../structures/DataBase";
-import { infringementInterface } from "../../interfaces/GuildDataBase";
-import { getTypeCaseCount } from "../../functions/getGuildDB";
+import {
+  GuildDataBaseInterface,
+  infringementInterface,
+  infringementType,
+} from "../../interfaces/GuildDataBase";
 
 export const command: commandInterFace = {
-  name: "ban",
-  description: "Bans a member from the server.",
-  usage: ["ban [Member] (Reason)"],
-  example: ["ban @Tyson Dm Advertising"],
+  name: "kick",
+  description: "Kicks a member from the server.",
+  usage: ["kick [Member] (Reason)"],
+  example: ["kick @Tyson Dm Advertising"],
   args: [
     {
       name: "Member",
       type: ["User Mention", "UserID"],
-      description: "Member to ban",
+      description: "Member to kick",
       example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
       required: true,
     },
     {
       name: "Reason",
       type: "Reason",
-      description: "Reason for the ban",
+      description: "Reason for the kick",
       example: ["Advertising", "Being Rude"],
       required: false,
     },
   ],
   aliases: [],
-  permission: ["BAN_MEMBERS", true],
+  permission: ["KICK_MEMBERS", true],
   async run(client, message, util) {
     let { args } = util;
     let member: GuildMember = await util.getMember(args[0]);
@@ -61,7 +65,7 @@ export const command: commandInterFace = {
       )
         return;
       if (
-        !member.bannable ||
+        !member.kickable ||
         util.compareRolePostion(
           message.guild.me.roles.highest,
           member.roles.highest,
@@ -78,9 +82,9 @@ export const command: commandInterFace = {
     }
     let reason = "No reason provided.";
     if (args[1]) reason = args.slice(1).join(" ");
-    let typeCaseCount = getTypeCaseCount("BAN", util.DB) + 1;
-    let caseCount = ++util.DB.moderation.caseCount;
     let backUpDB = { ...util.DB };
+    let typeCaseCount = kickCaseCount("KICK", util.DB) + 1;
+    let caseCount = ++util.DB.moderation.caseCount;
     const moderationDB: infringementInterface = {
       victim: {
         id: member.id,
@@ -95,12 +99,12 @@ export const command: commandInterFace = {
       reason: reason,
       typeCaseCount: typeCaseCount,
       caseCount: caseCount,
-      infringementType: "BAN",
+      infringementType: "KICK",
     };
 
-    util.DB.moderation.bans[member.id]
-      ? util.DB.moderation.bans[member.id].push(moderationDB)
-      : (util.DB.moderation.bans[member.id] = [moderationDB]);
+    util.DB.moderation.kicks[member.id]
+      ? util.DB.moderation.kicks[member.id].push(moderationDB)
+      : (util.DB.moderation.kicks[member.id] = [moderationDB]);
     util.DB.moderation.all[member.id]
       ? util.DB.moderation.all[member.id].push(moderationDB)
       : (util.DB.moderation.all[member.id] = [moderationDB]);
@@ -121,8 +125,8 @@ export const command: commandInterFace = {
               message.guild.iconURL({ format: "png", dynamic: true }) ||
               client.user.displayAvatarURL({ format: "png" }),
           },
-          title: `Banned from ${message.guild.name}`,
-          description: `You have been banned from ${message.guild.name} for "${reason}".\nYou were banned by ${message.author.tag}.`,
+          title: `Kicked from ${message.guild.name}`,
+          description: `You have been kicked from ${message.guild.name} for "${reason}".\nYou were kicked by ${message.author.tag}.`,
           footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -131,12 +135,12 @@ export const command: commandInterFace = {
       })
       .catch((e) => e);
     try {
-      await member.ban({ reason: reason });
+      await member.kick(reason);
       await message.channel.send({
         embed: sucessPunishEmbed(client, member.user, util, {
-          title: "Banned!",
+          title: "Kicked!",
           reason: reason,
-          casenumber: caseCount,
+          casenumber: util.DB.moderation.caseCount,
         }),
       });
     } catch {

@@ -1,15 +1,16 @@
-import Discord, { TextChannel } from "discord.js";
+import Discord, { MessageEmbed, TextChannel } from "discord.js";
 import commandCheck from "../functions/MemberCommandCheck";
 import { guildDataBase } from "../structures/DataBase";
 import { getGuildDB } from "../functions/GetGuildDB";
 import { errorCommandEmbed, clientInfo } from "../structures/Embeds";
 import { MessageEventInterface } from "../interfaces/Events";
 import { setUpArgs } from "../functions/SetUpArgs";
+
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
     if (message.author.bot) return;
-    let prefix: string = "!";
+    let prefix: string = client.prefix;
     let guildDB;
     guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
     prefix = guildDB.prefix;
@@ -18,13 +19,9 @@ export const event: MessageEventInterface = {
         !message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"])
       )
         return;
-    } // Checks Prefix
+    }
 
-    const [commandNameUPPERCASE, args, Util] = setUpArgs(
-      client,
-      message,
-      guildDB
-    );
+    const [commandNameUPPERCASE, , Util] = setUpArgs(client, message, guildDB);
     const commandName = commandNameUPPERCASE.toLowerCase();
     const command = client.commands.get(commandName)
       ? client.commands.get(commandName)

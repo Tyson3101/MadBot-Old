@@ -3,31 +3,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
 const discord_js_1 = require("discord.js");
 const embeds_1 = require("../../structures/embeds");
+const GetGuildDB_1 = require("../../functions/GetGuildDB");
 const DataBase_1 = require("../../structures/DataBase");
-const getGuildDB_1 = require("../../functions/getGuildDB");
 exports.command = {
-    name: "ban",
-    description: "Bans a member from the server.",
-    usage: ["ban [Member] (Reason)"],
-    example: ["ban @Tyson Dm Advertising"],
+    name: "kick",
+    description: "Kicks a member from the server.",
+    usage: ["kick [Member] (Reason)"],
+    example: ["kick @Tyson Dm Advertising"],
     args: [
         {
             name: "Member",
             type: ["User Mention", "UserID"],
-            description: "Member to ban",
+            description: "Member to kick",
             example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
             required: true,
         },
         {
             name: "Reason",
             type: "Reason",
-            description: "Reason for the ban",
+            description: "Reason for the kick",
             example: ["Advertising", "Being Rude"],
             required: false,
         },
     ],
     aliases: [],
-    permission: ["BAN_MEMBERS", true],
+    permission: ["KICK_MEMBERS", true],
     async run(client, message, util) {
         let { args } = util;
         let member = await util.getMember(args[0]);
@@ -44,7 +44,7 @@ exports.command = {
         if (message.member.id !== message.guild.ownerID) {
             if (!util.compareRolePostion(message.member.roles.highest, member.roles.highest))
                 return;
-            if (!member.bannable ||
+            if (!member.kickable ||
                 util.compareRolePostion(message.guild.me.roles.highest, member.roles.highest, true))
                 return message.channel.send({
                     embed: embeds_1.invaildPermissionsCustom(client, message.author, `I can't perform this action on this member.`),
@@ -53,9 +53,9 @@ exports.command = {
         let reason = "No reason provided.";
         if (args[1])
             reason = args.slice(1).join(" ");
-        let typeCaseCount = getGuildDB_1.getTypeCaseCount("BAN", util.DB) + 1;
-        let caseCount = ++util.DB.moderation.caseCount;
         let backUpDB = { ...util.DB };
+        let typeCaseCount = GetGuildDB_1.getTypeCaseCount("KICK", util.DB) + 1;
+        let caseCount = ++util.DB.moderation.caseCount;
         const moderationDB = {
             victim: {
                 id: member.id,
@@ -70,11 +70,11 @@ exports.command = {
             reason: reason,
             typeCaseCount: typeCaseCount,
             caseCount: caseCount,
-            infringementType: "BAN",
+            infringementType: "KICK",
         };
-        util.DB.moderation.bans[member.id]
-            ? util.DB.moderation.bans[member.id].push(moderationDB)
-            : (util.DB.moderation.bans[member.id] = [moderationDB]);
+        util.DB.moderation.kicks[member.id]
+            ? util.DB.moderation.kicks[member.id].push(moderationDB)
+            : (util.DB.moderation.kicks[member.id] = [moderationDB]);
         util.DB.moderation.all[member.id]
             ? util.DB.moderation.all[member.id].push(moderationDB)
             : (util.DB.moderation.all[member.id] = [moderationDB]);
@@ -94,8 +94,8 @@ exports.command = {
                     url: message.guild.iconURL({ format: "png", dynamic: true }) ||
                         client.user.displayAvatarURL({ format: "png" }),
                 },
-                title: `Banned from ${message.guild.name}`,
-                description: `You have been banned from ${message.guild.name} for "${reason}".\nYou were banned by ${message.author.tag}.`,
+                title: `Kicked from ${message.guild.name}`,
+                description: `You have been kicked from ${message.guild.name} for "${reason}".\nYou were kicked by ${message.author.tag}.`,
                 footer: {
                     text: `${client.user.username} ©`,
                     iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -104,12 +104,12 @@ exports.command = {
         })
             .catch((e) => e);
         try {
-            await member.ban({ reason: reason });
+            await member.kick(reason);
             await message.channel.send({
                 embed: embeds_1.sucessPunishEmbed(client, member.user, util, {
-                    title: "Banned!",
+                    title: "Kicked!",
                     reason: reason,
-                    casenumber: caseCount,
+                    casenumber: util.DB.moderation.caseCount,
                 }),
             });
         }

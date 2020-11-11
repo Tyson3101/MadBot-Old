@@ -17,6 +17,11 @@ export interface MessageEventInterface {
   run: (client: DiscordBot, message: Message) => void;
 }
 
+export interface MessageDeleteEventInterface {
+  event: ClientEvents;
+  run: (client: DiscordBot, DeleteDmessage: Message) => void;
+}
+
 export interface messageReactionAddEventInterface {
   event: ClientEvents;
   run: (client: DiscordBot, reaction: MessageReaction, user: User) => void;
@@ -26,4 +31,5 @@ export type EventInterface =  // Union Types, used to check at least event is on
   | MessageUpdateEventInterface
   | MessageEventInterface
   | ReadyEventInterface
-  | messageReactionAddEventInterface;
+  | messageReactionAddEventInterface
+  | MessageDeleteEventInterface;

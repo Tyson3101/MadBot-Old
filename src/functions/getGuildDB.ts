@@ -1,6 +1,9 @@
 import { Collection, Guild } from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
+import {
+  GuildDataBaseInterface,
+  infringementType,
+} from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
 import { gu } from "date-fns/locale";
 
@@ -28,15 +31,18 @@ export const getGuildDB = async (
         id: guild.id,
         ownerID: guild.ownerID,
         memberCount: guild.memberCount,
-        prefix: "!",
+        prefix: client.prefix,
         moderation: {
-          bans: new Map(),
-          kicks: new Map(),
-          mutes: new Map(),
-          warns: new Map(),
-          all: new Map(),
+          bans: {},
+          kicks: {},
+          mutes: {},
+          warns: {},
+          all: {},
+          unbans: {},
+          unmutes: {},
           activeCases: 0,
           caseCount: 0,
+          logChannel: null,
         },
       };
       await DB.set(guild.id, guildObj);
@@ -44,20 +50,37 @@ export const getGuildDB = async (
     }
   } else {
     return {
-      name: guild.name,
+      name: null,
       id: null,
       ownerID: null,
       memberCount: null,
-      prefix: "!",
+      prefix: client.prefix,
       moderation: {
         bans: null,
         kicks: null,
         mutes: null,
         warns: null,
         all: null,
+        unbans: null,
+        unmutes: null,
         activeCases: 0,
         caseCount: 0,
+        logChannel: null,
       },
     };
   }
 };
+
+export function getTypeCaseCount(
+  type: infringementType,
+  DB: GuildDataBaseInterface
+) {
+  let toLoop = DB.moderation[`${type.toLowerCase()}s`];
+  let caseCount = 0;
+  for (let key in toLoop) {
+    if (Array.isArray(toLoop[key])) {
+      caseCount += toLoop[key].length;
+    } else caseCount++;
+  }
+  return caseCount;
+}

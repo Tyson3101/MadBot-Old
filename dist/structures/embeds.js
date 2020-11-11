@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pingEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.CommandHelpEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsCustom = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.nsfwCommandEmbed = exports.dmCommandEmbed = void 0;
+exports.sucessPunishEmbed = exports.pingEmbed = exports.CommandHelpEmbed = exports.helpCatergoryEmbed = exports.helpEmbed = exports.clientInfo = exports.prefixEmbed = exports.noArgsCommandHelpEmbed = exports.errorCommandEmbed = exports.invaildPermissionsBotCommandEmbed = exports.invaildPermissionsCustom = exports.invaildPermissionsMemberCommandEmbed = exports.ownerCommandEmbed = exports.nsfwCommandEmbed = exports.dmCommandEmbed = void 0;
 const discord_js_1 = require("discord.js");
 const FirstCap_1 = require("../functions/FirstCap");
 const moment_1 = require("moment");
@@ -124,7 +124,7 @@ exports.errorCommandEmbed = (client, user, error) => {
         },
         color: "DARK_VIVID_PINK",
         title: "Error",
-        description: error.message
+        description: error?.message
             ? `:x: **This command experienced an error:** :x:\n${error.message}.`
             : `:x: This command experienced an error. :x:`,
         footer: {
@@ -150,57 +150,6 @@ exports.noArgsCommandHelpEmbed = (client, user, command, prefix) => {
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });
-};
-exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
-    const command = client.commands.get(commandName);
-    if (command.public === false && !client.developers.has(user.id))
-        return;
-    const { args } = command;
-    let embed = new discord_js_1.MessageEmbed({
-        author: {
-            name: user.tag,
-            iconURL: user.displayAvatarURL({
-                format: "png",
-                dynamic: true,
-            }),
-        },
-        color: "DARK_VIVID_PINK",
-        title: `${FirstCap_1.firstCap(command.name)} Help`,
-        description: `Join My **[Support Server](${client.supportServer})** for more help.`,
-        fields: [
-            {
-                name: `Command Help`,
-                value: `**Name:** ${FirstCap_1.firstCap(command.name)}
-**Catergory:** ${FirstCap_1.firstCap(command.catergory)}
-${command.permission && command.permission[0]
-                    ? `**Required Permission:** ${command.permission[0]}\n`
-                    : ""}${command.usage
-                    ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
-                    : ""}${command.example
-                    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
-                    : ""}${command.aliases?.length
-                    ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-                    : "\n"}${command.args?.length ? `**Arguments Info:**` : ""}`,
-            },
-        ],
-        footer: {
-            text: `${client.user.username} ©`,
-            iconURL: client.user.displayAvatarURL({ format: "png" }),
-        },
-    });
-    if (command.args?.length) {
-        args.forEach((argument, i) => {
-            i++;
-            embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type)
-                ? argument.type.join(", ")
-                : argument.type}\n${argument.description
-                ? `**Description:** ${argument.description}\n`
-                : ""}${argument.example?.length
-                ? `**Example:** ${argument.example.join(` **|** `)}\n`
-                : ""}**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
-        });
-    }
-    return embed;
 };
 exports.prefixEmbed = (client, member, db, prefix = null) => {
     let { user } = member;
@@ -318,6 +267,57 @@ exports.helpCatergoryEmbed = (client, user, catergory, prefix) => {
         return exports.helpEmbed(client, user, prefix);
     return embed;
 };
+exports.CommandHelpEmbed = (client, user, commandName, prefix) => {
+    const command = client.commands.get(commandName);
+    if (command.public === false && !client.developers.has(user.id))
+        return exports.helpEmbed(client, user, prefix);
+    const { args } = command;
+    let embed = new discord_js_1.MessageEmbed({
+        author: {
+            name: user.tag,
+            iconURL: user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
+        },
+        color: "DARK_VIVID_PINK",
+        title: `${FirstCap_1.firstCap(command.name)} Help`,
+        description: `Join My **[Support Server](${client.supportServer})** for more help.`,
+        fields: [
+            {
+                name: `Command Help`,
+                value: `**Name:** ${FirstCap_1.firstCap(command.name)}
+**Catergory:** ${FirstCap_1.firstCap(command.catergory)}
+${command.permission && command.permission[0]
+                    ? `**Required Permission:** ${command.permission[0]}\n`
+                    : ""}${command.usage
+                    ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
+                    : ""}${command.example
+                    ? `**Example:** ${prefix}${command.example.join(` **|** ${prefix}`)}\n`
+                    : ""}${command.aliases?.length
+                    ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
+                    : "\n"}${command.args?.length ? `**Arguments Info:**` : ""}`,
+            },
+        ],
+        footer: {
+            text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+    if (command.args?.length) {
+        args.forEach((argument, i) => {
+            i++;
+            embed.addField(`${i}: ${argument.name}`, `**Type:** ${Array.isArray(argument.type)
+                ? argument.type.join(", ")
+                : argument.type}\n${argument.description
+                ? `**Description:** ${argument.description}\n`
+                : ""}${argument.example?.length
+                ? `**Example:** ${argument.example.join(` **|** `)}\n`
+                : ""}**Required:** ${FirstCap_1.firstCap(argument.required.toString())}`);
+        });
+    }
+    return embed;
+};
 exports.pingEmbed = (client, user, { latency, ping }) => {
     return new discord_js_1.MessageEmbed({
         author: {
@@ -341,6 +341,39 @@ exports.pingEmbed = (client, user, { latency, ping }) => {
         ],
         footer: {
             text: `${client.user.username} ©`,
+            iconURL: client.user.displayAvatarURL({ format: "png" }),
+        },
+    });
+};
+exports.sucessPunishEmbed = (client, userPunished, util, { reason, casenumber, title }) => {
+    let { message } = util;
+    return new discord_js_1.MessageEmbed({
+        author: {
+            name: userPunished.tag,
+            iconURL: userPunished.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+            }),
+        },
+        color: "DARK_VIVID_PINK",
+        title: title,
+        description: `**${userPunished.tag}** has been ${title
+            .toLowerCase()
+            .slice(0, title.length - 1)} for "${reason}"`,
+        fields: [
+            {
+                name: "Case Number",
+                value: `${casenumber}`,
+                inline: true,
+            },
+            {
+                name: "Mistake?",
+                value: `*${util.prefix}help case* **|** *${util.prefix}help reason*`,
+                inline: true,
+            },
+        ],
+        footer: {
+            text: `${FirstCap_1.firstCap(title.slice(0, title.length - 1))} by ${message.author.tag}!`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
         },
     });

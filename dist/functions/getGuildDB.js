@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGuildDB = void 0;
+exports.getTypeCaseCount = exports.getGuildDB = void 0;
 const DataBase_1 = require("../structures/DataBase");
 exports.getGuildDB = async (client, guild, InputtedDB = null) => {
     const DB = InputtedDB || DataBase_1.guildDataBase;
@@ -21,15 +21,18 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
                 id: guild.id,
                 ownerID: guild.ownerID,
                 memberCount: guild.memberCount,
-                prefix: "!",
+                prefix: client.prefix,
                 moderation: {
-                    bans: new Map(),
-                    kicks: new Map(),
-                    mutes: new Map(),
-                    warns: new Map(),
-                    all: new Map(),
+                    bans: {},
+                    kicks: {},
+                    mutes: {},
+                    warns: {},
+                    all: {},
+                    unbans: {},
+                    unmutes: {},
                     activeCases: 0,
                     caseCount: 0,
+                    logChannel: null,
                 },
             };
             await DB.set(guild.id, guildObj);
@@ -38,20 +41,36 @@ exports.getGuildDB = async (client, guild, InputtedDB = null) => {
     }
     else {
         return {
-            name: guild.name,
+            name: null,
             id: null,
             ownerID: null,
             memberCount: null,
-            prefix: "!",
+            prefix: client.prefix,
             moderation: {
                 bans: null,
                 kicks: null,
                 mutes: null,
                 warns: null,
                 all: null,
+                unbans: null,
+                unmutes: null,
                 activeCases: 0,
                 caseCount: 0,
+                logChannel: null,
             },
         };
     }
 };
+function getTypeCaseCount(type, DB) {
+    let toLoop = DB.moderation[`${type.toLowerCase()}s`];
+    let caseCount = 0;
+    for (let key in toLoop) {
+        if (Array.isArray(toLoop[key])) {
+            caseCount += toLoop[key].length;
+        }
+        else
+            caseCount++;
+    }
+    return caseCount;
+}
+exports.getTypeCaseCount = getTypeCaseCount;

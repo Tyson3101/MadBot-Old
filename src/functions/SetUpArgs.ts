@@ -1,4 +1,4 @@
-import { GuildMember, Message, Role, User } from "discord.js";
+import { Guild, GuildMember, Message, Role, User } from "discord.js";
 import { utilObjInterface } from "../interfaces/Args";
 import { commandInterFace } from "../interfaces/Command";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
@@ -70,6 +70,10 @@ export function setUpArgs(
         });
         return null;
       }
+    },
+
+    getGuild(guildID: string): Guild {
+      return this.client.guilds.cache.get(guildID);
     },
 
     compareRolePostion(

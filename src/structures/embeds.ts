@@ -1,10 +1,18 @@
-import { GuildMember, MessageEmbed, PermissionString, User } from "discord.js";
+import {
+  GuildMember,
+  Message,
+  MessageEmbed,
+  PermissionString,
+  User,
+} from "discord.js";
 import { DiscordBot } from "./Client";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { firstCap } from "../functions/FirstCap";
 import { commandInterFace } from "../interfaces/Command";
 import { duration } from "moment";
+import { infringementInterface } from "../interfaces/GuildDataBase";
 import "moment-duration-format";
+import { utilObjInterface } from "../interfaces/Args";
 
 // All embeds I want to use. (Allows less typing and resuing, also can input stuff in)
 
@@ -161,7 +169,7 @@ export const errorCommandEmbed = (
     },
     color: "DARK_VIVID_PINK",
     title: "Error",
-    description: error.message
+    description: error?.message
       ? `:x: **This command experienced an error:** :x:\n${error.message}.`
       : `:x: This command experienced an error. :x:`,
     footer: {
@@ -193,81 +201,6 @@ export const noArgsCommandHelpEmbed = (
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-};
-
-export const CommandHelpEmbed = (
-  client: DiscordBot,
-  user: User,
-  commandName: string,
-  prefix: string
-): MessageEmbed => {
-  const command = client.commands.get(commandName);
-  if (command.public === false && !client.developers.has(user.id)) return;
-  const { args } = command;
-  let embed = new MessageEmbed({
-    author: {
-      name: user.tag,
-      iconURL: user.displayAvatarURL({
-        format: "png",
-        dynamic: true,
-      }),
-    },
-    color: "DARK_VIVID_PINK", //"FD0061",
-    title: `${firstCap(command.name)} Help`,
-    description: `Join My **[Support Server](${client.supportServer})** for more help.`,
-    fields: [
-      {
-        name: `Command Help`,
-        value: `**Name:** ${firstCap(command.name)}
-**Catergory:** ${firstCap(command.catergory)}
-${
-  command.permission && command.permission[0]
-    ? `**Required Permission:** ${command.permission[0]}\n`
-    : ""
-}${
-          command.usage
-            ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
-            : ""
-        }${
-          command.example
-            ? `**Example:** ${prefix}${command.example.join(
-                ` **|** ${prefix}`
-              )}\n`
-            : ""
-        }${
-          command.aliases?.length
-            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-            : "\n"
-        }${command.args?.length ? `**Arguments Info:**` : ""}`,
-      },
-    ],
-    footer: {
-      text: `${client.user.username} ©`,
-      iconURL: client.user.displayAvatarURL({ format: "png" }),
-    },
-  });
-  if (command.args?.length) {
-    args.forEach((argument, i: number) => {
-      i++;
-      embed.addField(
-        `${i}: ${argument.name}`,
-        `**Type:** ${
-          Array.isArray(argument.type)
-            ? argument.type.join(", ")
-            : argument.type
-        }\n${
-          argument.description
-            ? `**Description:** ${argument.description}\n`
-            : ""
-        }${
-          argument.example?.length
-            ? `**Example:** ${argument.example.join(` **|** `)}\n`
-            : ""
-        }**Required:** ${firstCap(argument.required.toString())}`
-      );
-    });
-  }
-  return embed;
 };
 
 export const prefixEmbed = (
@@ -427,6 +360,82 @@ export const helpCatergoryEmbed = (
   return embed;
 };
 
+export const CommandHelpEmbed = (
+  client: DiscordBot,
+  user: User,
+  commandName: string,
+  prefix: string
+): MessageEmbed => {
+  const command = client.commands.get(commandName);
+  if (command.public === false && !client.developers.has(user.id))
+    return helpEmbed(client, user, prefix);
+  const { args } = command;
+  let embed = new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    color: "DARK_VIVID_PINK", //"FD0061",
+    title: `${firstCap(command.name)} Help`,
+    description: `Join My **[Support Server](${client.supportServer})** for more help.`,
+    fields: [
+      {
+        name: `Command Help`,
+        value: `**Name:** ${firstCap(command.name)}
+**Catergory:** ${firstCap(command.catergory)}
+${
+  command.permission && command.permission[0]
+    ? `**Required Permission:** ${command.permission[0]}\n`
+    : ""
+}${
+          command.usage
+            ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
+            : ""
+        }${
+          command.example
+            ? `**Example:** ${prefix}${command.example.join(
+                ` **|** ${prefix}`
+              )}\n`
+            : ""
+        }${
+          command.aliases?.length
+            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
+            : "\n"
+        }${command.args?.length ? `**Arguments Info:**` : ""}`,
+      },
+    ],
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+  if (command.args?.length) {
+    args.forEach((argument, i: number) => {
+      i++;
+      embed.addField(
+        `${i}: ${argument.name}`,
+        `**Type:** ${
+          Array.isArray(argument.type)
+            ? argument.type.join(", ")
+            : argument.type
+        }\n${
+          argument.description
+            ? `**Description:** ${argument.description}\n`
+            : ""
+        }${
+          argument.example?.length
+            ? `**Example:** ${argument.example.join(` **|** `)}\n`
+            : ""
+        }**Required:** ${firstCap(argument.required.toString())}`
+      );
+    });
+  }
+  return embed;
+};
+
 export const pingEmbed = (
   client: DiscordBot,
   user: User,
@@ -454,6 +463,47 @@ export const pingEmbed = (
     ],
     footer: {
       text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};
+
+export const sucessPunishEmbed = (
+  client: DiscordBot,
+  userPunished: User,
+  util: utilObjInterface,
+  { reason, casenumber, title }
+): MessageEmbed => {
+  let { message } = util;
+  return new MessageEmbed({
+    author: {
+      name: userPunished.tag,
+      iconURL: userPunished.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    color: "DARK_VIVID_PINK",
+    title: title,
+    description: `**${userPunished.tag}** has been ${title
+      .toLowerCase()
+      .slice(0, title.length - 1)} for "${reason}"`,
+    fields: [
+      {
+        name: "Case Number",
+        value: `${casenumber}`,
+        inline: true,
+      },
+      {
+        name: "Mistake?",
+        value: `*${util.prefix}help case* **|** *${util.prefix}help reason*`,
+        inline: true,
+      },
+    ],
+    footer: {
+      text: `${firstCap(title.slice(0, title.length - 1))} by ${
+        message.author.tag
+      }!`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });

@@ -9,6 +9,7 @@ class DiscordBot extends discord_js_1.Client {
         this.developers = new discord_js_1.Collection();
         this.commands = new discord_js_1.Collection();
         this.events = new discord_js_1.Collection();
+        this.prefix = "m!";
     }
 }
 exports.DiscordBot = DiscordBot;

@@ -1,24 +1,40 @@
 import { Collection, Snowflake, User } from "discord.js";
 
-export type infringementType = "BAN" | "KICK" | "WARN" | "MUTE";
+export type infringementType =
+  | "BAN"
+  | "KICK"
+  | "WARN"
+  | "MUTE"
+  | "UNBAN"
+  | "UNMUTE";
+
+export interface ModerationUser {
+  id: string;
+  username: string;
+  tag: string;
+}
 export interface infringementInterface {
-  victim: User;
-  moderator: User;
+  victim: ModerationUser;
+  moderator: ModerationUser;
   reason: string;
-  banCaseCount: number;
+  typeCaseCount: number;
   caseCount: number;
   infringementType: infringementType;
   endDate?: Date;
 }
 
 export interface moderationInterface {
-  bans: Map<Snowflake, infringementInterface>;
-  kicks: Map<Snowflake, infringementInterface>;
-  warns: Map<Snowflake, infringementInterface>;
-  mutes: Map<Snowflake, infringementInterface>;
-  all: Map<Snowflake, infringementInterface>;
+  bans: { [key: string]: infringementInterface[] };
+  kicks: { [key: string]: infringementInterface[] };
+  warns: { [key: string]: infringementInterface[] };
+  mutes: { [key: string]: infringementInterface[] };
+  all: { [key: string]: infringementInterface[] };
+  unbans: { [key: string]: infringementInterface[] };
+  unmutes: { [key: string]: infringementInterface[] };
   caseCount: number;
+
   activeCases: number;
+  logChannel: string;
 }
 
 export interface GuildDataBaseInterface {

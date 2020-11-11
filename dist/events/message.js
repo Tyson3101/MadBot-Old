@@ -14,7 +14,7 @@ exports.event = {
     async run(client, message) {
         if (message.author.bot)
             return;
-        let prefix = "!";
+        let prefix = client.prefix;
         let guildDB;
         guildDB = await GetGuildDB_1.getGuildDB(client, message.guild, DataBase_1.guildDataBase);
         prefix = guildDB.prefix;
@@ -22,7 +22,7 @@ exports.event = {
             if (!message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"]))
                 return;
         }
-        const [commandNameUPPERCASE, args, Util] = SetUpArgs_1.setUpArgs(client, message, guildDB);
+        const [commandNameUPPERCASE, , Util] = SetUpArgs_1.setUpArgs(client, message, guildDB);
         const commandName = commandNameUPPERCASE.toLowerCase();
         const command = client.commands.get(commandName)
             ? client.commands.get(commandName)

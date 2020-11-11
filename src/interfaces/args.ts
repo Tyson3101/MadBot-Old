@@ -1,5 +1,6 @@
 import {
   Channel,
+  Guild,
   GuildChannel,
   GuildMember,
   Message,
@@ -31,6 +32,7 @@ export interface utilObjInterface {
   isDM: boolean;
   getMember: (id: string) => Promise<GuildMember>;
   getUser: (id: string) => Promise<User>;
+  getGuild: (id: string) => Guild;
   compareRolePostion: (
     checkHighestRole: Role,
     CheckLowestRole: Role,

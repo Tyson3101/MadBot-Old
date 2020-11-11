@@ -51,6 +51,9 @@ function setUpArgs(client, message, DB) {
                 return null;
             }
         },
+        getGuild(guildID) {
+            return this.client.guilds.cache.get(guildID);
+        },
         compareRolePostion(commandRole, otherRole, toReturnMsg) {
             let { author } = this.message;
             if (toReturnMsg) {

@@ -15,7 +15,7 @@ export const event: ReadyEventInterface = {
       position: 0,
     });
     await client.user.setActivity({
-      name: `!help`,
+      name: `${client.prefix}help`,
       type: "COMPETING",
     });
     console.log(`-----------------  Ready  ----------------
