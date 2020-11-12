@@ -50,12 +50,13 @@ export const event: MessageEventInterface = {
         command.run(client, message, Util);
         return;
       } catch (e) {
+        console.log(e);
         return message.channel.send({
           embed: errorCommandEmbed(client, message.author, e),
         });
       }
     }
-    if (Util.DB.tags[commandName.toLowerCase()]) {
+    if (Util.DB.tags && Util.DB.tags[commandName.toLowerCase()]) {
       return message.channel.send(
         Util.DB.tags[commandName.toLowerCase()].reply
       );

@@ -257,7 +257,7 @@ export const clientInfo = (
       },
       {
         name: `Default Prefix`,
-        value: `\`!\``,
+        value: `\`${client.prefix}\``,
         inline: true,
       },
       {

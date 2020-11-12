@@ -64,22 +64,22 @@ export const command: commandInterFace = {
         )
       )
         return;
-      if (
-        !member.kickable ||
-        util.compareRolePostion(
-          message.guild.me.roles.highest,
-          member.roles.highest,
-          true
-        )
-      )
-        return message.channel.send({
-          embed: invaildPermissionsCustom(
-            client,
-            message.author,
-            `I can't perform this action on this member.`
-          ),
-        });
     }
+    if (
+      !member.kickable ||
+      util.compareRolePostion(
+        message.guild.me.roles.highest,
+        member.roles.highest,
+        true
+      )
+    )
+      return message.channel.send({
+        embed: invaildPermissionsCustom(
+          client,
+          message.author,
+          `I can't perform this action on this member.`
+        ),
+      });
     let reason = "No reason provided.";
     if (args[1]) reason = args.slice(1).join(" ");
     let backUpDB = { ...util.DB };

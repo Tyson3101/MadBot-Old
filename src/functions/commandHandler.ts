@@ -1,14 +1,13 @@
 import fs from "fs";
-import { commandInterFace } from "../interfaces/Command";
 import { DiscordBot } from "../structures/Client";
 import { firstCap } from "./FirstCap";
 
 export const CommandHandlerInit = (client: DiscordBot): void => {
-  const catergories = fs.readdirSync("./dist/commands"); // From root
+  const catergories = fs.readdirSync("./dist/src/commands"); // From root
   let i = 1;
   catergories.forEach((catergory) => {
     const commands = fs
-      .readdirSync(`./dist/commands/${catergory}`)
+      .readdirSync(`./dist/src/commands/${catergory}`)
       .filter((filename) => filename.endsWith(".js"));
     commands.forEach((fileCommand) => {
       const { command } = require(`../commands/${catergory}/${fileCommand}`); // From File

@@ -5,7 +5,7 @@ import { DiscordBot } from "../structures/Client"; // Import Syntax
 export const EventHandlerInit = (client: DiscordBot): void => {
   let i = 1; // Counter for console logging
   const events = fs
-    .readdirSync("./dist/events")
+    .readdirSync("./dist/src/events")
     .filter((file) => file.endsWith(".js"));
   events.forEach((fileEvent) => {
     const event: EventInterface = require(`../events/${fileEvent}`).event;

@@ -22,8 +22,8 @@ export const command: commandInterFace = {
   ],
   async run(client, message, util) {
     const { args } = util;
-    util.DB.tags[args[0]] = {
-      name: args[0],
+    util.DB.tags[args[0].toLowerCase()] = {
+      name: args[0].toLowerCase(),
       reply: args.slice(1).join(" "),
     };
     const newDB = {
