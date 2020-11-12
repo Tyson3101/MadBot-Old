@@ -1,11 +1,10 @@
-import { Collection, Guild } from "discord.js";
+import { Guild } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import {
   GuildDataBaseInterface,
   infringementType,
 } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
-import { gu } from "date-fns/locale";
 
 export const getGuildDB = async (
   client: DiscordBot,

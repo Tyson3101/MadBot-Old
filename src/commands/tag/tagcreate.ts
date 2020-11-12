@@ -29,7 +29,6 @@ export const command: commandInterFace = {
     const newDB = {
       ...util.DB,
     };
-
     await guildDataBase.set(message.guild.id, newDB);
     message.channel.send(`The tag "${args[0]}" has been created!`);
   },
