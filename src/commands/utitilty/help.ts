@@ -1,11 +1,9 @@
 import { commandInterFace } from "../../interfaces/Command";
-import { getGuildDB } from "../../functions/getGuildDB";
 import {
   helpCatergoryEmbed,
   helpEmbed,
   CommandHelpEmbed,
 } from "../../structures/embeds";
-import { catergoryType } from "../../interfaces/catergoryType";
 
 export const command: commandInterFace = {
   name: "help",
@@ -23,8 +21,8 @@ export const command: commandInterFace = {
     },
   ],
   async run(client, message, { args, ...util }) {
-    const guildDB = await getGuildDB(client, message.guild);
-    const prefix = guildDB.prefix;
+    const { prefix } = util;
+    console.log(args);
     if (!args[0]) {
       // Checks if inputted a command or caterogry
       message.channel.send({

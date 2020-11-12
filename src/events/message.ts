@@ -55,6 +55,11 @@ export const event: MessageEventInterface = {
         });
       }
     }
+    if (Util.DB.tags[commandName.toLowerCase()]) {
+      return message.channel.send(
+        Util.DB.tags[commandName.toLowerCase()].reply
+      );
+    }
     if (message.mentions.users.has(client.user.id))
       return message.channel.send({
         embed: clientInfo(client, message.author, guildDB.prefix),

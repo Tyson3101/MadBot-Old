@@ -44,6 +44,8 @@ export const getGuildDB = async (
           caseCount: 0,
           logChannel: null,
         },
+        tags: {},
+        logChannel: null,
       };
       await DB.set(guild.id, guildObj);
       return guildObj;
@@ -67,6 +69,8 @@ export const getGuildDB = async (
         caseCount: 0,
         logChannel: null,
       },
+      tags: {},
+      logChannel: null,
     };
   }
 };

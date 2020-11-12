@@ -195,7 +195,7 @@ export const noArgsCommandHelpEmbed = (
     },
     color: "DARK_VIVID_PINK",
     title: "Invaild Arguments",
-    description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
+    description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}help ${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -344,7 +344,7 @@ export const helpCatergoryEmbed = (
   });
   client.commands
     .filter((cmd) => cmd.catergory === catergory)
-    .filter((cmd) => cmd.public !== false)
+    .filter((cmd) => cmd.public !== false && !cmd.public)
     .forEach((command: commandInterFace, commandName: string) => {
       embed.addField(
         `${prefix}help ${commandName}`,
@@ -356,7 +356,7 @@ export const helpCatergoryEmbed = (
         true
       );
     });
-  if (embed.fields?.length) return helpEmbed(client, user, prefix);
+  if (!embed.fields.length) return helpEmbed(client, user, prefix);
   return embed;
 };
 

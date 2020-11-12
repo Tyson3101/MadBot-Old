@@ -35,6 +35,8 @@ export const command: commandInterFace = {
         caseCount: 0,
         logChannel: null,
       },
+      tags: {},
+      logChannel: null,
     };
     await guildDataBase.set(args[0] || guild.id, DBObj);
     message.channel.send(JSON.stringify(DBObj, null, 4), {

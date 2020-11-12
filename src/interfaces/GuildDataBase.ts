@@ -1,4 +1,4 @@
-import { Collection, Snowflake, User } from "discord.js";
+import { Collection, Message, Snowflake, User } from "discord.js";
 
 export type infringementType =
   | "BAN"
@@ -23,6 +23,11 @@ export interface infringementInterface {
   endDate?: Date;
 }
 
+export interface tagInterface {
+  name: string;
+  reply: string;
+}
+
 export interface moderationInterface {
   bans: { [key: string]: infringementInterface[] };
   kicks: { [key: string]: infringementInterface[] };
@@ -32,7 +37,6 @@ export interface moderationInterface {
   unbans: { [key: string]: infringementInterface[] };
   unmutes: { [key: string]: infringementInterface[] };
   caseCount: number;
-
   activeCases: number;
   logChannel: string;
 }
@@ -44,5 +48,7 @@ export interface GuildDataBaseInterface {
   memberCount: number;
   prefix: string;
   moderation: moderationInterface;
+  tags: { [key: string]: tagInterface };
+  logChannel: string;
 }
 // Setup for GuildDataBase, like Mongoose Schemas (...lol)

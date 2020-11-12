@@ -1,4 +1,5 @@
 import { ReadyEventInterface } from "../interfaces/Events";
+import { guildDataBase } from "../structures/DataBase";
 
 function returnMultiple(stringToRepeat: string, timesToRepeat: number): string {
   let array = [];
