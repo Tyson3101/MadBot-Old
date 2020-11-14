@@ -10,7 +10,8 @@
     "removeComments": true,
     "strictNullChecks": false,
     "alwaysStrict": true,
-    "watch": true
+    "watch": true,
+    "typeRoots": ["node_modules/@types"]
   },
   "lib": ["esnext"]
 }

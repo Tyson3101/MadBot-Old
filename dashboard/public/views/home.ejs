@@ -4,10 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mad Bot</title>
+    <script>
+      window.onload = async () => {
+        if (!window.location.href.split("?code=")[1] && !"<%= user.guilds %>")
+          window.location.replace(
+            "https://discord.com/api/oauth2/authorize?client_id=770574530694610956&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2F&response_type=code&scope=identify%20email%20connections%20guilds"
+          );
+      };
+      const USERSJSON = "<%= user.guilds %>";
+      const USERS = JSON.parse(USERSJSON.replace(/&#34;/g, '"'));
+      console.log(USERS);
+    </script>
   </head>
   <body>
     <div>
-      <h1>Hello World!!!</h1>
+      <% user.guilds.forEach(element => { %>
+      <h1><%= element.name %></h1>
+      <% }) %>
     </div>
   </body>
 </html>
