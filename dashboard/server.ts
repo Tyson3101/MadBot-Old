@@ -13,6 +13,7 @@ const {
 } = process.env;
 // Copy all the view templates
 shell.cp("-R", "dashboard/public", "dist/dashboard");
+
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import session from "express-session";
@@ -62,7 +63,7 @@ async function userCheck(req: Request, res: Response, next: NextFunction) {
       grant_type: "authorization_code",
       code: code,
       redirect_uri: REDIRECT_URI,
-      scope: "identify email connections",
+      scope: "identify email guilds guilds.join",
     };
     const options = {
       method: "POST",
@@ -100,7 +101,7 @@ async function userCheck(req: Request, res: Response, next: NextFunction) {
     }
   } else {
     if (!(req.session as any).user) {
-      res.render(AUTH_USER_LINK);
+      res.redirect(AUTH_USER_LINK);
     }
   }
   next();

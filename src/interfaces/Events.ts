@@ -1,4 +1,11 @@
-import { Message, MessageReaction, User } from "discord.js";
+import {
+  GuildMember,
+  Message,
+  MessageReaction,
+  Speaking,
+  User,
+  VoiceState,
+} from "discord.js";
 import { DiscordBot } from "../structures/Client";
 import { ClientEvents } from "../interfaces/EventList";
 
@@ -10,6 +17,16 @@ export interface MessageUpdateEventInterface {
 export interface ReadyEventInterface {
   event: ClientEvents;
   run: (client: DiscordBot) => void;
+}
+
+export interface guildMemberSpeakingEventInterface {
+  event: ClientEvents;
+  run: (client: DiscordBot, member: GuildMember, speaking: Speaking) => void;
+}
+
+export interface voiceStateEventInterface {
+  event: ClientEvents;
+  run: (client: DiscordBot, oldState: VoiceState, newState: VoiceState) => void;
 }
 
 export interface MessageEventInterface {
@@ -32,4 +49,6 @@ export type EventInterface =  // Union Types, used to check at least event is on
   | MessageEventInterface
   | ReadyEventInterface
   | messageReactionAddEventInterface
-  | MessageDeleteEventInterface;
+  | MessageDeleteEventInterface
+  | guildMemberSpeakingEventInterface
+  | voiceStateEventInterface;

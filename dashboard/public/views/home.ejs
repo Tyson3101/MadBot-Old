@@ -8,7 +8,7 @@
       window.onload = async () => {
         if (!window.location.href.split("?code=")[1] && !"<%= user.guilds %>")
           window.location.replace(
-            "https://discord.com/api/oauth2/authorize?client_id=770574530694610956&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2F&response_type=code&scope=identify%20email%20connections%20guilds"
+            "https://discord.com/api/oauth2/authorize?client_id=770574530694610956&redirect_uri=https%3A%2F%2F889d4f3dcce8.ngrok.io%2Fuser%2F&response_type=code&scope=identify%20guilds%20email%20guilds.join"
           );
       };
       const USERSJSON = "<%= user.guilds %>";
@@ -18,9 +18,9 @@
   </head>
   <body>
     <div>
-      <% user.guilds.forEach(element => { %>
+      <% if(user.guilds[0]) {%> <% user.guilds.forEach(element => { %>
       <h1><%= element.name %></h1>
-      <% }) %>
+      <% }) } %>
     </div>
   </body>
 </html>
