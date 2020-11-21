@@ -3,24 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/style.css" />
     <title>Mad Bot</title>
     <script>
       window.onload = async () => {
         if (!window.location.href.split("?code=")[1] && !"<%= user.guilds %>")
-          window.location.replace(
-            "https://discord.com/api/oauth2/authorize?client_id=770574530694610956&redirect_uri=https%3A%2F%2F889d4f3dcce8.ngrok.io%2Fuser%2F&response_type=code&scope=identify%20guilds%20email%20guilds.join"
-          );
+          window.location.replace("<%= AUTH_USER_LINK %>");
       };
-      const USERSJSON = "<%= user.guilds %>";
-      const USERS = JSON.parse(USERSJSON.replace(/&#34;/g, '"'));
-      console.log(USERS);
+      const USERJSON = "<%= JSON.stringify(user) %>";
+      const USERGUILD = JSON.parse(USERJSON.replace(/&#34;/g, '"'));
     </script>
   </head>
   <body>
-    <div>
-      <% if(user.guilds[0]) {%> <% user.guilds.forEach(element => { %>
-      <h1><%= element.name %></h1>
-      <% }) } %>
+    <div class="navBar">
+      <h1>Mad Bot</h1>
     </div>
   </body>
 </html>

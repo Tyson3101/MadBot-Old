@@ -22,7 +22,6 @@ export const command: commandInterFace = {
   ],
   async run(client, message, { args, ...util }) {
     const { prefix } = util;
-    console.log(args);
     if (!args[0]) {
       // Checks if inputted a command or caterogry
       message.channel.send({

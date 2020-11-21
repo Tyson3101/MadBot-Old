@@ -13,6 +13,7 @@ export const command: commandInterFace = {
   ],
   public: false,
   devOnly: true,
+
   async run(client, message, { args, ...util }) {
     let guild: Guild;
     if (args[0]) guild = util.getGuild(args[0]);

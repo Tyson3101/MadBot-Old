@@ -56,7 +56,11 @@ export const event: MessageEventInterface = {
         });
       }
     }
-    if (Util.DB.tags && Util.DB.tags[commandName.toLowerCase()]) {
+    if (
+      Util.DB.tags &&
+      message.content.startsWith(prefix) &&
+      Util.DB.tags[commandName.toLowerCase()]
+    ) {
       return message.channel.send(
         Util.DB.tags[commandName.toLowerCase()].reply
       );

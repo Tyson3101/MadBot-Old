@@ -7,6 +7,7 @@ import {
   Role,
   User,
 } from "discord.js";
+
 import { DiscordBot } from "../structures/Client";
 import { argsType } from "./Argstype"; // Import syntax
 import { commandInterFace } from "./Command";

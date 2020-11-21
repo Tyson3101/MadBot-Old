@@ -9,7 +9,12 @@ const { TOKEN: token } = process.env;
 
 const client: DiscordBot = new DiscordBot({
   // Creates the client
-  ws: { intents: Intents.ALL }, // Intents
+  ws: {
+    intents: Intents.ALL,
+    properties: {
+      $browser: "Discord iOS",
+    },
+  }, // Intents
   partials: ["CHANNEL", "MESSAGE", "REACTION"],
 }); // Client Options (Partials));
 

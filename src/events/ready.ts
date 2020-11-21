@@ -15,10 +15,12 @@ export const event: ReadyEventInterface = {
       User: botDev, // Sets the botdevs user object
       position: 0,
     });
+
     await client.user.setActivity({
       name: `${client.prefix}help`,
       type: "COMPETING",
     });
+
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 Loggen in with the token ${client.token.slice(0, 34)}${returnMultiple(

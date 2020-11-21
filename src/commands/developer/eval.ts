@@ -1,120 +1,3 @@
-/*
-
-import Discord, {
-  Guild,
-  Message,
-  MessageEmbed,
-  Util as DiscordUtil,
-} from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
-import { guildDataBase } from "../../structures/DataBase";
-
-function determinedFlag(args: string[], flags: string[]) {
-  for (let i = 0; i < args.length; i++) {
-    for (let j = 0; j < flags.length; j++) {
-      if (args[i].includes(flags[j])) {
-        return true;
-      }
-    }
-  }
-}
-
-
-export const command: commandInterFace = {
-  name: "eval",
-  aliases: ["code"],
-  args: [
-    {
-      name: "Code To Eval",
-      type: "Code",
-      required: true,
-    },
-  ],
-  devOnly: true,
-  async run(client, message, { args, ...util }) {
-    const toEvalFull = args.join(" ").replace(/```(js)?/g, "");
-    let toEval: string;
-    let evaled: string;
-    let toEvaledSpilt: string[];
-    try {
-      const startTime = process.hrtime();
-      toEvaledSpilt = toEvalFull.split(/\n/g);
-      if (toEvaledSpilt.length <= 3) {
-        toEval = (toEvaledSpilt[1]
-          ? toEvaledSpilt[1].replace(/return/g, "")
-          : toEvaledSpilt[0].replace(/return/g, "")
-        ).trim();
-        evaled = await eval(
-          `(async (client, Discord, util, message) => ${toEval})(${client}, ${Discord}, ${util}, ${message})`
-        );
-      } else {
-        let filterd = toEvaledSpilt.filter((str) => str.length);
-        toEval = filterd
-          .map((str) => {
-            if (filterd[filterd.length - 1] === str) {
-              if (filterd[filterd.length - 1].includes("return")) return str;
-              else return `return ${filterd[filterd.length - 1]}`;
-            } else return `${str}\n`;
-          })
-          .join(" ")
-          .trim();
-        evaled = await eval(
-          `(async (client, Discord, util, message) => {\n${toEval}\n})(${client}, ${Discord}, ${util}, ${message})`
-        );
-      }
-      const timeTook = process.hrtime(startTime);
-      if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
-      await sendEvaledMessage(message, timeTook, toEvaledSpilt, evaled);
-    } catch (e) {
-      await message.channel.send(
-        new MessageEmbed({
-          author: {
-            name: message.author.tag,
-            iconURL: message.author.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-            }),
-          },
-          color: "DARK_VIVID_PINK",
-          title: "Evaled Code",
-          description: `Error!`,
-          fields: [
-            {
-              name: "Output",
-              value: `\`\`\`js\n${e}\n\`\`\``,
-            },
-            {
-              name: "Input",
-              value: `\`\`\`js\n${DiscordUtil.escapeMarkdown(
-                toEvaledSpilt
-                  .map((str, i) => {
-                    if (i === toEvaledSpilt.length - 1)
-                      return `${str.trim().replace(/return/g, "")}`;
-                    else return `${str}`.trim();
-                  })
-                  .join("\n")
-                  .trim(),
-                {
-                  underline: false,
-                  bold: false,
-                  italic: false,
-                  inlineCode: false,
-                }
-              )}\n\`\`\``,
-            },
-          ],
-          footer: {
-            text: `${client.user.username} ©`,
-            iconURL: client.user.displayAvatarURL({ format: "png" }),
-          },
-        })
-      );
-    }
-  },
-};
-*/
-
 import { Guild, Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
 import { commandInterFace } from "../../interfaces/Command";
 import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
@@ -177,6 +60,7 @@ async function sendEvaledMessage(
     console.log(e);
   }
 }
+import { functions } from "../../structures/evalFunctions";
 
 export const command: commandInterFace = {
   name: "eval",
@@ -197,25 +81,21 @@ export const command: commandInterFace = {
     try {
       const startTime = process.hrtime();
       toEvaledSpilt = toEvalFull.split(/\n/g);
-      if (toEvaledSpilt.length <= 3) {
-        toEval = (toEvaledSpilt[1]
-          ? toEvaledSpilt[1].replace(/return/g, "")
-          : toEvaledSpilt[0].replace(/return/g, "")
-        ).trim();
-        evaled = await eval(`(async () => ${toEval})()`);
-      } else {
-        let filterd = toEvaledSpilt.filter((str) => str.length);
-        toEval = filterd
-          .map((str) => {
-            if (filterd[filterd.length - 1] === str) {
-              if (filterd[filterd.length - 1].includes("return")) return str;
-              else return `return ${filterd[filterd.length - 1]}`;
-            } else return `${str}\n`;
-          })
-          .join(" ")
-          .trim();
-        evaled = await eval(`(async () => {\n${toEval}\n})()`);
-      }
+      let filterd = toEvaledSpilt.filter((str) => str.length);
+      toEval = filterd
+        .map((str) => {
+          if (filterd[filterd.length - 1] === str) {
+            if (filterd[filterd.length - 1].includes("return")) return str;
+            else return `return ${filterd[filterd.length - 1]}`;
+          } else return `${str}\n`;
+        })
+        .join(" ")
+        .trim();
+      let aboutToEval = `(async () => {\nconst Discord = require('discord.js')\nconst { MessageEmbed, MessageAttachment } = require('discord.js')\n${functions.join(
+        "\n"
+      )}\n${toEval}\n})()`;
+      evaled = await eval(aboutToEval);
+      console.log(evaled);
       const timeTook = process.hrtime(startTime);
       if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
 
