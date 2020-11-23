@@ -82,6 +82,7 @@ export const command: commandInterFace = {
     let caseCount = ++util.DB.moderation.caseCount;
     let backUpDB = { ...util.DB };
     const moderationDB: infringementInterface = {
+      guildID: message.guild.id,
       victim: {
         id: member.id,
         username: member.user.username,

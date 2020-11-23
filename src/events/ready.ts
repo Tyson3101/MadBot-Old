@@ -1,4 +1,6 @@
+import { handleEndMute, handleMutes } from "../functions/handleMutes";
 import { ReadyEventInterface } from "../interfaces/Events";
+import { infringementInterface } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
 
 function returnMultiple(stringToRepeat: string, timesToRepeat: number): string {
@@ -37,5 +39,22 @@ Users: ${client.guilds.cache.reduce(
 Commands: ${client.commands.size}
 Events: ${client.events.size}
 -----------------  Log  ----------------`);
+    const Mutes: infringementInterface[] = (await handleMutes(client))[1];
+    if (Mutes.length) {
+      Mutes.forEach((Case) => {
+        const guild = client.guilds.cache.get(Case.guildID);
+        if (guild && Case?.active && Case?.endDate) {
+          setTimeout(async () => {
+            handleEndMute(
+              await guild.members.fetch(Case.victim.id),
+              Case.muteRoleID,
+              Case.oldRolesID,
+              await guildDataBase.get(guild.id),
+              Case.caseCount
+            );
+          }, new Date(Case.endDate).getTime() - Date.now());
+        }
+      });
+    }
   },
 };

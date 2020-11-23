@@ -14,6 +14,7 @@ export interface ModerationUser {
   tag: string;
 }
 export interface infringementInterface {
+  guildID: string;
   victim: ModerationUser;
   moderator: ModerationUser;
   reason: string;
@@ -21,6 +22,9 @@ export interface infringementInterface {
   caseCount: number;
   infringementType: infringementType;
   endDate?: Date;
+  active?: boolean;
+  muteRoleID?: string;
+  oldRolesID?: string[];
 }
 
 export interface tagInterface {

@@ -11,11 +11,8 @@ const client: DiscordBot = new DiscordBot({
   // Creates the client
   ws: {
     intents: Intents.ALL,
-    properties: {
-      $browser: "Discord iOS",
-    },
   }, // Intents
-  partials: ["CHANNEL", "MESSAGE", "REACTION"],
+  partials: ["REACTION", "CHANNEL", "USER", "GUILD_MEMBER"],
 }); // Client Options (Partials));
 
 CommandHandlerInit(client); // Handles Command

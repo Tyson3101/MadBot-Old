@@ -14,13 +14,12 @@ export const event: MessageEventInterface = {
     let guildDB;
     guildDB = await getGuildDB(client, message.guild, guildDataBase); // Gets Guild DataBase
     prefix = guildDB.prefix;
-    if (message.channel.type !== "dm") {
+    if (message.channel.type !== "dm" && message.guild) {
       if (
         !message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"])
       )
         return;
     }
-
     const [commandNameUPPERCASE, , Util] = setUpArgs(client, message, guildDB);
     const commandName = commandNameUPPERCASE.toLowerCase();
     const command = client.commands.get(commandName)

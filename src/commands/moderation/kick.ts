@@ -86,6 +86,7 @@ export const command: commandInterFace = {
     let typeCaseCount = kickCaseCount("KICK", util.DB) + 1;
     let caseCount = ++util.DB.moderation.caseCount;
     const moderationDB: infringementInterface = {
+      guildID: message.guild.id,
       victim: {
         id: member.id,
         username: member.user.username,
