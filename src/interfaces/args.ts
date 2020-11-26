@@ -1,13 +1,5 @@
-import {
-  Channel,
-  Guild,
-  GuildChannel,
-  GuildMember,
-  Message,
-  Role,
-  User,
-} from "discord.js";
-
+import { Guild, GuildMember, Message, Role, User } from "discord.js";
+import * as lexure from "lexure";
 import { DiscordBot } from "../structures/Client";
 import { argsType } from "./Argstype"; // Import syntax
 import { commandInterFace } from "./Command";
@@ -26,7 +18,7 @@ export interface argsInterface {
 export interface utilObjInterface {
   client: DiscordBot;
   message: Message;
-  args: string[];
+  args: lexure.Args;
   DB: GuildDataBaseInterface;
   prefix: string;
   command: commandInterFace;

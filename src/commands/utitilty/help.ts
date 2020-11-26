@@ -20,34 +20,46 @@ export const command: commandInterFace = {
       type: "Text",
     },
   ],
-  async run(client, message, { args, ...util }) {
+  async run(
+    client,
+    message,
+    {
+      args: {
+        parserOutput: { ordered: args, flags, options },
+        flag,
+        option,
+      },
+      ...util
+    }
+  ) {
     const { prefix } = util;
-    if (!args[0]) {
+    if (!args[0]?.value) {
       // Checks if inputted a command or caterogry
-      message.channel.send({
+      message.say({
         embed: helpEmbed(client, message.author, prefix),
       });
     } else {
-      let inputted: any = client.commands.get(args[0].toLowerCase());
+      let inputted: any = client.commands.get(args[0]?.value.toLowerCase());
       if (!inputted) {
         let check = client.commands
           .filter(
-            (cmd) => cmd.catergory.toLowerCase() === args[0].toLowerCase()
+            (cmd) =>
+              cmd.catergory.toLowerCase() === args[0]?.value.toLowerCase()
           )
           .first();
         if (check) {
-          inputted = args[0];
-          message.channel.send({
+          inputted = args[0]?.value;
+          message.say({
             embed: helpCatergoryEmbed(
               client,
               message.author,
-              args[0].toLowerCase(),
+              args[0]?.value.toLowerCase(),
               prefix
             ),
           });
         }
       } else {
-        message.channel.send({
+        message.say({
           embed: CommandHelpEmbed(
             client,
             message.author,

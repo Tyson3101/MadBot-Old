@@ -22,23 +22,31 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: ["MANAGE_GUILD", false],
-  async run(client, message, { args, ...util }) {
+  async run(
+    client,
+    message,
+    {
+      args: {
+        parserOutput: { ordered: args, flags, options },
+        flag,
+        option,
+      },
+      ...util
+    }
+  ) {
     let guildDB = util.DB;
-    const prefix = message.content
-      .trim()
-      .slice(guildDB.prefix.length)
-      .split(/ +/g)[1];
+    const prefix = args[0]?.value;
     if (prefix) {
       guildDB.prefix = prefix;
       let newDBGUILD: GuildDataBaseInterface = {
         ...guildDB,
       };
       await guildDataBase.set(message.guild.id, newDBGUILD);
-      message.channel.send({
+      message.say({
         embed: prefixEmbed(client, message.member, util.DB, guildDB.prefix),
       });
     } else {
-      message.channel.send({
+      message.say({
         embed: prefixEmbed(client, message.member, util.DB),
       });
     }

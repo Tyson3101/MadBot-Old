@@ -20,16 +20,29 @@ export const command: commandInterFace = {
       required: true,
     },
   ],
-  async run(client, message, util) {
-    const { args } = util;
-    util.DB.tags[args[0].toLowerCase()] = {
-      name: args[0].toLowerCase(),
-      reply: args.slice(1).join(" "),
+  async run(
+    client,
+    message,
+    {
+      args: {
+        parserOutput: { ordered: args, flags, options },
+        flag,
+        option,
+      },
+      ...util
+    }
+  ) {
+    util.DB.tags[args[0]?.value.toLowerCase()] = {
+      name: args[0]?.value.toLowerCase(),
+      reply: args
+        .map((x) => x.raw)
+        .slice(1)
+        .join(" "),
     };
     const newDB = {
       ...util.DB,
     };
     await guildDataBase.set(message.guild.id, newDB);
-    message.channel.send(`The tag "${args[0]}" has been created!`);
+    message.say(`The tag "${args[0]?.value}" has been created!`);
   },
 };

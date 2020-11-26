@@ -1,14 +1,13 @@
-import { Guild, Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
+import { Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
+import { getToEval } from "../../functions/SetUpArgs";
 import { commandInterFace } from "../../interfaces/Command";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
-import { guildDataBase } from "../../structures/DataBase";
 
 async function sendEvaledMessage(
   message: Message,
   timeTook: number[],
   toDisplay: string[],
   evaled: string
-): Promise<Message> {
+): Promise<Message | Message[]> {
   const { client } = message;
   let evaledEmbed = new MessageEmbed({
     author: {
@@ -54,13 +53,13 @@ async function sendEvaledMessage(
     },
   });
   try {
-    let msg = await message.channel.send(evaledEmbed);
+    let msg: Message | Message[] = await message.channel.send(evaledEmbed);
     return msg;
   } catch (e) {
     console.log(e);
   }
 }
-import { functions } from "../../structures/evalFunctions";
+import { functions } from "../../functions/evalFunctions";
 
 export const command: commandInterFace = {
   name: "eval",
@@ -73,8 +72,19 @@ export const command: commandInterFace = {
     },
   ],
   devOnly: true,
-  async run(client, message, { args, ...util }) {
-    const toEvalFull = args.join(" ").replace(/```(js)?/g, "");
+  async run(
+    client,
+    message,
+    {
+      args: {
+        parserOutput: { ordered: args, flags, options },
+      },
+    }
+  ) {
+    const toEvalFull = args
+      .map((x) => x.raw)
+      .join(" ")
+      .replace(/```(js)?/g, "");
     let toEval: string;
     let evaled: string;
     let toEvaledSpilt: string[];
@@ -82,15 +92,7 @@ export const command: commandInterFace = {
       const startTime = process.hrtime();
       toEvaledSpilt = toEvalFull.split(/\n/g);
       let filterd = toEvaledSpilt.filter((str) => str.length);
-      toEval = filterd
-        .map((str) => {
-          if (filterd[filterd.length - 1] === str) {
-            if (filterd[filterd.length - 1].includes("return")) return str;
-            else return `return ${filterd[filterd.length - 1]}`;
-          } else return `${str}\n`;
-        })
-        .join(" ")
-        .trim();
+      toEval = getToEval(filterd);
       let aboutToEval = `(async () => {\nconst Discord = require('discord.js')\nconst { MessageEmbed, MessageAttachment } = require('discord.js')\n${functions.join(
         "\n"
       )}\n${toEval}\n})()`;
@@ -99,11 +101,12 @@ export const command: commandInterFace = {
       const timeTook = process.hrtime(startTime);
       if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
 
-      if (evaled) {
+      if (evaled && !flags.has("i")) {
         await sendEvaledMessage(message, timeTook, toEvaledSpilt, evaled);
       }
     } catch (e) {
-      message.channel.send(
+      console.log(e);
+      message.say(
         new MessageEmbed({
           author: {
             name: message.author.tag,

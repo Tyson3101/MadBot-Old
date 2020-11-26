@@ -34,7 +34,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public/views"));
 
 app.use(async (req, res, next) => {
-  (req.session as any).user = {
+  req.session.user = {
     ...(await import("./functions/getTestData")).OWNERDATA(),
   };
   next();
@@ -48,7 +48,7 @@ app.get(
     res.render("home", {
       AUTH_USER_LINK: AUTH_USER_LINK,
       user: {
-        ...(req.session as any).user,
+        ...req.session.user,
       },
     });
   }

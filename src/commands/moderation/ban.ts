@@ -1,4 +1,5 @@
 import { commandInterFace } from "../../interfaces/Command";
+
 import { GuildMember, MessageEmbed } from "discord.js";
 import {
   errorCommandEmbed,
@@ -14,6 +15,7 @@ export const command: commandInterFace = {
   description: "Bans a member from the server.",
   usage: ["ban [Member] (Reason)"],
   example: ["ban @Tyson Dm Advertising"],
+  guildOnly: true,
   args: [
     {
       name: "Member",
@@ -33,11 +35,16 @@ export const command: commandInterFace = {
   aliases: [],
   permission: ["BAN_MEMBERS", true],
   async run(client, message, util) {
-    let { args } = util;
-    let member: GuildMember = await util.getMember(args[0]);
+    const Argument = util.args;
+    const args = Argument.parserOutput.ordered;
+    const flags = Argument.parserOutput.flags;
+    const options = Argument.parserOutput.options;
+    const flag = Argument.flag;
+    const option = Argument.option;
+    let member: GuildMember = await util.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -45,7 +52,7 @@ export const command: commandInterFace = {
         ),
       });
     if (member.id === client.user.id)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -69,7 +76,7 @@ export const command: commandInterFace = {
         true
       )
     )
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -77,7 +84,7 @@ export const command: commandInterFace = {
         ),
       });
     let reason = "No reason provided.";
-    if (args[1]) reason = args.slice(1).join(" ");
+    if (args[1].value) reason = args.slice(1).join(" ");
     let typeCaseCount = getTypeCaseCount("BAN", util.DB) + 1;
     let caseCount = ++util.DB.moderation.caseCount;
     let backUpDB = { ...util.DB };
@@ -133,7 +140,7 @@ export const command: commandInterFace = {
       .catch((e) => e);
     try {
       await member.ban({ reason: reason });
-      await message.channel.send({
+      await message.say({
         embed: sucessPunishEmbed(client, member.user, util, {
           title: "Banned!",
           reason: reason,
@@ -142,7 +149,7 @@ export const command: commandInterFace = {
       });
     } catch (e) {
       console.log(e);
-      message.channel.send({
+      message.say({
         embed: errorCommandEmbed(client, message.author, null),
       });
       await guildDataBase.set(message.guild.id, backUpDB);

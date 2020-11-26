@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dashstart:dev": "node ./dist/dashboard/server.js",
-    "dashstart": "nodemon --watch dashboard -e ts,ejs --exec npm run dashstart:dev",
+    "dashstart": "nodemon --watch dashboard -e ts,ejs,css,json,js --exec npm run dashstart:dev",
     "botstart": "node ./dist/src/index.js"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "form-urlencoded": "^4.2.1",
     "join": "^3.0.0",
     "keyv": "^4.0.3",
+    "lexure": "^0.17.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^5.10.15",
@@ -35,13 +36,14 @@
     "node-fetch": "^2.6.1",
     "opusscript": "0.0.7",
     "shelljs": "^0.8.4",
-    "typescript": "^4.0.5",
+    "typescript": "^4.1.2",
     "util": "^0.12.3"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^14.14.6",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "typescript": "^4.1.2"
   }
 }

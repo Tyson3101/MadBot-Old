@@ -18,6 +18,7 @@ export const command: commandInterFace = {
   description: "Kicks a member from the server.",
   usage: ["kick [Member] (Reason)"],
   example: ["kick @Tyson Dm Advertising"],
+  guildOnly: true,
   args: [
     {
       name: "Member",
@@ -37,11 +38,16 @@ export const command: commandInterFace = {
   aliases: [],
   permission: ["KICK_MEMBERS", true],
   async run(client, message, util) {
-    let { args } = util;
-    let member: GuildMember = await util.getMember(args[0]);
+    const Argument = util.args;
+    const args = Argument.parserOutput.ordered;
+    const flags = Argument.parserOutput.flags;
+    const options = Argument.parserOutput.options;
+    const flag = Argument.flag;
+    const option = Argument.option;
+    let member: GuildMember = await util.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -49,7 +55,7 @@ export const command: commandInterFace = {
         ),
       });
     if (member.id === client.user.id)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -73,7 +79,7 @@ export const command: commandInterFace = {
         true
       )
     )
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -81,7 +87,7 @@ export const command: commandInterFace = {
         ),
       });
     let reason = "No reason provided.";
-    if (args[1]) reason = args.slice(1).join(" ");
+    if (args[1].value) reason = args.slice(1).join(" ");
     let backUpDB = { ...util.DB };
     let typeCaseCount = kickCaseCount("KICK", util.DB) + 1;
     let caseCount = ++util.DB.moderation.caseCount;
@@ -137,7 +143,7 @@ export const command: commandInterFace = {
       .catch((e) => e);
     try {
       await member.kick(reason);
-      await message.channel.send({
+      await message.say({
         embed: sucessPunishEmbed(client, member.user, util, {
           title: "Kicked!",
           reason: reason,
@@ -145,7 +151,7 @@ export const command: commandInterFace = {
         }),
       });
     } catch {
-      message.channel.send({
+      message.say({
         embed: errorCommandEmbed(client, message.author, null),
       });
       await guildDataBase.set(message.guild.id, backUpDB);

@@ -19,6 +19,7 @@ import { handleEndMute as handleMute } from "../../functions/handleMutes";
 export const command: commandInterFace = {
   name: "mute",
   description: "Mute a members",
+  guildOnly: true,
   args: [
     {
       name: "Member/ID to Mute",
@@ -30,7 +31,7 @@ export const command: commandInterFace = {
       name: "Time",
       description: "Time to mute for.",
       type: ["Time"],
-      required: true,
+      required: false,
     },
     {
       name: "Reason",
@@ -42,11 +43,16 @@ export const command: commandInterFace = {
   ],
   permission: ["MANAGE_CHANNELS", true],
   async run(client, message, util) {
-    let { args } = util;
-    let member: GuildMember = await util.getMember(args[0]);
+    const Argument = util.args;
+    const args = Argument.parserOutput.ordered;
+    const flags = Argument.parserOutput.flags;
+    const options = Argument.parserOutput.options;
+    const flag = Argument.flag;
+    const option = Argument.option;
+    let member: GuildMember = await util.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -54,7 +60,7 @@ export const command: commandInterFace = {
         ),
       });
     if (member.id === client.user.id)
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -78,7 +84,7 @@ export const command: commandInterFace = {
         true
       )
     )
-      return message.channel.send({
+      return message.say({
         embed: invaildPermissionsCustom(
           client,
           message.author,
@@ -86,8 +92,8 @@ export const command: commandInterFace = {
         ),
       });
     let endTime: number;
-    if (args[1]) {
-      endTime = ms(args[1]);
+    if (args[1].value) {
+      endTime = ms(args[1].value);
     }
     let MutedRole: Role = message.guild.roles.cache.find(
       (role) => role.name.toLowerCase() === "muted"
@@ -114,12 +120,14 @@ export const command: commandInterFace = {
           );
         });
     } catch (e) {
-      return message.channel.send({
+      return message.say({
         embed: errorCommandEmbed(client, message.author, e),
       });
     }
     let reason = "No reason provided.";
-    if (args[2]) reason = args.slice(2).join(" ");
+    if (args[1].value && !endTime) reason = args.slice(1).join(" ");
+    else if (args[2].value) reason = args.slice(2).join(" ");
+
     let backUpDB = { ...util.DB };
     let typeCaseCount = muteCaseCount("MUTE", util.DB) + 1;
     let caseCount = ++util.DB.moderation.caseCount;
@@ -144,7 +152,7 @@ export const command: commandInterFace = {
       typeCaseCount: typeCaseCount,
       caseCount: caseCount,
       infringementType: "MUTE",
-      endDate: new Date(Date.now() + endTime),
+      endDate: endTime ? new Date(Date.now() + endTime) : null,
       active: true,
     };
 
@@ -172,7 +180,7 @@ export const command: commandInterFace = {
               client.user.displayAvatarURL({ format: "png" }),
           },
           title: `Muted from ${message.guild.name}`,
-          description: `You have been Muted from ${message.guild.name} for ${args[1]} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
+          description: `You have been Muted from ${message.guild.name} for ${args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
           footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -180,21 +188,24 @@ export const command: commandInterFace = {
         }),
       })
       .catch((e) => e);
-    const timeMuteTimeout = setTimeout(
-      async () =>
-        handleMute(
-          member,
-          MutedRole.id,
-          moderationDB.oldRolesID,
-          util.DB,
-          typeCaseCount
-        ),
-      endTime
-    );
+    let timeMuteTimeout: any;
+    if (endTime) {
+      timeMuteTimeout = setTimeout(
+        async () =>
+          handleMute(
+            member,
+            MutedRole.id,
+            moderationDB.oldRolesID,
+            util.DB,
+            typeCaseCount
+          ),
+        endTime
+      );
+    }
     try {
       await member.roles.remove(moderationDB.oldRolesID);
       await member.roles.add(MutedRole, reason);
-      await message.channel.send({
+      await message.say({
         embed: sucessPunishEmbed(client, member.user, util, {
           title: "Muted!",
           reason: reason,
@@ -203,11 +214,11 @@ export const command: commandInterFace = {
       });
     } catch (e) {
       console.log(e);
-      message.channel.send({
+      message.say({
         embed: errorCommandEmbed(client, message.author, e),
       });
       await guildDataBase.set(message.guild.id, backUpDB);
-      clearTimeout(timeMuteTimeout);
+      if (timeMuteTimeout) clearTimeout(timeMuteTimeout);
     }
   },
 };

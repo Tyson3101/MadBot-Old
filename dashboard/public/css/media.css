@@ -1,0 +1,21 @@
+@media screen and (max-width: 1350px) {
+  .MadBotSideTextHeader {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 857px) {
+  .navBar {
+    height: 21vh;
+  }
+  .HeaderThumbnail {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .HeaderMain {
+    margin-top: 6px;
+    left: 2.2vw;
+  }
+}

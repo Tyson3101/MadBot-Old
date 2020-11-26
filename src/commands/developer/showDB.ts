@@ -11,10 +11,21 @@ export const command: commandInterFace = {
   ],
   public: false,
   devOnly: true,
-  async run(client, message, { args, ...util }) {
-    let guildDB = await guildDataBase.get(args[0]);
+  async run(
+    client,
+    message,
+    {
+      args: {
+        parserOutput: { ordered: args, flags, options },
+        flag,
+        option,
+      },
+      ...util
+    }
+  ) {
+    let guildDB = await guildDataBase.get(args[0]?.value);
     if (!guildDB) guildDB = util.DB;
     const DBJSON: string = JSON.stringify(guildDB, null, 4);
-    message.channel.send(DBJSON, { split: true, code: "json" });
+    message.say(DBJSON, { split: true, code: "json" });
   },
 };

@@ -1,37 +1,50 @@
 import { Guild, GuildMember, Message, Role, User } from "discord.js";
 import { utilObjInterface } from "../interfaces/Args";
-import { commandInterFace } from "../interfaces/Command";
+import * as lexure from "lexure";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { DiscordBot } from "../structures/Client";
 import {
   noArgsCommandHelpEmbed,
   invaildPermissionsCustom,
 } from "../structures/embeds";
-import { getGuildDB } from "./getGuildDB";
 
 export function setUpArgs(
   client: DiscordBot,
   message: Message,
   DB: GuildDataBaseInterface
-): [string, string[], utilObjInterface] {
-  const [commandNameUPPERCASE, ...argsArray] = message.content
-    .trim()
-    .slice(DB.prefix.length)
-    .split(/ +/g);
+): [string, lexure.Args, utilObjInterface] {
+  const lexer = new lexure.Lexer(message.content).setQuotes([
+    ['"', '"'],
+    ["“", "”"],
+  ]);
+  let UtilArgs: utilObjInterface;
+  let args: lexure.Args;
+  const res = lexer.lexCommand((s) => (s.startsWith(DB.prefix) ? 1 : null));
+  const CommandName = res && res[0]?.value;
+  const commandNameLowerCase = CommandName?.toLowerCase();
+
+  const argsAll = res && res[1]();
+  const parser = new lexure.Parser(argsAll).setUnorderedStrategy(
+    lexure.longStrategy()
+  );
+
+  args = new lexure.Args(parser.parse());
 
   // Util Object
 
-  const UtilArgs: utilObjInterface = {
+  UtilArgs = {
     client: client,
     message: message,
-    args: argsArray,
+    args: args,
     DB: DB,
     prefix: DB.prefix,
     isDM: !message.guild,
-    command: client.commands.get(commandNameUPPERCASE.toLowerCase())
-      ? client.commands.get(commandNameUPPERCASE.toLowerCase())
-      : null,
-
+    command:
+      client.commands.get(commandNameLowerCase) ??
+      client.commands.find(
+        (cmd) => cmd.aliases && cmd.aliases.includes(commandNameLowerCase)
+      ) ??
+      null,
     async getUser(mentionID: string): Promise<User> {
       let idArray = mentionID.match(/\d+/);
       if (!idArray) throw "No ID!";
@@ -106,5 +119,28 @@ export function setUpArgs(
   };
 
   // Return
-  return [commandNameUPPERCASE, argsArray, UtilArgs];
+  return [commandNameLowerCase, args, UtilArgs];
+}
+
+export function getToEval(filterd: string[]): string {
+  let testArray = filterd.filter(
+    (str) => str.length && !str.match(/^(\})?(\])?(\})?(\))?$/g)
+  );
+  console.log(testArray);
+  let checkArray = testArray.map((str, i) => {
+    if (i === testArray.length - 1) {
+      if (str.includes("return")) return str;
+      else return `return ${str}`;
+    } else return `${str}\n`;
+  });
+  console.log(checkArray);
+  for (let i = 0; i < filterd.length; i++) {
+    if (checkArray[i] && filterd[i] !== checkArray[i])
+      filterd[i] = checkArray[i];
+  }
+  //console.log(filterd);
+  return filterd
+    .map((x) => x)
+    .join(" ")
+    .trim();
 }
