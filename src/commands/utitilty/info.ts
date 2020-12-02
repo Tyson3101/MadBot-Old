@@ -1,7 +1,5 @@
 import { commandInterFace } from "../../interfaces/Command";
 import { clientInfo } from "../../structures/Embeds";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
-import { getGuildDB } from "../../functions/GetGuildDB";
 import { Message } from "discord.js";
 
 export const command: commandInterFace = {
@@ -10,17 +8,17 @@ export const command: commandInterFace = {
   aliases: ["stats"],
   async run(
     client,
-    message: Message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
   ) {
-    const { prefix } = util;
+    const { prefix } = message;
     message.say({ embed: clientInfo(client, message.author, prefix) }); // Sends Client Info Embed
   },
 };

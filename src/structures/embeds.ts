@@ -1,18 +1,16 @@
 import {
   GuildMember,
-  Message,
   MessageEmbed,
   PermissionString,
+  TextChannel,
   User,
+  Message,
 } from "discord.js";
 import { DiscordBot } from "./Client";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
-import { firstCap } from "../functions/FirstCap";
 import { commandInterFace } from "../interfaces/Command";
 import { duration } from "moment";
-import { infringementInterface } from "../interfaces/GuildDataBase";
 import "moment-duration-format";
-import { utilObjInterface } from "../interfaces/Args";
 
 // All embeds I want to use. (Allows less typing and resuing, also can input stuff in)
 
@@ -169,9 +167,15 @@ export const errorCommandEmbed = (
     },
     color: "DARK_VIVID_PINK",
     title: "Error",
-    description: error?.message
-      ? `:x: **This command experienced an error:** :x:\n${error.message}.`
-      : `:x: This command experienced an error. :x:`,
+    description: error
+      ? `:x: **This command experienced an error:** :x:\nPlease report this error: \`${error}\` to #${
+          (client.channels.cache.get("782159661141983243") as TextChannel).name
+        } in my [Support Server](${client.supportServer})!`
+      : `\nPlease report this incident to ${client.users
+          .fetch(client.developers.find((user) => !user.position).id)
+          .then((user) => user.tag)} in my [Support Server](${
+          client.supportServer
+        })!`,
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -196,6 +200,12 @@ export const noArgsCommandHelpEmbed = (
     color: "DARK_VIVID_PINK",
     title: "Invaild Arguments",
     description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}help ${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
+    fields: [
+      {
+        name: "Tips:",
+        value: client.tips.join("\n"),
+      },
+    ],
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -313,7 +323,9 @@ export const helpEmbed = (
     allReady.push(command.catergory);
     embed.addField(
       `${prefix}help ${command.catergory}`,
-      `Shows all commands in the ${firstCap(command.catergory)} Catergory`,
+      `Shows all commands in the ${client.firstCap(
+        command.catergory
+      )} Catergory`,
       true
     );
   });
@@ -335,7 +347,7 @@ export const helpCatergoryEmbed = (
       }),
     },
     color: "DARK_VIVID_PINK",
-    title: `${client.user.username} ${firstCap(catergory)} Commands`,
+    title: `${client.user.username} ${client.firstCap(catergory)} Commands`,
     description: `**[Join Support Server Here](${client.supportServer})**`,
     footer: {
       text: `${client.user.username} ©`,
@@ -351,7 +363,7 @@ export const helpCatergoryEmbed = (
         `${
           command.description
             ? command.description
-            : `Help for ${firstCap(commandName)}`
+            : `Help for ${client.firstCap(commandName)}`
         }`,
         true
       );
@@ -379,18 +391,19 @@ export const CommandHelpEmbed = (
       }),
     },
     color: "DARK_VIVID_PINK", //"FD0061",
-    title: `${firstCap(command.name)} Help`,
+    title: `${client.firstCap(command.name)} Help`,
     description: `Join My **[Support Server](${client.supportServer})** for more help.`,
     fields: [
       {
         name: `Command Help`,
-        value: `**Name:** ${firstCap(command.name)}
-**Catergory:** ${firstCap(command.catergory)}
-${
-  command.permission && command.permission[0]
-    ? `**Required Permission:** ${command.permission[0]}\n`
-    : ""
-}${
+        value: `**Name:** ${client.firstCap(command.name)}
+**Catergory:** ${client.firstCap(command.catergory)}\n${
+          command.note ? `**Note:** ${command.note}\n` : ""
+        }${
+          command.permission && command.permission[0]
+            ? `**Required Permission:** ${command.permission[0]}\n`
+            : ""
+        }${
           command.usage
             ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
             : ""
@@ -413,6 +426,7 @@ ${
     },
   });
   if (command.args?.length) {
+    embed.addField("Tips:", client.tips.join("\n"));
     args.forEach((argument, i: number) => {
       i++;
       embed.addField(
@@ -425,11 +439,13 @@ ${
           argument.description
             ? `**Description:** ${argument.description}\n`
             : ""
+        }${argument.note ? `**Note:** ${argument.note}\n` : ""}${
+          argument.length ? `**Length:** ${argument.length}\n` : ""
         }${
           argument.example?.length
             ? `**Example:** ${argument.example.join(` **|** `)}\n`
             : ""
-        }**Required:** ${firstCap(argument.required.toString())}`
+        }**Required:** ${client.firstCap(argument.required.toString())}`
       );
     });
   }
@@ -471,10 +487,9 @@ export const pingEmbed = (
 export const sucessPunishEmbed = (
   client: DiscordBot,
   userPunished: User,
-  util: utilObjInterface,
+  message: Message,
   { reason, casenumber, title }
 ): MessageEmbed => {
-  let { message } = util;
   return new MessageEmbed({
     author: {
       name: userPunished.tag,
@@ -496,12 +511,12 @@ export const sucessPunishEmbed = (
       },
       {
         name: "Mistake?",
-        value: `*${util.prefix}help case* **|** *${util.prefix}help reason*`,
+        value: `*${message.prefix}help case* **|** *${message.prefix}help reason*`,
         inline: true,
       },
     ],
     footer: {
-      text: `${firstCap(title.slice(0, title.length - 1))} by ${
+      text: `${client.firstCap(title.slice(0, title.length - 1))} by ${
         message.author.tag
       }!`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),

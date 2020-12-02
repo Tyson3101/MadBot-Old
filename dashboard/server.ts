@@ -1,18 +1,14 @@
 import { config } from "dotenv";
 config();
 import * as shell from "shelljs";
-import userCheck from "./functions/validate";
-const {
-  AUTH_USER_LINK,
-  PORT: processPORT,
-  SECRET_SESSION_KEY,
-  MONGODBSessionPassword,
-} = process.env;
+//import userCheck from "./functions/validate";
+const { AUTH_USER_LINK, PORT: processPORT, SECRET_SESSION_KEY } = process.env;
 // Copy all the view templates
 shell.cp("-R", "dashboard/public", "dist/dashboard");
 import express from "express";
 import path from "path";
 import session from "express-session";
+import { serverIcon } from "./functions/serverIcon";
 const app = express();
 app.use(express.json());
 app.use(
@@ -47,6 +43,9 @@ app.get(
   /*userCheck,*/ (req, res) => {
     res.render("home", {
       AUTH_USER_LINK: AUTH_USER_LINK,
+      Util: {
+        serverIcon,
+      },
       user: {
         ...req.session.user,
       },

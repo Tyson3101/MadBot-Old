@@ -16,18 +16,18 @@ export const command: commandInterFace = {
 
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
   ) {
     let guild: Guild;
-    if (args[0]?.value) guild = util.getGuild(args[0]?.value);
+    if (args[0]?.value) guild = message.getGuild(args[0]?.value);
     if (!guild) guild = message.guild;
     const DBObj: GuildDataBaseInterface = {
       name: guild.name,

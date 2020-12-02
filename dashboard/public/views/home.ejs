@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/media.css" />
+    <script src="../javascript/index.js" type="module"></script>
     <title>Mad Bot</title>
     <script>
       window.onload = async () => {
@@ -34,6 +35,36 @@
         />
       </div>
       <h1 class="HeaderMain">MadBot Dashboard</h1>
+    </div>
+    <div>
+      <h1
+        style="
+          text-align: center;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 4rem;
+          font-weight: bolder;
+          text-decoration: underline solid;
+        "
+      >
+        Servers
+      </h1>
+    </div>
+    <div class="Servers">
+      <% user.guilds.forEach(server => {%>
+      <div>
+        <h1 style="font-size: large">Server: <%= server.name %></h1>
+        <button
+          onclick="serverPageRedirect({ server: server })"
+          id="<%= server.id %>"
+        >
+          <img
+            src="<%= Util.serverIcon(server, { width: 500, height: 300}) %>"
+            width="500"
+            height="300"
+          />
+        </button>
+      </div>
+      <% }) %>
     </div>
   </body>
 </html>

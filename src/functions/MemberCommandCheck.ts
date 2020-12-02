@@ -9,12 +9,10 @@ import {
   noArgsCommandHelpEmbed,
   nsfwCommandEmbed,
 } from "../structures/Embeds";
-import { utilObjInterface } from "../interfaces/Args";
 
 export default function (
   client: DiscordBot,
   message: Message,
-  util: utilObjInterface,
   command: commandInterFace
 ) {
   if (command.permission && command.permission[0]) {
@@ -22,26 +20,28 @@ export default function (
       command.permission[1] = command.permission[0];
     }
   }
-  if (!message.content.toLowerCase().startsWith(util.prefix.toLowerCase()))
+  if (!message.content.toLowerCase().startsWith(message.prefix.toLowerCase()))
     return;
   if (command.devOnly && !client.developers.has(message.author.id))
     return message.channel.send({
       embed: ownerCommandEmbed(client, message.author),
     });
-  if (command.guildOnly && message.channel.type === "dm")
+  if (command.guildOnly && message.isDM)
     return message.channel.send({
       embed: dmCommandEmbed(client, message.author),
     });
-  if (message.channel.type !== "dm" && command.nsfw && message.channel.nsfw)
+  if (!message.isDM && command.nsfw && (message.channel as TextChannel).nsfw)
     return message.channel.send({
       embed: nsfwCommandEmbed(client, message.author),
     });
   if (
-    message.channel.type !== "dm" &&
+    !message.isDM &&
     command.permission &&
     command.permission[0] &&
     !message.member.hasPermission(command.permission[0]) &&
-    !message.channel.permissionsFor(message.member).has(command.permission[0])
+    !(message.channel as TextChannel)
+      .permissionsFor(message.member)
+      .has(command.permission[0])
   )
     return message.channel.send({
       embed: invaildPermissionsMemberCommandEmbed(
@@ -51,13 +51,13 @@ export default function (
       ),
     });
   if (
-    message.channel.type !== "dm" &&
+    !message.isDM &&
     command.permission &&
     command.permission[1] !== false &&
     !message.guild.me.hasPermission(
       command.permission[1] as PermissionString
     ) &&
-    !message.channel
+    !(message.channel as TextChannel)
       .permissionsFor(message.guild.me)
       .has(command.permission[1] as PermissionString)
   )
@@ -68,13 +68,13 @@ export default function (
         command.permission[1] as PermissionString
       ),
     });
-  if (command.args?.filter((arg) => arg.required).length > util.args.length)
+  if (command.args?.filter((arg) => arg.required).length > message.args.length)
     return message.channel.send({
       embed: noArgsCommandHelpEmbed(
         client,
         message.author,
         command,
-        util.prefix
+        message.prefix
       ),
     });
   return true;

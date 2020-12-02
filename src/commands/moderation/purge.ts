@@ -25,14 +25,17 @@ export const command: commandInterFace = {
   permission: ["MANAGE_MESSAGES", true],
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
-  ) {},
+  ) {
+    if (Number.isNaN(args[0].value))
+      return message.say({ embed: { title: "Works Ok???" } });
+  },
 };

@@ -11,14 +11,14 @@ export const command: commandInterFace = {
   devOnly: false,
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
   ) {
     let latency: string = Date.now() - message.createdTimestamp + "ms";

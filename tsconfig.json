@@ -10,7 +10,9 @@
     "removeComments": true,
     "strictNullChecks": false,
     "alwaysStrict": true,
-    "watch": true
+    "watch": true,
+    "baseUrl": "types",
+    "typeRoots": ["types"]
   },
   "lib": ["esnext"]
 }

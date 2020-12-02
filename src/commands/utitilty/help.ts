@@ -17,22 +17,23 @@ export const command: commandInterFace = {
       required: false,
       example: ["ban", "moderation"],
       description: "Command Or Catergory to help with",
+      length: "any",
       type: "Text",
     },
   ],
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
   ) {
-    const { prefix } = util;
+    const { prefix } = message;
     if (!args[0]?.value) {
       // Checks if inputted a command or caterogry
       message.say({

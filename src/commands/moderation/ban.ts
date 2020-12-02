@@ -1,6 +1,5 @@
 import { commandInterFace } from "../../interfaces/Command";
-
-import { GuildMember, MessageEmbed } from "discord.js";
+import { GuildMember, MessageEmbed, Message } from "discord.js";
 import {
   errorCommandEmbed,
   invaildPermissionsCustom,
@@ -8,7 +7,6 @@ import {
 } from "../../structures/embeds";
 import { guildDataBase } from "../../structures/DataBase";
 import { infringementInterface } from "../../interfaces/GuildDataBase";
-import { getTypeCaseCount } from "../../functions/getGuildDB";
 
 export const command: commandInterFace = {
   name: "ban",
@@ -34,14 +32,19 @@ export const command: commandInterFace = {
   ],
   aliases: [],
   permission: ["BAN_MEMBERS", true],
-  async run(client, message, util) {
-    const Argument = util.args;
-    const args = Argument.parserOutput.ordered;
-    const flags = Argument.parserOutput.flags;
-    const options = Argument.parserOutput.options;
-    const flag = Argument.flag;
-    const option = Argument.option;
-    let member: GuildMember = await util.getMember(args[0]?.value);
+  async run(
+    client,
+    {
+      argsUtil: {
+        parserOutput: { flags, options },
+        flag,
+        option,
+      },
+      args,
+      ...message
+    }
+  ) {
+    let member: GuildMember = await message.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
@@ -61,7 +64,7 @@ export const command: commandInterFace = {
       });
     if (message.member.id !== message.guild.ownerID) {
       if (
-        !util.compareRolePostion(
+        !message.compareRolePostion(
           message.member.roles.highest,
           member.roles.highest
         )
@@ -70,7 +73,7 @@ export const command: commandInterFace = {
     }
     if (
       !member.bannable ||
-      util.compareRolePostion(
+      !message.compareRolePostion(
         message.guild.me.roles.highest,
         member.roles.highest,
         true
@@ -84,35 +87,32 @@ export const command: commandInterFace = {
         ),
       });
     let reason = "No reason provided.";
-    if (args[1].value) reason = args.slice(1).join(" ");
-    let typeCaseCount = getTypeCaseCount("BAN", util.DB) + 1;
-    let caseCount = ++util.DB.moderation.caseCount;
-    let backUpDB = { ...util.DB };
+    if (args[1].value)
+      reason = args
+        .map((x) => x.raw)
+        .slice(1)
+        .join(" ");
+    let typeCaseCount = client.getTypeCaseCount("BAN", message.DB) + 1;
+    let caseCount = ++message.DB.moderation.caseCount;
+    let backUpDB = { ...message.DB };
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
-      victim: {
-        id: member.id,
-        username: member.user.username,
-        tag: member.user.tag,
-      },
-      moderator: {
-        id: message.author.id,
-        username: message.author.username,
-        tag: message.author.tag,
-      },
+      victim: member.id,
+      moderator: message.author.id,
       reason: reason,
       typeCaseCount: typeCaseCount,
       caseCount: caseCount,
+      startDate: new Date(),
       infringementType: "BAN",
     };
 
-    util.DB.moderation.bans[member.id]
-      ? util.DB.moderation.bans[member.id].push(moderationDB)
-      : (util.DB.moderation.bans[member.id] = [moderationDB]);
-    util.DB.moderation.all[member.id]
-      ? util.DB.moderation.all[member.id].push(moderationDB)
-      : (util.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...util.DB });
+    message.DB.moderation.bans[member.id]
+      ? message.DB.moderation.bans[member.id].push(moderationDB)
+      : (message.DB.moderation.bans[member.id] = [moderationDB]);
+    message.DB.moderation.all[member.id]
+      ? message.DB.moderation.all[member.id].push(moderationDB)
+      : (message.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -141,7 +141,7 @@ export const command: commandInterFace = {
     try {
       await member.ban({ reason: reason });
       await message.say({
-        embed: sucessPunishEmbed(client, member.user, util, {
+        embed: sucessPunishEmbed(client, member.user, <Message>message, {
           title: "Banned!",
           reason: reason,
           casenumber: caseCount,

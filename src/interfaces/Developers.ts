@@ -7,6 +7,6 @@ enum Position { // Enum
 }
 
 export interface developerInterface {
-  User: User; // User object of that developer
+  id: string; // User object of that developer
   position: Position; // There postion of the enum
 }

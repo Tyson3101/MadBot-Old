@@ -1,16 +1,12 @@
-import { Guild } from "discord.js";
-import { DiscordBot } from "../structures/Client";
-import {
-  GuildDataBaseInterface,
-  infringementType,
-} from "../interfaces/GuildDataBase";
+import { Message } from "discord.js";
+import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
 
-export const getGuildDB = async (
-  client: DiscordBot,
-  guild: Guild,
+export async function getGuildDB(
+  message: Message,
   InputtedDB: any = null // Used to check other DB's I may want to use. Defaults to guild
-): Promise<GuildDataBaseInterface> => {
+): Promise<GuildDataBaseInterface> {
+  const { guild, client } = message;
   // Says it returns a promise which resloves into a GuildDataBaseInterface>
   const DB = InputtedDB || guildDataBase;
   // Checks if guild is null (If is it was sent in dm.)
@@ -72,18 +68,4 @@ export const getGuildDB = async (
       logChannel: null,
     };
   }
-};
-
-export function getTypeCaseCount(
-  type: infringementType,
-  DB: GuildDataBaseInterface
-) {
-  let toLoop = DB.moderation[`${type.toLowerCase()}s`];
-  let caseCount = 0;
-  for (let key in toLoop) {
-    if (Array.isArray(toLoop[key])) {
-      caseCount += toLoop[key].length;
-    } else caseCount++;
-  }
-  return caseCount;
 }

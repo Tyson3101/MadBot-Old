@@ -1,20 +1,12 @@
-import { handleEndMute, handleMutes } from "../functions/handleMutes";
 import { ReadyEventInterface } from "../interfaces/Events";
 import { infringementInterface } from "../interfaces/GuildDataBase";
 import { guildDataBase } from "../structures/DataBase";
 
-function returnMultiple(stringToRepeat: string, timesToRepeat: number): string {
-  let array = [];
-  for (let i = 0; i < timesToRepeat; i++) array.push(stringToRepeat);
-  return array.join("");
-}
-
 export const event: ReadyEventInterface = {
   event: "ready",
   async run(client) {
-    let botDev = await client.users.fetch("397737988915724310");
-    client.developers.set(botDev.id, {
-      User: botDev, // Sets the botdevs user object
+    client.developers.set("397737988915724310", {
+      id: "397737988915724310", // Sets the botdevs user id
       position: 0,
     });
 
@@ -25,8 +17,7 @@ export const event: ReadyEventInterface = {
 
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
-Loggen in with the token ${client.token.slice(0, 34)}${returnMultiple(
-      "x",
+Loggen in with the token ${client.token.slice(0, 34)}${"x".repeat(
       client.token.slice(34).length
     )}
 -----------------  Stats  ----------------
@@ -39,14 +30,16 @@ Users: ${client.guilds.cache.reduce(
 Commands: ${client.commands.size}
 Events: ${client.events.size}
 -----------------  Log  ----------------`);
-    const Mutes: infringementInterface[] = (await handleMutes(client))[1];
-    if (Mutes.length) {
-      Mutes.forEach((Case) => {
+    const Mutes = (await client.handleMutes(
+      client
+    )) as infringementInterface[][];
+    Mutes.forEach((MuteGuild: infringementInterface[]) => {
+      MuteGuild.forEach((Case: infringementInterface) => {
         const guild = client.guilds.cache.get(Case.guildID);
         if (guild && Case?.active && Case?.endDate) {
           setTimeout(async () => {
-            handleEndMute(
-              await guild.members.fetch(Case.victim.id),
+            client.handleEndMute(
+              await guild.members.fetch(Case.victim),
               Case.muteRoleID,
               Case.oldRolesID,
               await guildDataBase.get(guild.id),
@@ -55,6 +48,6 @@ Events: ${client.events.size}
           }, new Date(Case.endDate).getTime() - Date.now());
         }
       });
-    }
+    });
   },
 };

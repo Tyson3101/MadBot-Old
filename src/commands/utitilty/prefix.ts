@@ -1,7 +1,6 @@
 import { commandInterFace } from "../../interfaces/Command";
 import { guildDataBase } from "../../structures/DataBase";
 import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
-import { getGuildDB } from "../../functions/GetGuildDB";
 import { prefixEmbed } from "../../structures/Embeds"; // Import Syntax
 
 export const command: commandInterFace = {
@@ -15,6 +14,7 @@ export const command: commandInterFace = {
       type: ["Prefix"],
       description: "Prefix to change.",
       example: ["$", "z!"],
+      length: "1 Word",
       required: false,
     },
   ],
@@ -24,17 +24,17 @@ export const command: commandInterFace = {
   permission: ["MANAGE_GUILD", false],
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
         flag,
         option,
       },
-      ...util
+      args,
+      ...message
     }
   ) {
-    let guildDB = util.DB;
+    let guildDB = message.DB;
     const prefix = args[0]?.value;
     if (prefix) {
       guildDB.prefix = prefix;
@@ -43,11 +43,11 @@ export const command: commandInterFace = {
       };
       await guildDataBase.set(message.guild.id, newDBGUILD);
       message.say({
-        embed: prefixEmbed(client, message.member, util.DB, guildDB.prefix),
+        embed: prefixEmbed(client, message.member, message.DB, guildDB.prefix),
       });
     } else {
       message.say({
-        embed: prefixEmbed(client, message.member, util.DB),
+        embed: prefixEmbed(client, message.member, message.DB),
       });
     }
   },

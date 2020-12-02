@@ -8,11 +8,8 @@ export type infringementType =
   | "UNBAN"
   | "UNMUTE";
 
-export interface ModerationUser {
-  id: string;
-  username: string;
-  tag: string;
-}
+export type ModerationUser = string;
+
 export interface infringementInterface {
   guildID: string;
   victim: ModerationUser;
@@ -21,6 +18,7 @@ export interface infringementInterface {
   typeCaseCount: number;
   caseCount: number;
   infringementType: infringementType;
+  startDate: Date;
   endDate?: Date;
   active?: boolean;
   muteRoleID?: string;
@@ -29,7 +27,10 @@ export interface infringementInterface {
 
 export interface tagInterface {
   name: string;
-  reply: string;
+  replies: string[];
+  author: string;
+  createdAt: Date;
+  uses: number;
 }
 
 export interface moderationInterface {

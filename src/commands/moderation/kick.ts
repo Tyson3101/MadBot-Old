@@ -1,17 +1,12 @@
 import { commandInterFace } from "../../interfaces/Command";
-import { GuildMember, MessageEmbed } from "discord.js";
+import { GuildMember, MessageEmbed, Message } from "discord.js";
 import {
   errorCommandEmbed,
   invaildPermissionsCustom,
   sucessPunishEmbed,
 } from "../../structures/embeds";
-import { getTypeCaseCount as kickCaseCount } from "../../functions/GetGuildDB";
 import { guildDataBase } from "../../structures/DataBase";
-import {
-  GuildDataBaseInterface,
-  infringementInterface,
-  infringementType,
-} from "../../interfaces/GuildDataBase";
+import { infringementInterface } from "../../interfaces/GuildDataBase";
 
 export const command: commandInterFace = {
   name: "kick",
@@ -37,14 +32,19 @@ export const command: commandInterFace = {
   ],
   aliases: [],
   permission: ["KICK_MEMBERS", true],
-  async run(client, message, util) {
-    const Argument = util.args;
-    const args = Argument.parserOutput.ordered;
-    const flags = Argument.parserOutput.flags;
-    const options = Argument.parserOutput.options;
-    const flag = Argument.flag;
-    const option = Argument.option;
-    let member: GuildMember = await util.getMember(args[0]?.value);
+  async run(
+    client,
+    {
+      argsUtil: {
+        parserOutput: { flags, options },
+        flag,
+        option,
+      },
+      args,
+      ...message
+    }
+  ) {
+    let member: GuildMember = await message.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
@@ -64,7 +64,7 @@ export const command: commandInterFace = {
       });
     if (message.member.id !== message.guild.ownerID) {
       if (
-        !util.compareRolePostion(
+        !message.compareRolePostion(
           message.member.roles.highest,
           member.roles.highest
         )
@@ -73,7 +73,7 @@ export const command: commandInterFace = {
     }
     if (
       !member.kickable ||
-      util.compareRolePostion(
+      !message.compareRolePostion(
         message.guild.me.roles.highest,
         member.roles.highest,
         true
@@ -87,35 +87,32 @@ export const command: commandInterFace = {
         ),
       });
     let reason = "No reason provided.";
-    if (args[1].value) reason = args.slice(1).join(" ");
-    let backUpDB = { ...util.DB };
-    let typeCaseCount = kickCaseCount("KICK", util.DB) + 1;
-    let caseCount = ++util.DB.moderation.caseCount;
+    if (args[1].value)
+      reason = args
+        .map((x) => x.raw)
+        .slice(1)
+        .join(" ");
+    let backUpDB = { ...message.DB };
+    let typeCaseCount = client.getTypeCaseCount("KICK", message.DB) + 1;
+    let caseCount = ++message.DB.moderation.caseCount;
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
-      victim: {
-        id: member.id,
-        username: member.user.username,
-        tag: member.user.tag,
-      },
-      moderator: {
-        id: message.author.id,
-        username: message.author.username,
-        tag: message.author.tag,
-      },
+      victim: member.id,
+      moderator: message.author.id,
       reason: reason,
       typeCaseCount: typeCaseCount,
       caseCount: caseCount,
+      startDate: new Date(),
       infringementType: "KICK",
     };
 
-    util.DB.moderation.kicks[member.id]
-      ? util.DB.moderation.kicks[member.id].push(moderationDB)
-      : (util.DB.moderation.kicks[member.id] = [moderationDB]);
-    util.DB.moderation.all[member.id]
-      ? util.DB.moderation.all[member.id].push(moderationDB)
-      : (util.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...util.DB });
+    message.DB.moderation.kicks[member.id]
+      ? message.DB.moderation.kicks[member.id].push(moderationDB)
+      : (message.DB.moderation.kicks[member.id] = [moderationDB]);
+    message.DB.moderation.all[member.id]
+      ? message.DB.moderation.all[member.id].push(moderationDB)
+      : (message.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -144,10 +141,10 @@ export const command: commandInterFace = {
     try {
       await member.kick(reason);
       await message.say({
-        embed: sucessPunishEmbed(client, member.user, util, {
+        embed: sucessPunishEmbed(client, member.user, <Message>message, {
           title: "Kicked!",
           reason: reason,
-          casenumber: util.DB.moderation.caseCount,
+          casenumber: message.DB.moderation.caseCount,
         }),
       });
     } catch {

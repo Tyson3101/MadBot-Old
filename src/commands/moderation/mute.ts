@@ -1,9 +1,4 @@
-import Discord, {
-  MessageEmbed,
-  MessageAttachment,
-  GuildMember,
-  Role,
-} from "discord.js";
+import { MessageEmbed, GuildMember, Role, Message } from "discord.js";
 import { commandInterFace } from "../../interfaces/Command";
 import {
   errorCommandEmbed,
@@ -13,8 +8,6 @@ import {
 import ms from "ms";
 import { guildDataBase } from "../../structures/DataBase";
 import { infringementInterface } from "../../interfaces/GuildDataBase";
-import { getTypeCaseCount as muteCaseCount } from "../../functions/GetGuildDB";
-import { handleEndMute as handleMute } from "../../functions/handleMutes";
 
 export const command: commandInterFace = {
   name: "mute",
@@ -42,14 +35,19 @@ export const command: commandInterFace = {
     },
   ],
   permission: ["MANAGE_CHANNELS", true],
-  async run(client, message, util) {
-    const Argument = util.args;
-    const args = Argument.parserOutput.ordered;
-    const flags = Argument.parserOutput.flags;
-    const options = Argument.parserOutput.options;
-    const flag = Argument.flag;
-    const option = Argument.option;
-    let member: GuildMember = await util.getMember(args[0]?.value);
+  async run(
+    client,
+    {
+      argsUtil: {
+        parserOutput: { flags, options },
+        flag,
+        option,
+      },
+      args,
+      ...message
+    }
+  ) {
+    let member: GuildMember = await message.getMember(args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
@@ -69,7 +67,7 @@ export const command: commandInterFace = {
       });
     if (message.member.id !== message.guild.ownerID) {
       if (
-        !util.compareRolePostion(
+        !message.compareRolePostion(
           message.member.roles.highest,
           member.roles.highest
         )
@@ -78,7 +76,7 @@ export const command: commandInterFace = {
     }
     if (
       !member.manageable ||
-      !util.compareRolePostion(
+      !message.compareRolePostion(
         message.guild.me.roles.highest,
         member.roles.highest,
         true
@@ -125,44 +123,45 @@ export const command: commandInterFace = {
       });
     }
     let reason = "No reason provided.";
-    if (args[1].value && !endTime) reason = args.slice(1).join(" ");
-    else if (args[2].value) reason = args.slice(2).join(" ");
+    if (args[1].value && !endTime)
+      reason = args
+        .map((x) => x.raw)
+        .slice(1)
+        .join(" ");
+    else if (args[2].value)
+      reason = args
+        .map((x) => x.raw)
+        .slice(2)
+        .join(" ");
 
-    let backUpDB = { ...util.DB };
-    let typeCaseCount = muteCaseCount("MUTE", util.DB) + 1;
-    let caseCount = ++util.DB.moderation.caseCount;
-    util.DB.moderation.activeCases++;
+    let backUpDB = { ...message.DB };
+    let typeCaseCount = client.getTypeCaseCount("MUTE", message.DB) + 1;
+    let caseCount = ++message.DB.moderation.caseCount;
+    message.DB.moderation.activeCases++;
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
       muteRoleID: MutedRole.id,
       oldRolesID: member.roles.cache
         .filter((role) => role.editable && !role.managed)
         .keyArray(),
-      victim: {
-        id: member.id,
-        username: member.user.username,
-        tag: member.user.tag,
-      },
-      moderator: {
-        id: message.author.id,
-        username: message.author.username,
-        tag: message.author.tag,
-      },
+      victim: member.id,
+      moderator: message.author.id,
       reason: reason,
       typeCaseCount: typeCaseCount,
       caseCount: caseCount,
       infringementType: "MUTE",
+      startDate: new Date(),
       endDate: endTime ? new Date(Date.now() + endTime) : null,
       active: true,
     };
 
-    util.DB.moderation.mutes[member.id]
-      ? util.DB.moderation.mutes[member.id].push(moderationDB)
-      : (util.DB.moderation.mutes[member.id] = [moderationDB]);
-    util.DB.moderation.all[member.id]
-      ? util.DB.moderation.all[member.id].push(moderationDB)
-      : (util.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...util.DB });
+    message.DB.moderation.mutes[member.id]
+      ? message.DB.moderation.mutes[member.id].push(moderationDB)
+      : (message.DB.moderation.mutes[member.id] = [moderationDB]);
+    message.DB.moderation.all[member.id]
+      ? message.DB.moderation.all[member.id].push(moderationDB)
+      : (message.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -192,11 +191,11 @@ export const command: commandInterFace = {
     if (endTime) {
       timeMuteTimeout = setTimeout(
         async () =>
-          handleMute(
+          client.handleEndMute(
             member,
             MutedRole.id,
             moderationDB.oldRolesID,
-            util.DB,
+            message.DB,
             typeCaseCount
           ),
         endTime
@@ -206,10 +205,10 @@ export const command: commandInterFace = {
       await member.roles.remove(moderationDB.oldRolesID);
       await member.roles.add(MutedRole, reason);
       await message.say({
-        embed: sucessPunishEmbed(client, member.user, util, {
+        embed: sucessPunishEmbed(client, member.user, <Message>message, {
           title: "Muted!",
           reason: reason,
-          casenumber: util.DB.moderation.caseCount,
+          casenumber: message.DB.moderation.caseCount,
         }),
       });
     } catch (e) {

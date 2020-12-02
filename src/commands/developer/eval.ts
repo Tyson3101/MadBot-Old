@@ -1,5 +1,4 @@
 import { Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
-import { getToEval } from "../../functions/SetUpArgs";
 import { commandInterFace } from "../../interfaces/Command";
 
 async function sendEvaledMessage(
@@ -59,7 +58,6 @@ async function sendEvaledMessage(
     console.log(e);
   }
 }
-import { functions } from "../../functions/evalFunctions";
 
 export const command: commandInterFace = {
   name: "eval",
@@ -74,17 +72,17 @@ export const command: commandInterFace = {
   devOnly: true,
   async run(
     client,
-    message,
     {
-      args: {
-        parserOutput: { ordered: args, flags, options },
+      argsUtil: {
+        parserOutput: { flags, options },
+        flag,
+        option,
       },
+      args,
+      ...message
     }
   ) {
-    const toEvalFull = args
-      .map((x) => x.raw)
-      .join(" ")
-      .replace(/```(js)?/g, "");
+    let toEvalFull = message.plainArgs.join(" ").replace(/```(js)?/g, "");
     let toEval: string;
     let evaled: string;
     let toEvaledSpilt: string[];
@@ -92,17 +90,21 @@ export const command: commandInterFace = {
       const startTime = process.hrtime();
       toEvaledSpilt = toEvalFull.split(/\n/g);
       let filterd = toEvaledSpilt.filter((str) => str.length);
-      toEval = getToEval(filterd);
-      let aboutToEval = `(async () => {\nconst Discord = require('discord.js')\nconst { MessageEmbed, MessageAttachment } = require('discord.js')\n${functions.join(
-        "\n"
-      )}\n${toEval}\n})()`;
+      toEval = client.getToEval(filterd);
+      let aboutToEval = `(async () => {\nconst Discord = require('discord.js')\nconst { MessageEmbed, MessageAttachment } = require('discord.js')\n${toEval}\n})()`;
       evaled = await eval(aboutToEval);
-      console.log(evaled);
       const timeTook = process.hrtime(startTime);
-      if (typeof evaled !== "string") evaled = require("util").inspect(evaled);
+      if (typeof evaled !== "string")
+        evaled = require("message").inspect(evaled);
 
       if (evaled && !flags.has("i")) {
-        await sendEvaledMessage(message, timeTook, toEvaledSpilt, evaled);
+        await sendEvaledMessage(
+          <Message>message,
+          timeTook,
+          toEvaledSpilt,
+          evaled
+        );
+        console.log(evaled);
       }
     } catch (e) {
       console.log(e);
