@@ -6,19 +6,7 @@ export const command: commandInterFace = {
   name: "info",
   description: "Shows info of MadBot",
   aliases: ["stats"],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
-    const { prefix } = message;
-    message.say({ embed: clientInfo(client, message.author, prefix) }); // Sends Client Info Embed
+  async run(client, message) {
+    message.say({ embed: clientInfo(client, message.author, message.prefix) }); // Sends Client Info Embed
   },
 };

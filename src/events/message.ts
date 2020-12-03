@@ -3,19 +3,19 @@ import { guildDataBase } from "../structures/DataBase";
 import { errorCommandEmbed, clientInfo } from "../structures/Embeds";
 import { MessageEventInterface } from "../interfaces/Events";
 import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
+import { TextChannel } from "discord.js";
 
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
     await message.initiazlise();
     if (message.author.bot) return;
-    let prefix: string = client.prefix;
-    let guildDB: GuildDataBaseInterface;
-    guildDB = await client.getGuildDB(message, guildDataBase); // Gets Guild DataBase
-    prefix = guildDB.prefix;
-    if (message.channel.type !== "dm" && message.guild) {
+    const prefix = message.prefix;
+    if (!message.isDM && message.guild) {
       if (
-        !message.channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"])
+        !(message.channel as TextChannel)
+          .permissionsFor(message.guild.me)
+          .has(["SEND_MESSAGES"])
       )
         return;
     }

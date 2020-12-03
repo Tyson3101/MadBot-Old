@@ -55,17 +55,17 @@ export default function (
     command.permission &&
     command.permission[1] !== false &&
     !message.guild.me.hasPermission(
-      command.permission[1] as PermissionString
+      command.permission.slice(1) as PermissionString[]
     ) &&
     !(message.channel as TextChannel)
       .permissionsFor(message.guild.me)
-      .has(command.permission[1] as PermissionString)
+      .has(command.permission.slice(1) as PermissionString[])
   )
     return message.channel.send({
       embed: invaildPermissionsBotCommandEmbed(
         client,
         message.author,
-        command.permission[1] as PermissionString
+        command.permission.slice(1) as PermissionString[]
       ),
     });
   if (command.args?.filter((arg) => arg.required).length > message.args.length)

@@ -5,6 +5,9 @@ import { guildDataBase } from "../structures/DataBase";
 export const event: ReadyEventInterface = {
   event: "ready",
   async run(client) {
+    const Mutes = (await client.handleMutes(
+      client
+    )) as infringementInterface[][];
     client.developers.set("397737988915724310", {
       id: "397737988915724310", // Sets the botdevs user id
       position: 0,
@@ -29,10 +32,8 @@ Users: ${client.guilds.cache.reduce(
     )}
 Commands: ${client.commands.size}
 Events: ${client.events.size}
+Mutes: ${Mutes.reduce((acc, ele) => acc + ele.length, 0)}
 -----------------  Log  ----------------`);
-    const Mutes = (await client.handleMutes(
-      client
-    )) as infringementInterface[][];
     Mutes.forEach((MuteGuild: infringementInterface[]) => {
       MuteGuild.forEach((Case: infringementInterface) => {
         const guild = client.guilds.cache.get(Case.guildID);

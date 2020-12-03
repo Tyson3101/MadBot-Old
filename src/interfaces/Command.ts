@@ -15,8 +15,21 @@ export interface commandInterFace {
   guildOnly?: boolean;
   devOnly?: boolean;
   nsfw?: boolean;
-  permission?: [Discord.PermissionString, boolean | Discord.PermissionString];
+  permission?: [
+    Discord.PermissionString,
+    boolean | Discord.PermissionString,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?,
+    Discord.PermissionString?
+  ];
   public?: boolean;
   catergory?: string;
-  run: (client: DiscordBot, message: Discord.Message) => void;
+  run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
 }

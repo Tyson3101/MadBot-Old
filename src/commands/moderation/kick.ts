@@ -32,19 +32,8 @@ export const command: commandInterFace = {
   ],
   aliases: [],
   permission: ["KICK_MEMBERS", true],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
-    let member: GuildMember = await message.getMember(args[0]?.value);
+  async run(client, message) {
+    let member: GuildMember = await message.getMember(message.args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
@@ -87,8 +76,8 @@ export const command: commandInterFace = {
         ),
       });
     let reason = "No reason provided.";
-    if (args[1].value)
-      reason = args
+    if (message.args[1].value)
+      reason = message.args
         .map((x) => x.raw)
         .slice(1)
         .join(" ");

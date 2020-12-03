@@ -14,20 +14,10 @@ export const command: commandInterFace = {
   public: false,
   devOnly: true,
 
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
+  async run(client, message) {
     let guild: Guild;
-    if (args[0]?.value) guild = message.getGuild(args[0]?.value);
+    if (message.args[0]?.value)
+      guild = message.getGuild(message.args[0]?.value);
     if (!guild) guild = message.guild;
     const DBObj: GuildDataBaseInterface = {
       name: guild.name,
@@ -50,7 +40,7 @@ export const command: commandInterFace = {
       tags: {},
       logChannel: null,
     };
-    await guildDataBase.set(args[0]?.value || guild.id, DBObj);
+    await guildDataBase.set(message.args[0]?.value || guild.id, DBObj);
     message.say(JSON.stringify(DBObj, null, 4), {
       split: true,
       code: "json",

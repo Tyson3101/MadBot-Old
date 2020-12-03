@@ -70,18 +70,7 @@ export const command: commandInterFace = {
     },
   ],
   devOnly: true,
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
+  async run(client, message) {
     let toEvalFull = message.plainArgs.join(" ").replace(/```(js)?/g, "");
     let toEval: string;
     let evaled: string;
@@ -97,7 +86,7 @@ export const command: commandInterFace = {
       if (typeof evaled !== "string")
         evaled = require("message").inspect(evaled);
 
-      if (evaled && !flags.has("i")) {
+      if (evaled && !message.argsUtil.parserOutput.flags.has("i")) {
         await sendEvaledMessage(
           <Message>message,
           timeTook,

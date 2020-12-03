@@ -22,20 +22,9 @@ export const command: commandInterFace = {
   guildOnly: true,
   devOnly: false,
   permission: ["MANAGE_GUILD", false],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
+  async run(client, message) {
     let guildDB = message.DB;
-    const prefix = args[0]?.value;
+    const prefix = message.args[0]?.value;
     if (prefix) {
       guildDB.prefix = prefix;
       let newDBGUILD: GuildDataBaseInterface = {

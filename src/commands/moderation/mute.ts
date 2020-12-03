@@ -34,20 +34,9 @@ export const command: commandInterFace = {
       required: false,
     },
   ],
-  permission: ["MANAGE_CHANNELS", true],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
-    let member: GuildMember = await message.getMember(args[0]?.value);
+  permission: ["MANAGE_ROLES", "MANAGE_CHANNELS", "MANAGE_ROLES"],
+  async run(client, message) {
+    let member: GuildMember = await message.getMember(message.args[0]?.value);
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
@@ -90,8 +79,8 @@ export const command: commandInterFace = {
         ),
       });
     let endTime: number;
-    if (args[1].value) {
-      endTime = ms(args[1].value);
+    if (message.args[1].value) {
+      endTime = ms(message.args[1].value);
     }
     let MutedRole: Role = message.guild.roles.cache.find(
       (role) => role.name.toLowerCase() === "muted"
@@ -123,13 +112,13 @@ export const command: commandInterFace = {
       });
     }
     let reason = "No reason provided.";
-    if (args[1].value && !endTime)
-      reason = args
+    if (message.args[1].value && !endTime)
+      reason = message.args
         .map((x) => x.raw)
         .slice(1)
         .join(" ");
-    else if (args[2].value)
-      reason = args
+    else if (message.args[2].value)
+      reason = message.args
         .map((x) => x.raw)
         .slice(2)
         .join(" ");
@@ -179,7 +168,7 @@ export const command: commandInterFace = {
               client.user.displayAvatarURL({ format: "png" }),
           },
           title: `Muted from ${message.guild.name}`,
-          description: `You have been Muted from ${message.guild.name} for ${args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
+          description: `You have been Muted from ${message.guild.name} for ${message.args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
           footer: {
             text: `${client.user.username} ©`,
             iconURL: client.user.displayAvatarURL({ format: "png" }),

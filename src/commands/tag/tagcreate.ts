@@ -34,25 +34,14 @@ export const command: commandInterFace = {
       required: true,
     },
   ],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
+  async run(client, message) {
     const replies: string[] = [];
-    for (let i = 1; i < args.length; i++) {
-      if (args[i].raw.startsWith('"')) {
-        replies.push(args[i].value);
+    for (let i = 1; i < message.args.length; i++) {
+      if (message.args[i].raw.startsWith('"')) {
+        replies.push(message.args[i].value);
       } else {
         replies.push(
-          args
+          message.args
             .slice(i)
             .map((x) => x.raw)
             .join(" ")
@@ -60,8 +49,8 @@ export const command: commandInterFace = {
         break;
       }
     }
-    message.DB.tags[args[0].value.toLowerCase()] = {
-      name: args[0].value.toLowerCase(),
+    message.DB.tags[message.args[0].value.toLowerCase()] = {
+      name: message.args[0].value.toLowerCase(),
       replies: replies,
       createdAt: new Date(),
       author: message.author.id,
@@ -71,6 +60,6 @@ export const command: commandInterFace = {
       ...message.DB,
     };
     await guildDataBase.set(message.guild.id, newDB);
-    message.say(`The tag "${args[0].value}" has been created!`);
+    message.say(`The tag "${message.args[0].value}" has been created!`);
   },
 };

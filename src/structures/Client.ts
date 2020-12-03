@@ -6,7 +6,7 @@ import {
   GuildMember,
   Guild,
   Message,
-  ClientEvents,
+  Role,
 } from "discord.js";
 import { commandInterFace } from "../interfaces/Command";
 import fs from "fs";
@@ -19,6 +19,7 @@ import {
   infringementType,
 } from "../interfaces/GuildDataBase";
 import { getGuildDB } from "../functions/getGuildDB";
+import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
 
 export class DiscordBot extends Client {
   // Extending Client
@@ -92,6 +93,12 @@ export class DiscordBot extends Client {
     DB: GuildDataBaseInterface,
     CaseNumber: number
   ): Promise<boolean> {
+    if (
+      !DB.moderation.mutes[member.id].some(
+        (Case) => Case.caseCount === CaseNumber
+      )
+    )
+      return false;
     DB.moderation.activeCases -= 1;
     DB.moderation.mutes[member.id].find(
       (Case) => Case.caseCount === CaseNumber
@@ -99,10 +106,14 @@ export class DiscordBot extends Client {
     DB.moderation.all[member.id]
       .filter((Case) => Case.infringementType === "MUTE")
       .find((Case) => Case.caseCount === CaseNumber).active = false;
-    await member.roles.remove(MutedRole, "Time End!");
-    await member.roles.add(oldRoles, "Time End!");
-    await guildDataBase.set(member.guild.id, { ...DB });
-    return true;
+    try {
+      await guildDataBase.set(member.guild.id, { ...DB });
+      await member.roles.remove(MutedRole, "Time End!");
+      await member.roles.add(oldRoles, "Time End!");
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   public getTypeCaseCount(
@@ -117,6 +128,80 @@ export class DiscordBot extends Client {
       } else caseCount++;
     }
     return caseCount;
+  }
+
+  //@ts-ignore
+  async getUser(message: Message, mentionID: string): Promise<User> {
+    let idArray = mentionID.match(/\d+/);
+    if (!idArray) throw "No ID!";
+    let id = idArray[0];
+    try {
+      let User = await this.users.fetch(id);
+      return User;
+    } catch (e) {
+      message.channel.send({
+        embed: noArgsCommandHelpEmbed(
+          message.client,
+          message.author,
+          message.command,
+          message.prefix
+        ),
+      });
+      return null;
+    }
+  }
+  //@ts-ignore
+  async getMember(message: Message, mentionID: string): Promise<GuildMember> {
+    let idArray = mentionID.match(/\d+/);
+    if (!idArray[0]) return null;
+    let id = idArray[0];
+    if (!id) return null;
+    try {
+      let guildMember = await message.guild.members.fetch(id);
+      return guildMember;
+    } catch (e) {
+      message.channel.send({
+        embed: noArgsCommandHelpEmbed(
+          message.client,
+          message.author,
+          message.command,
+          message.prefix
+        ),
+      });
+      return null;
+    }
+  }
+  //@ts-ignore
+  getGuild(guildID: string): Guild {
+    return this.guilds.cache.get(guildID);
+  }
+  //@ts-ignore
+  compareRolePostion(
+    commandRole: Role,
+    otherRole: Role,
+    message: Message,
+    toReturnMsg: boolean
+  ): boolean {
+    if (toReturnMsg) {
+      if (
+        commandRole.position <= otherRole.position ||
+        otherRole.permissions.has("BAN_MEMBERS")
+      )
+        return false;
+      else return true;
+    } else {
+      if (
+        commandRole.position <= otherRole.position ||
+        otherRole.permissions.has("BAN_MEMBERS")
+      )
+        message.channel.send({
+          embed: invaildPermissionsCustom(
+            this,
+            message.author,
+            `You can't perform this action on this member.`
+          ),
+        });
+    }
   }
 
   private _eventHandlerInit(client: this): void {

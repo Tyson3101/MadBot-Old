@@ -23,19 +23,8 @@ export const command: commandInterFace = {
   ],
   example: ["purge [52] (Reason)"],
   permission: ["MANAGE_MESSAGES", true],
-  async run(
-    client,
-    {
-      argsUtil: {
-        parserOutput: { flags, options },
-        flag,
-        option,
-      },
-      args,
-      ...message
-    }
-  ) {
-    if (Number.isNaN(args[0].value))
+  async run(client, message) {
+    if (Number.isNaN(message.args[0].value))
       return message.say({ embed: { title: "Works Ok???" } });
   },
 };

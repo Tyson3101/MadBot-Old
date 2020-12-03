@@ -130,7 +130,7 @@ export const invaildPermissionsCustom = (
 export const invaildPermissionsBotCommandEmbed = (
   client: DiscordBot,
   user: User,
-  permission: PermissionString
+  permission: PermissionString[]
 ): MessageEmbed => {
   return new MessageEmbed({
     author: {
@@ -142,7 +142,9 @@ export const invaildPermissionsBotCommandEmbed = (
     },
     color: "DARK_VIVID_PINK",
     title: "Invaild Permissions",
-    description: `:x: I need the "${permission}" Permission to execute this command. :x:`,
+    description: `:x: I need the "${permission.join(
+      " **|** "
+    )}" Permission(s) to execute this command. :x:`,
     footer: {
       text: `${client.user.username} ©`,
       iconURL: client.user.displayAvatarURL({ format: "png" }),
@@ -392,7 +394,7 @@ export const CommandHelpEmbed = (
     },
     color: "DARK_VIVID_PINK", //"FD0061",
     title: `${client.firstCap(command.name)} Help`,
-    description: `Join My **[Support Server](${client.supportServer})** for more help.`,
+    description: `Join My **[Support Server](${client.supportServer})** for more help.\n**\`[]\`** = Required **|** **\`()\`** = Optional`,
     fields: [
       {
         name: `Command Help`,
