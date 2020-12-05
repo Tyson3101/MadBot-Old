@@ -1,13 +1,25 @@
 import { Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
 import { commandInterFace } from "../../interfaces/Command";
+import hastebin from "hastebin";
 
 async function sendEvaledMessage(
   message: Message,
   timeTook: number[],
   toDisplay: string[],
-  evaled: string
+  evaled: string,
+  showBin: string
 ): Promise<Message | Message[]> {
   const { client } = message;
+  let evaledHasteBin: string;
+  try {
+    evaledHasteBin = await hastebin.createPaste(showBin, {
+      raw: false,
+      contentType: true,
+      server: "https://hastebin.com",
+    });
+  } catch {
+    //.
+  }
   let evaledEmbed = new MessageEmbed({
     author: {
       name: message.author.tag,
@@ -20,15 +32,16 @@ async function sendEvaledMessage(
     title: "Evaled Code",
     description: `**Evaled! Took ${timeTook[0] > 0 ? `${timeTook[0]}s` : ""}${
       timeTook[1] / 1e6
-    }ms**\n\n**Output**\n\`\`\`js\n${DiscordUtil.escapeMarkdown(
-      evaled.slice(0, 1987),
-      {
-        underline: false,
-        bold: false,
-        italic: false,
-        inlineCode: false,
-      }
-    )}\n\`\`\``,
+    }ms**\n\n**Output**\n${
+      evaled.length < 2000
+        ? `\`\`\`js\n${DiscordUtil.escapeMarkdown(evaled.slice(0, 2000), {
+            underline: false,
+            bold: false,
+            italic: false,
+            inlineCode: false,
+          })}\`\`\`\n**${evaledHasteBin}**`
+        : evaledHasteBin
+    }\n`,
     fields: [
       {
         name: "Input",
@@ -52,7 +65,7 @@ async function sendEvaledMessage(
     },
   });
   try {
-    let msg: Message | Message[] = await message.channel.send(evaledEmbed);
+    let msg: Message = await message.channel.send(evaledEmbed);
     return msg;
   } catch (e) {
     console.log(e);
@@ -80,23 +93,27 @@ export const command: commandInterFace = {
       toEvaledSpilt = toEvalFull.split(/\n/g);
       let filterd = toEvaledSpilt.filter((str) => str.length);
       toEval = client.getToEval(filterd);
-      let aboutToEval = `(async () => {\nconst Discord = require('discord.js')\nconst { MessageEmbed, MessageAttachment } = require('discord.js')\n${toEval}\n})()`;
+      let aboutToEval = `(async () => {\nconst Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js');\n${toEval}\n})()`;
       evaled = await eval(aboutToEval);
       const timeTook = process.hrtime(startTime);
-      if (typeof evaled !== "string")
-        evaled = require("message").inspect(evaled);
+      let evaledMassed: string;
+      if (typeof evaled !== "string") {
+        evaledMassed = (await import("util")).inspect(evaled);
+        evaled = (await import("util")).inspect(evaled, {
+          depth: 0,
+        });
+      }
 
-      if (evaled && !message.argsUtil.parserOutput.flags.has("i")) {
+      if (evaled && !message.argsUtil.flag("i")) {
         await sendEvaledMessage(
           <Message>message,
           timeTook,
           toEvaledSpilt,
-          evaled
+          evaled,
+          evaledMassed
         );
-        console.log(evaled);
       }
     } catch (e) {
-      console.log(e);
       message.say(
         new MessageEmbed({
           author: {

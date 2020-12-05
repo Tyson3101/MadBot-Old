@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "form-urlencoded": "^4.2.1",
+    "hastebin": "^0.2.1",
     "join": "^3.0.0",
     "keyv": "^4.0.3",
     "lexure": "^0.17.0",
