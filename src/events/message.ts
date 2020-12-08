@@ -8,7 +8,6 @@ import { TextChannel } from "discord.js";
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
-    await message.initiazlise();
     if (message.author.bot) return;
     const prefix = message.prefix;
     if (!message.isDM && message.guild) {
@@ -46,9 +45,9 @@ export const event: MessageEventInterface = {
       }
     }
     if (
-      message.DB.tags &&
+      message.guild.DB.tags &&
       message.content.startsWith(prefix) &&
-      message.DB.tags[
+      message.guild.DB.tags[
         command.name.toLowerCase() +
           " " +
           message.args
@@ -58,7 +57,7 @@ export const event: MessageEventInterface = {
       ]
     ) {
       const tag =
-        message.DB.tags[
+        message.guild.DB.tags[
           command.name.toLowerCase() +
             " " +
             message.args
@@ -66,7 +65,7 @@ export const event: MessageEventInterface = {
               .join(" ")
               .toLowerCase()
         ];
-      message.DB.tags[
+      message.guild.DB.tags[
         command.name.toLowerCase() +
           " " +
           message.args
@@ -74,7 +73,7 @@ export const event: MessageEventInterface = {
             .join(" ")
             .toLowerCase()
       ].uses++;
-      await guildDataBase.set(message.guild.id, message.DB);
+      await guildDataBase.set(message.guild.id, message.guild.DB);
       return message
         .say(tag.replies[Math.floor(Math.random() * tag.replies.length)])
         .catch(console.log);

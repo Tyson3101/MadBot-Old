@@ -17,7 +17,6 @@ export const event: ReadyEventInterface = {
       name: `${client.prefix}help`,
       type: "COMPETING",
     });
-
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 Loggen in with the token ${client.token.slice(0, 34)}${"x".repeat(

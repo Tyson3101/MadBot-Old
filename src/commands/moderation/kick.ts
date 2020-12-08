@@ -81,9 +81,9 @@ export const command: commandInterFace = {
         .map((x) => x.raw)
         .slice(1)
         .join(" ");
-    let backUpDB = { ...message.DB };
-    let typeCaseCount = client.getTypeCaseCount("KICK", message.DB) + 1;
-    let caseCount = ++message.DB.moderation.caseCount;
+    let backUpDB = { ...message.guild.DB };
+    let typeCaseCount = client.getTypeCaseCount("KICK", message.guild.DB) + 1;
+    let caseCount = ++message.guild.DB.moderation.caseCount;
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
       victim: member.id,
@@ -95,13 +95,13 @@ export const command: commandInterFace = {
       infringementType: "KICK",
     };
 
-    message.DB.moderation.kicks[member.id]
-      ? message.DB.moderation.kicks[member.id].push(moderationDB)
-      : (message.DB.moderation.kicks[member.id] = [moderationDB]);
-    message.DB.moderation.all[member.id]
-      ? message.DB.moderation.all[member.id].push(moderationDB)
-      : (message.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...message.DB });
+    message.guild.DB.moderation.kicks[member.id]
+      ? message.guild.DB.moderation.kicks[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.kicks[member.id] = [moderationDB]);
+    message.guild.DB.moderation.all[member.id]
+      ? message.guild.DB.moderation.all[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -133,7 +133,7 @@ export const command: commandInterFace = {
         embed: sucessPunishEmbed(client, member.user, <Message>message, {
           title: "Kicked!",
           reason: reason,
-          casenumber: message.DB.moderation.caseCount,
+          casenumber: message.guild.DB.moderation.caseCount,
         }),
       });
     } catch {

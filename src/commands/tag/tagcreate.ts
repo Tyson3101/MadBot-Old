@@ -49,7 +49,7 @@ export const command: commandInterFace = {
         break;
       }
     }
-    message.DB.tags[message.args[0].value.toLowerCase()] = {
+    message.guild.DB.tags[message.args[0].value.toLowerCase()] = {
       name: message.args[0].value.toLowerCase(),
       replies: replies,
       createdAt: new Date(),
@@ -57,7 +57,7 @@ export const command: commandInterFace = {
       uses: 0,
     };
     const newDB = {
-      ...message.DB,
+      ...message.guild.DB,
     };
     await guildDataBase.set(message.guild.id, newDB);
     message.say(`The tag "${message.args[0].value}" has been created!`);

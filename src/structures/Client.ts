@@ -26,6 +26,7 @@ export class DiscordBot extends Client {
   events: Collection<string, EventInterface>; // Key, Value
   commands: Collection<string, commandInterFace>; // Key, Value
   developers: Collection<Snowflake, developerInterface>; // Key, Value
+  DBs: Collection<Snowflake, GuildDataBaseInterface>;
   supportServer: string;
   prefix: string;
   tips: string[];
@@ -39,6 +40,7 @@ export class DiscordBot extends Client {
     this.tips = [
       `**Have 2 or more words for one argument?** Join them with " ".\n**Eg:** ?tagcreate "name stillName" response to command`,
     ];
+    this.DBs = new Collection();
   }
 
   public firstCap(string: string) {
@@ -204,6 +206,12 @@ export class DiscordBot extends Client {
     }
   }
 
+  private getAllGuildsDBs(): Promise<GuildDataBaseInterface[]> {
+    return Promise.all(
+      this.guilds.cache.map(async (guild) => await guildDataBase.get(guild.id))
+    );
+  }
+
   private _eventHandlerInit(client: this): void {
     let i = 1; // Counter for console logging
     const events = fs
@@ -254,6 +262,7 @@ export class DiscordBot extends Client {
       });
     });
   }
+
   public async startUp(token: string) {
     if (!this.user) {
       // Checks if logged in!
@@ -261,6 +270,27 @@ export class DiscordBot extends Client {
       this._eventHandlerInit(this); // Handles Events
       try {
         let TOKEN = await this.login(token);
+        let allDBs = await this.getAllGuildsDBs();
+        allDBs.forEach((DB) => {
+          this.DBs.set(DB.id, DB);
+        });
+        this.guilds.cache.forEach((guild) => {
+          const DB = this.DBs.get(guild.id);
+          guild.DB = DB;
+          guild.prefix = DB.prefix;
+        });
+        setInterval(async () => {
+          allDBs = await this.getAllGuildsDBs();
+          allDBs.forEach((DB) => {
+            this.DBs.set(DB.id, DB);
+          });
+          this.guilds.cache.forEach((guild) => {
+            const DB = this.DBs.get(guild.id);
+            guild.DB = DB;
+            guild.prefix = DB.prefix;
+          }, 1);
+        });
+
         return TOKEN;
       } catch (e) {
         throw e;

@@ -3,7 +3,7 @@ import { config } from "dotenv";
 config(); // Allows for reading .env file
 import { DiscordBot } from "./structures/Client";
 import { Intents } from "discord.js";
-import { extendStructures } from "./structures/extendStructures";
+import { extendStructures } from "./functions/extendStructures";
 const { TOKEN: token } = process.env;
 
 extendStructures();

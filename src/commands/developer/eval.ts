@@ -12,11 +12,13 @@ async function sendEvaledMessage(
   const { client } = message;
   let evaledHasteBin: string;
   try {
-    evaledHasteBin = await hastebin.createPaste(showBin, {
-      raw: false,
-      contentType: true,
-      server: "https://hastebin.com",
-    });
+    if (showBin) {
+      evaledHasteBin = await hastebin.createPaste(showBin, {
+        raw: false,
+        contentType: true,
+        server: "https://hastebin.com",
+      });
+    }
   } catch {
     //.
   }
@@ -39,8 +41,10 @@ async function sendEvaledMessage(
             bold: false,
             italic: false,
             inlineCode: false,
-          })}\`\`\`\n**${evaledHasteBin}**`
+          })}\`\`\`\n${evaledHasteBin ? `**${evaledHasteBin}**` : ""}`
         : evaledHasteBin
+        ? evaledHasteBin
+        : "No Output."
     }\n`,
     fields: [
       {
@@ -102,8 +106,9 @@ export const command: commandInterFace = {
         evaled = (await import("util")).inspect(evaled, {
           depth: 0,
         });
+      } else {
+        evaled = `"${evaled}"`;
       }
-
       if (evaled && !message.argsUtil.flag("i")) {
         await sendEvaledMessage(
           <Message>message,

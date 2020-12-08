@@ -15,8 +15,8 @@ export const command: commandInterFace = {
     },
   ],
   async run(client, message) {
-    delete message.DB.tags[message.args[0]?.value.toLowerCase()];
-    await guildDataBase.set(message.guild.id, message.DB);
+    delete message.guild.DB.tags[message.args[0]?.value.toLowerCase()];
+    await guildDataBase.set(message.guild.id, message.guild.DB);
     message.say(`The tag "${message.args[0]?.value}" has been deleted!`);
   },
 };

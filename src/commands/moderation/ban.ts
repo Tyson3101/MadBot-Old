@@ -81,9 +81,9 @@ export const command: commandInterFace = {
         .map((x) => x.raw)
         .slice(1)
         .join(" ");
-    let typeCaseCount = client.getTypeCaseCount("BAN", message.DB) + 1;
-    let caseCount = ++message.DB.moderation.caseCount;
-    let backUpDB = { ...message.DB };
+    let typeCaseCount = client.getTypeCaseCount("BAN", message.guild.DB) + 1;
+    let caseCount = ++message.guild.DB.moderation.caseCount;
+    let backUpDB = { ...message.guild.DB };
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
       victim: member.id,
@@ -95,13 +95,13 @@ export const command: commandInterFace = {
       infringementType: "BAN",
     };
 
-    message.DB.moderation.bans[member.id]
-      ? message.DB.moderation.bans[member.id].push(moderationDB)
-      : (message.DB.moderation.bans[member.id] = [moderationDB]);
-    message.DB.moderation.all[member.id]
-      ? message.DB.moderation.all[member.id].push(moderationDB)
-      : (message.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...message.DB });
+    message.guild.DB.moderation.bans[member.id]
+      ? message.guild.DB.moderation.bans[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.bans[member.id] = [moderationDB]);
+    message.guild.DB.moderation.all[member.id]
+      ? message.guild.DB.moderation.all[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({

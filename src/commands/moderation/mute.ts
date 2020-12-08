@@ -123,10 +123,10 @@ export const command: commandInterFace = {
         .slice(2)
         .join(" ");
 
-    let backUpDB = { ...message.DB };
-    let typeCaseCount = client.getTypeCaseCount("MUTE", message.DB) + 1;
-    let caseCount = ++message.DB.moderation.caseCount;
-    message.DB.moderation.activeCases++;
+    let backUpDB = { ...message.guild.DB };
+    let typeCaseCount = client.getTypeCaseCount("MUTE", message.guild.DB) + 1;
+    let caseCount = ++message.guild.DB.moderation.caseCount;
+    message.guild.DB.moderation.activeCases++;
     const moderationDB: infringementInterface = {
       guildID: message.guild.id,
       muteRoleID: MutedRole.id,
@@ -144,13 +144,13 @@ export const command: commandInterFace = {
       active: true,
     };
 
-    message.DB.moderation.mutes[member.id]
-      ? message.DB.moderation.mutes[member.id].push(moderationDB)
-      : (message.DB.moderation.mutes[member.id] = [moderationDB]);
-    message.DB.moderation.all[member.id]
-      ? message.DB.moderation.all[member.id].push(moderationDB)
-      : (message.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...message.DB });
+    message.guild.DB.moderation.mutes[member.id]
+      ? message.guild.DB.moderation.mutes[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.mutes[member.id] = [moderationDB]);
+    message.guild.DB.moderation.all[member.id]
+      ? message.guild.DB.moderation.all[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -184,7 +184,7 @@ export const command: commandInterFace = {
             member,
             MutedRole.id,
             moderationDB.oldRolesID,
-            message.DB,
+            message.guild.DB,
             typeCaseCount
           ),
         endTime
@@ -197,7 +197,7 @@ export const command: commandInterFace = {
         embed: sucessPunishEmbed(client, member.user, <Message>message, {
           title: "Muted!",
           reason: reason,
-          casenumber: message.DB.moderation.caseCount,
+          casenumber: message.guild.DB.moderation.caseCount,
         }),
       });
     } catch (e) {

@@ -34,7 +34,7 @@ export const command: commandInterFace = {
         .join(" ");
     if (
       !member.roles.cache.some((role) => role.name.toLowerCase() === "muted") ||
-      !message.DB.moderation.mutes[member.id].some((Case) => Case.active)
+      !message.guild.DB.moderation.mutes[member.id].some((Case) => Case.active)
     ) {
       return message.say({
         embed: noArgsCommandHelpEmbed(
@@ -45,14 +45,14 @@ export const command: commandInterFace = {
         ),
       });
     }
-    const Case = message.DB.moderation.mutes[member.id].find(
+    const Case = message.guild.DB.moderation.mutes[member.id].find(
       (Case) => Case.active
     );
     const handled: boolean = await client.handleEndMute(
       member,
       Case.muteRoleID,
       Case.oldRolesID,
-      message.DB,
+      message.guild.DB,
       Case.caseCount
     );
     if (!handled) {

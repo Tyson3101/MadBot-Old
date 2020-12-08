@@ -3,6 +3,8 @@ import { commandInterFace } from "../src/interfaces/Command";
 import { GuildDataBaseInterface } from "../src/interfaces/GuildDataBase";
 import { DiscordBot } from "../src/structures/Client";
 import * as lexure from "lexure";
+import { Collection } from "discord.js";
+import { Snowflake } from "discord.js";
 
 declare module "express-session" {
   interface Session {
@@ -16,10 +18,9 @@ declare module "discord.js" {
     args?: lexure.Token[];
     argsUtil?: lexure.Args;
     plainArgs?: string[];
-    DB?: GuildDataBaseInterface;
-    prefix?: string;
     command?: commandInterFace;
     isDM?: boolean;
+    prefix?: string;
     initiazlise?: () => Promise<void>;
     getMember?: (id: string) => Promise<GuildMember>;
     getUser?: (id: string) => Promise<User>;
@@ -51,5 +52,9 @@ declare module "discord.js" {
       content: StringResolvable,
       options: MessageOptions
     ): Promise<Message | Message[]>;
+  }
+  interface Guild {
+    DB?: GuildDataBaseInterface;
+    prefix?: string;
   }
 }
