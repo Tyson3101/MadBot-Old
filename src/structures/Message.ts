@@ -102,7 +102,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       }
     }
 
-    private getArgsAll() {
+    private _getArgsAll() {
       const lexer = new lexure.Lexer(this.content).setQuotes([
         ['"', '"'],
         ["“", "”"],
@@ -154,26 +154,26 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
 
     //@ts-ignore
     get args() {
-      return this.getArgsAll().args;
+      return this._getArgsAll().args;
     }
     //@ts-ignore
     get argsUtil() {
-      return this.getArgsAll().argsUtil;
+      return this._getArgsAll().argsUtil;
     }
     //@ts-ignore
     get plainArgs() {
-      return this.getArgsAll().plainArgs;
+      return this._getArgsAll().plainArgs;
     }
     //@ts-ignore
     get isDM() {
-      return this.getArgsAll().isDM;
+      return this._getArgsAll().isDM;
     }
     //@ts-ignore
     get command() {
-      return this.getArgsAll().command;
+      return this._getArgsAll().command;
     }
 
     get prefix() {
-      return this.getArgsAll().prefix;
+      return this._getArgsAll().prefix;
     }
   };
