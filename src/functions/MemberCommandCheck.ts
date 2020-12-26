@@ -68,7 +68,10 @@ export default function (
         command.permission.slice(1) as PermissionString[]
       ),
     });
-  if (command.args?.filter((arg) => arg.required).length > message.args.length)
+  if (
+    command.args &&
+    command.args.filter((arg) => arg.required).length > message.args.length
+  )
     return message.channel.send({
       embed: noArgsCommandHelpEmbed(
         client,

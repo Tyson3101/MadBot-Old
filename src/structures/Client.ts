@@ -7,6 +7,7 @@ import {
   Guild,
   Message,
   Role,
+  User,
 } from "discord.js";
 import { commandInterFace } from "../interfaces/Command";
 import fs from "fs";
@@ -23,6 +24,36 @@ import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
 
 export class DiscordBot extends Client {
   // Extending Client
+
+  static DEFUALT_PREFIX() {
+    return "m!";
+  }
+
+  static DEFUALT_DB(guild: Guild) {
+    const DBObj: GuildDataBaseInterface = {
+      name: guild.name,
+      id: guild.id,
+      ownerID: guild.ownerID,
+      memberCount: guild.memberCount,
+      prefix: DiscordBot.DEFUALT_PREFIX(),
+      moderation: {
+        bans: {},
+        kicks: {},
+        mutes: {},
+        warns: {},
+        all: {},
+        unbans: {},
+        unmutes: {},
+        activeCases: 0,
+        caseCount: 0,
+        logChannel: null,
+      },
+      tags: {},
+      logChannel: null,
+    };
+    return DBObj;
+  }
+
   events: Collection<string, EventInterface>; // Key, Value
   commands: Collection<string, commandInterFace>; // Key, Value
   developers: Collection<Snowflake, developerInterface>; // Key, Value
@@ -78,6 +109,7 @@ export class DiscordBot extends Client {
         return guildDataBase
           .get(guild.id)
           .then((DB: GuildDataBaseInterface) => {
+            if (!DB || !DB.moderation) return [];
             return [
               ...Object.values(DB.moderation.mutes).flatMap((Cases) =>
                 Cases.filter((Case) => Case.active)
@@ -133,7 +165,11 @@ export class DiscordBot extends Client {
   }
 
   //@ts-ignore
-  async getUser(message: Message, mentionID: string): Promise<User> {
+  async getUser(
+    message: Message,
+    mentionID: string,
+    send: boolean = true
+  ): Promise<User> {
     let idArray = mentionID.match(/\d+/);
     if (!idArray) throw "No ID!";
     let id = idArray[0];
@@ -141,41 +177,69 @@ export class DiscordBot extends Client {
       let User = await this.users.fetch(id);
       return User;
     } catch (e) {
-      message.channel.send({
-        embed: noArgsCommandHelpEmbed(
-          message.client,
-          message.author,
-          message.command,
-          message.prefix
-        ),
-      });
+      send &&
+        message.channel.send({
+          embed: noArgsCommandHelpEmbed(
+            message.client,
+            message.author,
+            message.command,
+            message.prefix
+          ),
+        });
       return null;
     }
   }
   //@ts-ignore
-  async getMember(message: Message, mentionID: string): Promise<GuildMember> {
+  async getMember(
+    message: Message,
+    mentionID: string,
+    send: boolean = true
+  ): Promise<GuildMember> {
     let idArray = mentionID.match(/\d+/);
-    if (!idArray[0]) return null;
-    let id = idArray[0];
-    if (!id) return null;
+    let id = idArray?.[0];
+    let method: string = "id";
+    if (!id) {
+      id = mentionID;
+      method = "name";
+    }
     try {
-      let guildMember = await message.guild.members.fetch(id);
+      let guildMember: GuildMember;
+      if (method === "id") {
+        guildMember = await message.guild.members.fetch(id);
+      } else {
+        guildMember = (
+          await message.guild.members.fetch({
+            query: id.split("#")[1].length <= 4 ? id.split("#")[0] : id,
+          })
+        )
+          .filter((mem) =>
+            //@ts-ignore
+            mem.user.username === id.split("#")[1].length <= 4
+              ? id.split("#")[0]
+              : id
+          )
+          .first();
+      }
       return guildMember;
     } catch (e) {
-      message.channel.send({
-        embed: noArgsCommandHelpEmbed(
-          message.client,
-          message.author,
-          message.command,
-          message.prefix
-        ),
-      });
+      send &&
+        message.channel.send({
+          embed: noArgsCommandHelpEmbed(
+            this,
+            message.author,
+            message.command,
+            message.prefix
+          ),
+        });
       return null;
     }
   }
   //@ts-ignore
   getGuild(guildID: string): Guild {
-    return this.guilds.cache.get(guildID);
+    return (
+      this.guilds.cache.get(guildID) ??
+      this.guilds.cache.find((ch) => ch.name === guildID)
+    );
   }
   //@ts-ignore
   compareRolePostion(
@@ -207,9 +271,7 @@ export class DiscordBot extends Client {
   }
 
   private getAllGuildsDBs(): Promise<GuildDataBaseInterface[]> {
-    return Promise.all(
-      this.guilds.cache.map(async (guild) => await guildDataBase.get(guild.id))
-    );
+    return Promise.all(this.guilds.cache.map((_, id) => guildDataBase.get(id)));
   }
 
   private _eventHandlerInit(client: this): void {
@@ -263,6 +325,35 @@ export class DiscordBot extends Client {
     });
   }
 
+  private async handleAllDBs() {
+    let allDBs = await this.getAllGuildsDBs();
+    allDBs
+      .filter((DB) => DB)
+      .forEach((DB) => {
+        this.DBs.set(DB.id, DB);
+      });
+    this.guilds.cache.forEach(async (guild, id) => {
+      let DB: GuildDataBaseInterface;
+      if (this.DBs.has(id)) {
+        DB = this.DBs.get(id);
+        for (let key of Object.keys(DB).filter((keyStr) =>
+          ["name", "id", "ownerID", "memberCount"].includes(keyStr)
+        )) {
+          if (DB[key] !== guild[key]) {
+            DB[key] = guild[key];
+            await guildDataBase.set(id, DB);
+          }
+        }
+        this.DBs.set(id, DB);
+      } else {
+        await guildDataBase.set(id, DiscordBot.DEFUALT_DB(guild));
+        this.DBs.set(id, DiscordBot.DEFUALT_DB(guild));
+        DB = DiscordBot.DEFUALT_DB(guild);
+      }
+      guild.DB = DB;
+      guild.prefix = DB.prefix;
+    });
+  }
   public async startUp(token: string) {
     if (!this.user) {
       // Checks if logged in!
@@ -270,27 +361,8 @@ export class DiscordBot extends Client {
       this._eventHandlerInit(this); // Handles Events
       try {
         let TOKEN = await this.login(token);
-        let allDBs = await this.getAllGuildsDBs();
-        allDBs.forEach((DB) => {
-          this.DBs.set(DB.id, DB);
-        });
-        this.guilds.cache.forEach((guild) => {
-          const DB = this.DBs.get(guild.id);
-          guild.DB = DB;
-          guild.prefix = DB.prefix;
-        });
-        setInterval(async () => {
-          allDBs = await this.getAllGuildsDBs();
-          allDBs.forEach((DB) => {
-            this.DBs.set(DB.id, DB);
-          });
-          this.guilds.cache.forEach((guild) => {
-            const DB = this.DBs.get(guild.id);
-            guild.DB = DB;
-            guild.prefix = DB.prefix;
-          }, 1);
-        });
-
+        await this.handleAllDBs();
+        setInterval(async () => await this.handleAllDBs(), 1);
         return TOKEN;
       } catch (e) {
         throw e;

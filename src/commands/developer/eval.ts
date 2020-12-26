@@ -19,8 +19,8 @@ async function sendEvaledMessage(
         server: "https://hastebin.com",
       });
     }
-  } catch {
-    //.
+  } catch (e) {
+    console.log("Bin fail!", e);
   }
   let evaledEmbed = new MessageEmbed({
     author: {

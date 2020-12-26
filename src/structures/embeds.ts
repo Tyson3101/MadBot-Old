@@ -419,7 +419,11 @@ export const CommandHelpEmbed = (
           command.aliases?.length
             ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : "\n"
-        }${command.args?.length ? `**Arguments Info:**` : ""}`,
+        }${
+          command.args?.length
+            ? `**Arguments:** ${command.args.join(` **|** `)}\n`
+            : "\n"
+        }`,
       },
     ],
     footer: {
@@ -427,30 +431,6 @@ export const CommandHelpEmbed = (
       iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-  if (command.args?.length) {
-    embed.addField("Tips:", client.tips.join("\n"));
-    args.forEach((argument, i: number) => {
-      i++;
-      embed.addField(
-        `${i}: ${argument.name}`,
-        `**Type:** ${
-          Array.isArray(argument.type)
-            ? argument.type.join(", ")
-            : argument.type
-        }\n${
-          argument.description
-            ? `**Description:** ${argument.description}\n`
-            : ""
-        }${argument.note ? `**Note:** ${argument.note}\n` : ""}${
-          argument.length ? `**Length:** ${argument.length}\n` : ""
-        }${
-          argument.example?.length
-            ? `**Example:** ${argument.example.join(` **|** `)}\n`
-            : ""
-        }**Required:** ${client.firstCap(argument.required.toString())}`
-      );
-    });
-  }
   return embed;
 };
 

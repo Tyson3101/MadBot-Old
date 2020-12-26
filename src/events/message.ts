@@ -32,8 +32,9 @@ export const event: MessageEventInterface = {
       }
     }
     if (command) {
+      console.log("Hey! Command starting");
       let vaildMember = commandCheck(client, message, command);
-      if (vaildMember !== true) return;
+      if (vaildMember !== true) return console.log("Hey! Not a Vaild Member");
       try {
         await command.run(client, message);
         return;
@@ -44,39 +45,42 @@ export const event: MessageEventInterface = {
         });
       }
     }
-    if (
-      message.guild.DB.tags &&
-      message.content.startsWith(prefix) &&
-      message.guild.DB.tags[
-        command.name.toLowerCase() +
-          " " +
-          message.args
-            .map((x) => x.raw)
-            .join(" ")
-            .toLowerCase()
-      ]
-    ) {
-      const tag =
+    if (!message.isDM) {
+      console.log(
+        `${message.commandNameLowerCase} ${message.plainArgs
+          .map((str) => str.toLowerCase())
+          .join(" ")}`,
         message.guild.DB.tags[
-          command.name.toLowerCase() +
-            " " +
-            message.args
-              .map((x) => x.raw)
-              .join(" ")
-              .toLowerCase()
-        ];
-      message.guild.DB.tags[
-        command.name.toLowerCase() +
-          " " +
-          message.args
-            .map((x) => x.raw)
-            .join(" ")
-            .toLowerCase()
-      ].uses++;
-      await guildDataBase.set(message.guild.id, message.guild.DB);
-      return message
-        .say(tag.replies[Math.floor(Math.random() * tag.replies.length)])
-        .catch(console.log);
+          `${message.commandNameLowerCase} ${message.plainArgs
+            .map((str) => str.toLowerCase())
+            .join(" ")}`
+        ]
+      );
+      if (
+        message.guild.DB.tags &&
+        message.content.toLowerCase().startsWith(prefix.toLowerCase()) &&
+        message.guild.DB.tags[
+          `${message.commandNameLowerCase} ${message.plainArgs
+            .map((str) => str.toLowerCase())
+            .join(" ")}`
+        ]
+      ) {
+        const tag =
+          message.guild.DB.tags[
+            `${message.commandNameLowerCase} ${message.plainArgs
+              .map((str) => str.toLowerCase())
+              .join(" ")}`
+          ];
+        message.guild.DB.tags[
+          `${message.commandNameLowerCase} ${message.plainArgs
+            .map((str) => str.toLowerCase())
+            .join(" ")}`
+        ].uses++;
+        await guildDataBase.set(message.guild.id, message.guild.DB);
+        return message
+          .say(tag.replies[Math.floor(Math.random() * tag.replies.length)])
+          .catch(console.log);
+      }
     }
     if (message.mentions.users.has(client.user.id))
       return message.say({

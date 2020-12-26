@@ -21,9 +21,10 @@ declare module "discord.js" {
     command?: commandInterFace;
     isDM?: boolean;
     prefix?: string;
+    commandNameLowerCase: string;
     initiazlise?: () => Promise<void>;
-    getMember?: (id: string) => Promise<GuildMember>;
-    getUser?: (id: string) => Promise<User>;
+    getMember?: (id: string, send?: boolean) => Promise<GuildMember>;
+    getUser?: (id: string, send?: boolean) => Promise<User>;
     getGuild?: (id: string) => Guild;
     compareRolePostion?: (
       checkHighestRole: Role,

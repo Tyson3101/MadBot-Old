@@ -1,6 +1,8 @@
 import Discord from "discord.js";
 import { GuildMember, MessageEmbed, Message } from "discord.js";
 import { commandInterFace } from "../../interfaces/Command";
+import { infringementInterface } from "../../interfaces/GuildDataBase";
+import { guildDataBase } from "../../structures/DataBase";
 import {
   noArgsCommandHelpEmbed,
   sucessPunishEmbed,
@@ -65,6 +67,28 @@ export const command: commandInterFace = {
         ),
       });
     }
+    let typeCaseCount = client.getTypeCaseCount("UNMUTE", message.guild.DB) + 1;
+    let caseCount = ++message.guild.DB.moderation.caseCount;
+    message.guild.DB.moderation.activeCases++;
+    const moderationDB: infringementInterface = {
+      guildID: message.guild.id,
+      victim: member.id,
+      moderator: message.author.id,
+      reason: reason,
+      typeCaseCount: typeCaseCount,
+      caseCount: caseCount,
+      infringementType: "UNMUTE",
+      startDate: new Date(),
+      endDate: null,
+    };
+
+    message.guild.DB.moderation.unmutes[member.id]
+      ? message.guild.DB.moderation.unmutes[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.unmutes[member.id] = [moderationDB]);
+    message.guild.DB.moderation.all[member.id]
+      ? message.guild.DB.moderation.all[member.id].push(moderationDB)
+      : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
+    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({

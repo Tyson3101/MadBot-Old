@@ -37,6 +37,7 @@ export const command: commandInterFace = {
   permission: ["MANAGE_ROLES", "MANAGE_CHANNELS", "MANAGE_ROLES"],
   async run(client, message) {
     let member: GuildMember = await message.getMember(message.args[0]?.value);
+    console.log("Started");
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({

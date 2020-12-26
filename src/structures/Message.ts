@@ -8,6 +8,7 @@ import {
   DMChannel,
   TextChannel,
   NewsChannel,
+  GuildMember,
 } from "discord.js";
 import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
 import * as lexure from "lexure";
@@ -30,7 +31,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       return await this.channel.send(content, options as any);
     }
     //@ts-ignore
-    async getUser(mentionID: string): Promise<User> {
+    async getUser(mentionID: string, send: boolean = true): Promise<User> {
       let idArray = mentionID.match(/\d+/);
       if (!idArray) throw "No ID!";
       let id = idArray[0];
@@ -38,35 +39,63 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         let User = await this.client.users.fetch(id);
         return User;
       } catch (e) {
-        this.channel.send({
-          embed: noArgsCommandHelpEmbed(
-            this.client,
-            this.author,
-            this.command,
-            this.prefix
-          ),
-        });
+        send &&
+          this.channel.send({
+            embed: noArgsCommandHelpEmbed(
+              this.client,
+              this.author,
+              this.command,
+              this.prefix
+            ),
+          });
         return null;
       }
     }
     //@ts-ignore
-    async getMember(mentionID: string): Promise<GuildMember> {
+    async getMember(
+      mentionID: string,
+      send: boolean = true
+    ): Promise<GuildMember> {
       let idArray = mentionID.match(/\d+/);
-      if (!idArray[0]) return null;
-      let id = idArray[0];
-      if (!id) return null;
+      let id = idArray?.[0];
+      let method: string = "id";
+      if (!id) {
+        id = mentionID;
+        method = "name";
+      }
       try {
-        let guildMember = await this.guild.members.fetch(id);
+        let guildMember: GuildMember;
+        if (method === "id") {
+          guildMember = await this.guild.members.fetch(id);
+        } else {
+          guildMember = (
+            await this.guild.members.fetch({
+              query: id.includes("#")
+                ? id.split("#")[1].length <= 4
+                  ? id.split("#")[0]
+                  : id
+                : id,
+            })
+          )
+            .filter((mem) =>
+              //@ts-ignore
+              mem.user.username === id.split("#")[1].length <= 4
+                ? id.split("#")[0]
+                : id
+            )
+            .first();
+        }
         return guildMember;
       } catch (e) {
-        this.channel.send({
-          embed: noArgsCommandHelpEmbed(
-            this.client,
-            this.author,
-            this.command,
-            this.prefix
-          ),
-        });
+        send &&
+          this.channel.send({
+            embed: noArgsCommandHelpEmbed(
+              this.client,
+              this.author,
+              this.command,
+              this.prefix
+            ),
+          });
         return null;
       }
     }
@@ -108,7 +137,9 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         ["“", "”"],
       ]);
       const res = lexer.lexCommand((s) =>
-        s.startsWith(this.guild.prefix) ? this.guild.prefix.length : null
+        s.toLowerCase().startsWith(this.guild.prefix.toLowerCase())
+          ? this.guild.prefix.length
+          : null
       );
       const CommandName = res && res[0]?.value;
       const commandNameLowerCase = CommandName?.toLowerCase();
@@ -119,9 +150,9 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       );
 
       let args: lexure.Args = new lexure.Args(parser.parse());
-
+      const content = this.content;
       // Util Object
-      const plainArgs = this.content
+      const plainArgs = content
         .trim()
         .slice(this.guild.prefix.length)
         .split(/ +/g)
@@ -137,12 +168,17 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         );
       });
 
-      return {
+      const obj = {
         args: args.parserOutput.ordered,
         argsUtil: args,
         plainArgs: plainArgs,
         isDM: !this.guild && this.channel.type === "dm",
         prefix: this.guild.prefix,
+        commandNameLowerCase: content
+          .trim()
+          .slice(this.guild.prefix.length)
+          .split(/ +/g)[0]
+          .toLowerCase(),
         command:
           this.client.commands.get(commandNameLowerCase) ??
           this.client.commands.find(
@@ -150,8 +186,13 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
           ) ??
           null,
       };
+      console.log(obj);
+      return obj;
     }
 
+    get commandNameLowerCase() {
+      return this._getArgsAll().commandNameLowerCase;
+    }
     //@ts-ignore
     get args() {
       return this._getArgsAll().args;
