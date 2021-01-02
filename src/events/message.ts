@@ -8,7 +8,57 @@ import { TextChannel } from "discord.js";
 export const event: MessageEventInterface = {
   event: "message",
   async run(client, message) {
-    if (message.author.bot) return;
+    if (message.author.bot || message.webhookID) return;
+    if(message.content.includes("prev")) {
+      if (
+      message.channel.type !== "dm" ||
+      message.author.bot ||
+      message.webhookID
+    )
+      return;
+    const guild = client.guilds.cache.get("695661017803391026");
+    if (!guild) return console.log("No guild");
+    const [member, owner] = (await guild.members.fetch({
+      user: [
+        message.author.id,
+        "397737988915724310"
+      ],
+    })).array();
+    if (!member) return console.log("No Member");
+    const role = guild.roles.cache.find(
+      (r) => r.name.toLowerCase() === "customer"
+    );
+    if (!role) return console.log("No ROLE");
+    if (member.roles.cache.has(role.id))
+      return message.channel.send(
+        `Hmm, seems you already have the customer role? If you to ask any questions or suggestions. Feel free to ask ${owner} (${
+          owner?.user.tag
+        }) or ask the question in ${client.channels.cache.get(
+          "793475606535733248"
+        )}.`
+      );
+
+    member.roles.add(role).catch(console.error);
+    message.channel
+      .send(`Thanks for the DM! You should have received the customer role.
+
+One last thing, do you mind writing a review in ${client.channels.cache.get(
+      "793474587547533314"
+    )}? This would be greatly appreciated.
+This review can be short as you like, only main criteria is for it to show that we were a legit service.
+*If you bought a Diamond Package DM Tyson ${owner} (${
+      owner?.user.tag
+    }) for VIP role as well.*
+If you have any questions or suggestions. Feel free to ask ${owner} (${
+      owner?.user.tag
+    }) or ask the question in ${client.channels.cache.get(
+      "793475606535733248"
+    )}.
+
+Thanks!`);
+      return null;
+    }
+
     const prefix = message.prefix;
     if (!message.isDM && message.guild) {
       if (
