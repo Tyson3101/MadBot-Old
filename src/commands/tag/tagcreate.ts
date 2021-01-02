@@ -5,9 +5,8 @@ export const command: commandInterFace = {
   name: "tagcreate",
   description: `Creates a tag`,
   note: 'This command allows random responses. Wrap each response with " "',
-  usage: [
+  usage:
     "tagcreate [TagName] [First Text to Reply Back With] (2nd Reply) (3rd Reply) (...)",
-  ],
   example: [
     "tagcreate 5+5 it equals 6",
     `tagcreate "new rules" Check the #rules here`,
@@ -16,21 +15,10 @@ export const command: commandInterFace = {
   args: [
     {
       name: "TagName",
-      type: "Text",
-      example: [`"Are Cats Dangerous?"`, `new rules`, `joke`],
       required: true,
-      length: "any",
     },
     {
       name: "Text to Reply Back With",
-      type: "Text",
-      example: [
-        "Yes, Cats are dangerous",
-        "Check the #rules here",
-        '"21" "19"',
-      ],
-      length: "any",
-      note: 'This command allows random responses. Wrap each response with " "',
       required: true,
     },
   ],

@@ -4,13 +4,10 @@ import { guildDataBase } from "../../structures/DataBase";
 export const command: commandInterFace = {
   name: "tagdelete",
   description: "Deletes a tag",
-  usage: ["tagdelete [TagName]"],
   example: ["prices"],
   args: [
     {
       name: "TagName",
-      type: "Text",
-      example: ["rules"],
       required: true,
     },
   ],

@@ -11,26 +11,18 @@ import { infringementInterface } from "../../interfaces/GuildDataBase";
 export const command: commandInterFace = {
   name: "ban",
   description: "Bans a member from the server.",
-  usage: ["ban [Member] (Reason)"],
-  example: ["ban @Tyson Dm Advertising"],
+  example: ["ban @Tyson Dm Advertising", "ban 53636233242246347"],
   guildOnly: true,
   args: [
     {
       name: "Member",
-      type: ["User Mention", "UserID"],
-      description: "Member to ban",
-      example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
       required: true,
     },
     {
       name: "Reason",
-      type: "Reason",
-      description: "Reason for the ban",
-      example: ["Advertising", "Being Rude"],
       required: false,
     },
   ],
-  aliases: [],
   permission: ["BAN_MEMBERS", true],
   async run(client, message) {
     let member: GuildMember = await message.getMember(message.args[0]?.value);

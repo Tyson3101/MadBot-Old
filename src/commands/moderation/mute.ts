@@ -12,25 +12,22 @@ import { infringementInterface } from "../../interfaces/GuildDataBase";
 export const command: commandInterFace = {
   name: "mute",
   description: "Mute a members",
+  example: [
+    "mute @Tyson 5h Dm Advertising *5 hours*",
+    "mute 53636233242246347 very very rude. *Unlimited*",
+  ],
   guildOnly: true,
   args: [
     {
       name: "Member/ID to Mute",
-      description: "Member to mute.",
-      type: ["User Mention", "UserID"],
       required: true,
     },
     {
       name: "Time",
-      description: "Time to mute for.",
-      type: ["Time"],
       required: false,
     },
     {
       name: "Reason",
-      type: "Reason",
-      description: "Reason for the mute",
-      example: ["Advertising", "Being Rude"],
       required: false,
     },
   ],

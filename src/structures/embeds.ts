@@ -398,31 +398,24 @@ export const CommandHelpEmbed = (
     fields: [
       {
         name: `Command Help`,
-        value: `**Name:** ${client.firstCap(command.name)}
-**Catergory:** ${client.firstCap(command.catergory)}\n${
-          command.note ? `**Note:** ${command.note}\n` : ""
+        value: `**Name:** ${client.firstCap(command.name)}\n${
+          command.aliases?.length
+            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
+            : ""
+        }${
+          command.args?.length
+            ? `**Arguments:** ${command.args
+                .map((arg) => arg.name)
+                .join(` **|** `)}\n`
+            : ""
         }${
           command.permission && command.permission[0]
             ? `**Required Permission:** ${command.permission[0]}\n`
             : ""
-        }${
-          command.usage
-            ? `**Usage:** ${prefix}${command.usage.join(` **|** ${prefix}`)}\n`
-            : ""
-        }${
+        }${command.usage ? `**Usage:** ${prefix}${command.usage}\n\n` : "\n"}${
           command.example
-            ? `**Example:** ${prefix}${command.example.join(
-                ` **|** ${prefix}`
-              )}\n`
+            ? `**Examples:**\n${prefix}${command.example.join(`\n${prefix}`)}`
             : ""
-        }${
-          command.aliases?.length
-            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
-            : "\n"
-        }${
-          command.args?.length
-            ? `**Arguments:** ${command.args.join(` **|** `)}\n`
-            : "\n"
         }`,
       },
     ],

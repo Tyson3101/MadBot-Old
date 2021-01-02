@@ -10,18 +10,14 @@ import {
 
 export const command: commandInterFace = {
   name: "unmute",
+  example: ["unmute @Tyson felt sorry.", "unmute 53636233242246347 apologized"],
   args: [
     {
       name: "Member/ID to Unmute",
-      description: "Member to mute.",
-      type: ["User Mention", "UserID"],
       required: true,
     },
     {
       name: "Reason",
-      type: "Reason",
-      description: "Reason for the unmute",
-      example: ["Mistake", "Said Sorry"],
       required: false,
     },
   ],

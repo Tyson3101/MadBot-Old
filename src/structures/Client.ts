@@ -9,7 +9,7 @@ import {
   Role,
   User,
 } from "discord.js";
-import { commandInterFace } from "../interfaces/Command";
+import { commandInterFace, SubCommand } from "../interfaces/Command";
 import fs from "fs";
 import { developerInterface } from "../interfaces/Developers";
 import { EventInterface } from "../interfaces/Events";
@@ -27,6 +27,14 @@ export class DiscordBot extends Client {
 
   static DEFUALT_PREFIX() {
     return "m!";
+  }
+
+  static getTimeAgo(oldDate: Date, newDate: Date): number {
+    return Number(
+      ((newDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24)).toFixed(
+        0
+      )
+    );
   }
 
   static DEFUALT_DB(guild: Guild) {
@@ -295,6 +303,28 @@ export class DiscordBot extends Client {
       i++;
     });
   }
+  // Array<[string, subCommand]>
+  private async _subCommands(
+    command: commandInterFace
+  ): Promise<SubCommand[] | undefined> {
+    const subCommandsFolder = fs
+      .readdirSync("./dist/src/subCommands")
+      .find((folder) => folder.toLowerCase() === command.name.toLowerCase());
+    if (!subCommandsFolder) return;
+    const subCommandsFiles = fs
+      .readdirSync(`./dist/src/subCommands/${subCommandsFolder}`)
+      .filter((file) => file.endsWith(".js"));
+    if (!subCommandsFiles.length) return;
+    const subCommandsPromise = subCommandsFiles.map(
+      (file) => import(`../subCommands/${subCommandsFolder}/${file}`)
+    );
+
+    const subCommands: SubCommand[] = (
+      await Promise.all(subCommandsPromise)
+    ).map((sub) => sub.subCommand);
+
+    return subCommands?.length ? subCommands : undefined;
+  }
   private _commandHandlerInit(client: this) {
     const catergories = fs.readdirSync("./dist/src/commands"); // From root
     let i = 1;
@@ -303,20 +333,33 @@ export class DiscordBot extends Client {
         .readdirSync(`./dist/src/commands/${catergory}`)
         .filter((filename) => filename.endsWith(".js"));
       commands.forEach(async (fileCommand) => {
-        const { command } = await import(
+        const { command }: { command: commandInterFace } = await import(
           `../commands/${catergory}/${fileCommand}`
         ); // From File
         if (!command || client.commands.has(command.name.toLowerCase())) return;
         command.name = command.name.toLowerCase();
+        const AllsubCommands = (await this._subCommands(command)) ?? [];
+        const subCommands: Collection<string, SubCommand> = new Collection();
+        AllsubCommands.forEach((subCommand) =>
+          subCommands.set(subCommand.name, subCommand)
+        );
+        let usage = command.name + " ";
+        if (command.args?.length)
+          usage += command.args
+            .map((arg) => (arg.required ? `[${arg.name}]` : `(${arg.name})`))
+            .join(" ");
         const addCommand = {
           ...command,
-          catergory: catergory, // Adds catergory property here to make it easier, is the folder name of that command file
+          catergory: catergory,
+          subCommands, // Adds catergory property here to make it easier, is the folder name of that command file
         };
-
+        if (!command.usage) addCommand["usage"] = usage.trim();
         if (i === 1)
           console.log(`-----------------  Commands  ----------------`);
         console.log(
-          `Command ${i}: Loaded ${client.firstCap(addCommand.name)}!`
+          `Command ${i}: Loaded ${client.firstCap(
+            addCommand.name
+          )}! | SubCommands: ${subCommands.size}`
         );
         i++;
 
@@ -354,13 +397,13 @@ export class DiscordBot extends Client {
       guild.prefix = DB.prefix;
     });
   }
-  public async startUp(token: string) {
+  public async login(token: string) {
     if (!this.user) {
       // Checks if logged in!
       this._commandHandlerInit(this); // Handles Commands
       this._eventHandlerInit(this); // Handles Events
       try {
-        let TOKEN = await this.login(token);
+        let TOKEN = await super.login(token);
         await this.handleAllDBs();
         setInterval(async () => await this.handleAllDBs(), 1);
         return TOKEN;

@@ -11,22 +11,15 @@ import { infringementInterface } from "../../interfaces/GuildDataBase";
 export const command: commandInterFace = {
   name: "kick",
   description: "Kicks a member from the server.",
-  usage: ["kick [Member] (Reason)"],
-  example: ["kick @Tyson Dm Advertising"],
+  example: ["kick @Tyson Dm Advertising", "kick 53636233242246347"],
   guildOnly: true,
   args: [
     {
       name: "Member",
-      type: ["User Mention", "UserID"],
-      description: "Member to kick",
-      example: ["**Mention:** @Tyson", "**ID:** 397737988915724310"],
       required: true,
     },
     {
       name: "Reason",
-      type: "Reason",
-      description: "Reason for the kick",
-      example: ["Advertising", "Being Rude"],
       required: false,
     },
   ],

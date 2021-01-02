@@ -7,18 +7,11 @@ import {
 
 export const command: commandInterFace = {
   name: "help",
-  usage: ["help (command/catergory)"],
   example: ["help moderation", "help", "help info"],
-  aliases: [],
-  public: false,
   args: [
     {
       name: `Command/Catergory`,
       required: false,
-      example: ["ban", "moderation"],
-      description: "Command Or Catergory to help with",
-      length: "any",
-      type: "Text",
     },
   ],
   async run(client, message) {

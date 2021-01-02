@@ -16,4 +16,4 @@ const client: DiscordBot = new DiscordBot({
   partials: ["REACTION", "CHANNEL", "USER", "GUILD_MEMBER"],
 }); // Client Options (Partials));
 
-client.startUp(token); // Logs into the bot
+client.login(token); // Logs into the bot

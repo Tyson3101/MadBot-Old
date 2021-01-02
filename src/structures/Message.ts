@@ -136,15 +136,16 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         ['"', '"'],
         ["“", "”"],
       ]);
+      const prefix = this.guild
+        ? this.guild.prefix.toLowerCase()
+        : this.client.prefix;
       const res = lexer.lexCommand((s) =>
-        s.toLowerCase().startsWith(this.guild.prefix.toLowerCase())
-          ? this.guild.prefix.length
-          : null
+        s.toLowerCase().startsWith(prefix) ? prefix.length : null
       );
       const CommandName = res && res[0]?.value;
       const commandNameLowerCase = CommandName?.toLowerCase();
 
-      const argsAll = res && res[1]();
+      const argsAll = CommandName && res[1]();
       const parser = new lexure.Parser(argsAll).setUnorderedStrategy(
         lexure.longStrategy()
       );
@@ -154,7 +155,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       // Util Object
       const plainArgs = content
         .trim()
-        .slice(this.guild.prefix.length)
+        .slice(prefix.length)
         .split(/ +/g)
         .slice(1);
 
@@ -173,10 +174,10 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         argsUtil: args,
         plainArgs: plainArgs,
         isDM: !this.guild && this.channel.type === "dm",
-        prefix: this.guild.prefix,
+        prefix: prefix,
         commandNameLowerCase: content
           .trim()
-          .slice(this.guild.prefix.length)
+          .slice(prefix.length)
           .split(/ +/g)[0]
           .toLowerCase(),
         command:

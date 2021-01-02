@@ -6,15 +6,10 @@ import { prefixEmbed } from "../../structures/Embeds"; // Import Syntax
 export const command: commandInterFace = {
   name: "prefix",
   description: "Gets or changes prefix for a server",
-  usage: ["prefix (prefix)"],
   example: ["prefix ?", "prefix Orange"],
   args: [
     {
       name: "New Prefix",
-      type: ["Prefix"],
-      description: "Prefix to change.",
-      example: ["$", "z!"],
-      length: "1 Word",
       required: false,
     },
   ],

@@ -1,5 +1,6 @@
 .gitignore
-node_modules
 .env
 dist
+node_modules
+node_modules/**/*
 getTestData.ts

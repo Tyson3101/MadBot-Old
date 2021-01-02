@@ -5,7 +5,6 @@ export const command: commandInterFace = {
   args: [
     {
       name: "GuildID",
-      type: "GuildID",
       required: false,
     },
   ],

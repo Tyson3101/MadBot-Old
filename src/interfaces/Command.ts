@@ -8,7 +8,7 @@ export interface commandInterFace {
   name: string;
   description?: string;
   note?: string;
-  usage?: string[];
+  usage?: string;
   example?: string[];
   args?: args[];
   aliases?: string[];
@@ -31,5 +31,11 @@ export interface commandInterFace {
   ];
   public?: boolean;
   catergory?: string;
+  subCommands?: Discord.Collection<string, SubCommand>;
+  run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
+}
+
+export interface SubCommand {
+  name: string;
   run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
 }

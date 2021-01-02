@@ -25,10 +25,5 @@ export interface argsInterface {
   // Args Interface makes it easier to follow
   // Interface
   name: string;
-  type: argsType | argsType[];
   required: boolean;
-  length?: string;
-  note?: string;
-  description?: string;
-  example?: string[];
 }

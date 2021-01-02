@@ -4,7 +4,6 @@ import { pingEmbed } from "../../structures/Embeds"; // Import Syntax
 export const command: commandInterFace = {
   name: "ping",
   description: "Shows the API Latency.",
-  usage: ["ping"],
   example: ["ping"],
   aliases: ["latency"],
   guildOnly: false,

@@ -12,20 +12,14 @@ export const command: commandInterFace = {
   args: [
     {
       name: "Message Count",
-      description: "Amount of messages to purge",
-      type: "Number",
-      example: ["100"],
       required: true,
     },
     {
       name: "Reason",
-      description: "Reason for the purge",
-      type: "Reason",
-      example: ["Clean up"],
       required: false,
     },
   ],
-  example: ["purge [52] (Reason)"],
+  example: ["purge 52 Too many shitpost", "purge 69"],
   permission: ["MANAGE_MESSAGES", true],
   async run(client, message) {
     const amount = parseInt(message.args[0].value);

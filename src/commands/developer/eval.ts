@@ -82,21 +82,19 @@ export const command: commandInterFace = {
   args: [
     {
       name: "Code To Eval",
-      type: "Code",
       required: true,
     },
   ],
   devOnly: true,
   async run(client, message) {
-    let toEvalFull = message.plainArgs.join(" ").replace(/```(js)?/g, "");
+    let toEvalFull = message.plainArgs.join(" ").replace(/```(.\n)?/g, "");
     let toEval: string;
     let evaled: string;
     let toEvaledSpilt: string[];
     try {
       const startTime = process.hrtime();
       toEvaledSpilt = toEvalFull.split(/\n/g);
-      let filterd = toEvaledSpilt.filter((str) => str.length);
-      toEval = client.getToEval(filterd);
+      toEval = toEvaledSpilt.join("\n");
       let aboutToEval = `(async () => {\nconst Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js');\n${toEval}\n})()`;
       evaled = await eval(aboutToEval);
       const timeTook = process.hrtime(startTime);
