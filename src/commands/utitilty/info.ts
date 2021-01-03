@@ -7,6 +7,6 @@ export const command: Command = {
   description: "Shows info of MadBot",
   aliases: ["stats"],
   async run(client, message) {
-    message.say({ embed: clientInfo(client, message.author, message.prefix) }); // Sends Client Info Embed
+    message.say({ embed: clientInfo(client, message.author, message.prefix) });
   },
 };

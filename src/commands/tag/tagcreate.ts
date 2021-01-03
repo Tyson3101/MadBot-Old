@@ -1,4 +1,5 @@
 import { Command } from "../../interfaces/Command";
+import { GuildDataBase } from "../../structures/DataBase";
 
 export const command: Command = {
   name: "tagcreate",
@@ -46,7 +47,10 @@ export const command: Command = {
     const newDB = {
       ...message.guild.DB,
     };
-    await client.guildDB.set(message.guild.id, newDB);
+    await client.guildDB.set(
+      message.guild.id,
+      new GuildDataBase(message.guild, newDB)
+    );
     message.say(`The tag "${message.args[0].value}" has been created!`);
   },
 };

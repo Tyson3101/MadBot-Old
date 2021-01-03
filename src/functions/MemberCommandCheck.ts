@@ -80,5 +80,6 @@ export default function (
         message.prefix
       ),
     });
+
   return true;
 }

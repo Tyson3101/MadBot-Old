@@ -10,7 +10,7 @@ import {
   NewsChannel,
   GuildMember,
 } from "discord.js";
-import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
+import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./Embeds";
 import * as lexure from "lexure";
 import { DiscordBot } from "./Client";
 
@@ -193,7 +193,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
           ) ??
           null,
       };
-      console.log(obj);
+
       return obj;
     }
 

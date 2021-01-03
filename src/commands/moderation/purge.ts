@@ -1,9 +1,8 @@
-import Discord from "discord.js";
 import { MessageEmbed } from "discord.js";
 import { HTTPError } from "discord.js";
 import { TextChannel } from "discord.js";
 import { Command } from "../../interfaces/Command";
-import { noArgsCommandHelpEmbed } from "../../structures/embeds";
+import { noArgsCommandHelpEmbed } from "../../structures/Embeds";
 
 export const command: Command = {
   name: "purge",

@@ -9,8 +9,8 @@ export const command: Command = {
   guildOnly: false,
   devOnly: false,
   async run(client, message) {
-    let latency: string = Date.now() - message.createdTimestamp + "ms";
-    let ping: string = client.ws.ping + "ms";
+    let latency = Date.now() - message.createdTimestamp + "ms";
+    let ping = client.ws.ping + "ms";
     message.say({
       embed: pingEmbed(client, message.author, {
         latency: latency,

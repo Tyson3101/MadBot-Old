@@ -1,5 +1,3 @@
-import { Collection, Message, Snowflake, User } from "discord.js";
-
 export type InfringementType =
   | "BAN"
   | "KICK"

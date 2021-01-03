@@ -1,6 +1,7 @@
 import { Command } from "../../interfaces/Command";
 export const command: Command = {
   name: "showdb",
+  description: "Shows DB",
   args: [
     {
       name: "GuildID",

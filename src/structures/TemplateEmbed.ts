@@ -1,22 +1,6 @@
 import { MessageEmbed, Message, User, GuildMember } from "discord.js";
 import { DiscordBot } from "./Client";
 
-/* 
-    author: {
-      name: user.tag,
-      iconURL: user.displayAvatarURL({
-        format: "png",
-        dynamic: true,
-      }),
-    },
-    color: "DARK_VIVID_PINK",
-
-    footer: {
-      text: `${client.user.username} ©`,
-      iconURL: client.user.displayAvatarURL({ format: "png" }),
-    },
-    */
-
 export class TemplatedEmbed extends MessageEmbed {
   static DEFUALT_TEMPLATE(option: Message | User | GuildMember | DiscordBot) {
     // @ts-ignore

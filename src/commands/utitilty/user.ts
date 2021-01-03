@@ -1,4 +1,3 @@
-import { MessageEmbed } from "discord.js";
 import { Command } from "../../interfaces/Command";
 import { DiscordBot } from "../../structures/Client";
 import { TemplatedEmbed } from "../../structures/TemplateEmbed";

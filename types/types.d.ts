@@ -52,6 +52,7 @@ declare module "discord.js" {
       options: MessageOptions
     ): Promise<Message | Message[]>;
   }
+
   interface Guild {
     DB?: GuildDataBase;
     prefix?: string;

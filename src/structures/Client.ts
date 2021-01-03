@@ -20,7 +20,7 @@ import {
 } from "../interfaces/GuildDataBase";
 import { GuildDataBase } from "./DataBase";
 import { getGuildDB } from "../functions/getGuildDB";
-import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
+import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./Embeds";
 import Keyv from "keyv";
 import { config } from "dotenv";
 config();
@@ -32,16 +32,12 @@ export class DiscordBot extends Client {
     return "m!";
   }
 
-  static getTimeAgo(oldDate: Date, newDate: Date): number {
+  static getTimeAgo(oldDate: Date, newDate: Date = new Date()): number {
     return Number(
       ((newDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24)).toFixed(
         0
       )
     );
-  }
-
-  static DEFUALT_DB(guild: Guild) {
-    return new GuildDataBase(guild);
   }
 
   events: Collection<string, EventInterface>; // Key, Value

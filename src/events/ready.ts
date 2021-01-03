@@ -30,6 +30,7 @@ Commands: ${client.commands.size}
 Events: ${client.events.size}
 Mutes: ${Mutes.reduce((acc, ele) => acc + ele.length, 0)}
 -----------------  Log  ----------------`);
+
     Mutes.forEach((MuteGuild: Infringement[]) => {
       MuteGuild.forEach((Case: Infringement) => {
         const guild = client.guilds.cache.get(Case.guildID);

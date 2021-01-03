@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { DiscordBot } from "../structures/Client";
 
-export type ClientEvents =  // List of client events (I may be dumb i couldnt see it in the types of djs)
+export type ClientEvents =  // List of client events
   | "rateLimit"
   | "ready"
   | "resumed"

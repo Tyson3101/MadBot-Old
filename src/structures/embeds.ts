@@ -12,7 +12,7 @@ import { Command } from "../interfaces/Command";
 import { duration } from "moment";
 import "moment-duration-format";
 
-// All embeds I want to use. (Allows less typing and resuing, also can input stuff in)
+// All embeds I want to use.
 
 export const dmCommandEmbed = (
   client: DiscordBot,

@@ -6,7 +6,7 @@ import { Intents } from "discord.js";
 import { extendStructures } from "./functions/extendStructures";
 const { TOKEN: token } = process.env;
 
-extendStructures();
+extendStructures(); //Extends Discord
 
 const client: DiscordBot = new DiscordBot({
   // Creates the client

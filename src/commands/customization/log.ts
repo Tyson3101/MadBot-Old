@@ -9,5 +9,7 @@ export const command: Command = {
       message.command.subCommands
         .get(message.args[0].value.toLowerCase())
         ?.run(client, message);
+
+    //TEST
   },
 };

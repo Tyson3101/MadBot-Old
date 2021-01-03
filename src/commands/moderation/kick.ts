@@ -4,8 +4,9 @@ import {
   errorCommandEmbed,
   invaildPermissionsCustom,
   sucessPunishEmbed,
-} from "../../structures/embeds";
+} from "../../structures/Embeds";
 import { Infringement } from "../../interfaces/GuildDataBase";
+import { GuildDataBase } from "../../structures/DataBase";
 
 export const command: Command = {
   name: "kick",
@@ -93,7 +94,10 @@ export const command: Command = {
     message.guild.DB.moderation.all[member.id]
       ? message.guild.DB.moderation.all[member.id].push(moderationDB)
       : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
-    await client.guildDB.set(message.guild.id, { ...message.guild.DB });
+    await client.guildDB.set(
+      message.guild.id,
+      new GuildDataBase(message.guild, { ...message.guild.DB })
+    );
     member
       .send({
         embed: new MessageEmbed({

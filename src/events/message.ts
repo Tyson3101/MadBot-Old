@@ -1,7 +1,6 @@
 import commandCheck from "../functions/MemberCommandCheck";
 import { errorCommandEmbed, clientInfo } from "../structures/Embeds";
 import { MessageEvent } from "../interfaces/Events";
-import { GuildDataBase } from "../structures/DataBase";
 import { TextChannel } from "discord.js";
 
 export const event: MessageEvent = {
