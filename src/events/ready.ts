@@ -1,13 +1,10 @@
-import { ReadyEventInterface } from "../interfaces/Events";
-import { infringementInterface } from "../interfaces/GuildDataBase";
-import { guildDataBase } from "../structures/DataBase";
+import { ReadyEvent } from "../interfaces/Events";
+import { Infringement } from "../interfaces/GuildDataBase";
 
-export const event: ReadyEventInterface = {
+export const event: ReadyEvent = {
   event: "ready",
   async run(client) {
-    const Mutes = (await client.handleMutes(
-      client
-    )) as infringementInterface[][];
+    const Mutes = (await client.handleMutes(client)) as Infringement[][];
     client.developers.set("397737988915724310", {
       id: "397737988915724310", // Sets the botdevs user id
       position: 0,
@@ -33,8 +30,8 @@ Commands: ${client.commands.size}
 Events: ${client.events.size}
 Mutes: ${Mutes.reduce((acc, ele) => acc + ele.length, 0)}
 -----------------  Log  ----------------`);
-    Mutes.forEach((MuteGuild: infringementInterface[]) => {
-      MuteGuild.forEach((Case: infringementInterface) => {
+    Mutes.forEach((MuteGuild: Infringement[]) => {
+      MuteGuild.forEach((Case: Infringement) => {
         const guild = client.guilds.cache.get(Case.guildID);
         if (guild && Case?.active && Case?.endDate) {
           setTimeout(async () => {
@@ -42,7 +39,7 @@ Mutes: ${Mutes.reduce((acc, ele) => acc + ele.length, 0)}
               await guild.members.fetch(Case.victim),
               Case.muteRoleID,
               Case.oldRolesID,
-              await guildDataBase.get(guild.id),
+              await client.guildDB.get(guild.id),
               Case.caseCount
             );
           }, new Date(Case.endDate).getTime() - Date.now());

@@ -1,7 +1,6 @@
-import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
+import { Command } from "../../interfaces/Command";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "tagdelete",
   description: "Deletes a tag",
   example: ["prices"],
@@ -13,7 +12,7 @@ export const command: commandInterFace = {
   ],
   async run(client, message) {
     delete message.guild.DB.tags[message.args[0]?.value.toLowerCase()];
-    await guildDataBase.set(message.guild.id, message.guild.DB);
+    await client.guildDB.set(message.guild.id, message.guild.DB);
     message.say(`The tag "${message.args[0]?.value}" has been deleted!`);
   },
 };

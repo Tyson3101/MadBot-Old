@@ -33,12 +33,20 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
     //@ts-ignore
     async getUser(mentionID: string, send: boolean = true): Promise<User> {
       let idArray = mentionID.match(/\d+/);
-      if (!idArray) throw "No ID!";
-      let id = idArray[0];
+      let id = idArray?.[0].length > 16 ? idArray?.[0] : mentionID;
       try {
         let User = await this.client.users.fetch(id);
         return User;
-      } catch (e) {
+      } catch {
+        if (
+          this.client.users.cache.some(
+            (user) => user.username === id || user.tag === mentionID
+          )
+        ) {
+          return this.client.users.cache.find(
+            (user) => user.username === id || user.tag === mentionID
+          );
+        }
         send &&
           this.channel.send({
             embed: noArgsCommandHelpEmbed(
@@ -57,7 +65,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       send: boolean = true
     ): Promise<GuildMember> {
       let idArray = mentionID.match(/\d+/);
-      let id = idArray?.[0];
+      let id = idArray?.[0].length > 16 ? idArray?.[0] : null;
       let method: string = "id";
       if (!id) {
         id = mentionID;
@@ -70,18 +78,13 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         } else {
           guildMember = (
             await this.guild.members.fetch({
-              query: id.includes("#")
-                ? id.split("#")[1].length <= 4
-                  ? id.split("#")[0]
-                  : id
-                : id,
+              query: id.split("#")[0],
             })
           )
-            .filter((mem) =>
-              //@ts-ignore
-              mem.user.username === id.split("#")[1].length <= 4
-                ? id.split("#")[0]
-                : id
+            .filter(
+              (mem) =>
+                //@ts-ignore
+                mem.user.username === id.split("#")[0]
             )
             .first();
         }
@@ -101,7 +104,10 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
     }
     //@ts-ignore
     getGuild(guildID: string): Guild {
-      return this.client.guilds.cache.get(guildID);
+      return (
+        this.client.guilds.cache.get(guildID) ??
+        this.client.guilds.cache.find((ch) => ch.name === guildID)
+      );
     }
     //@ts-ignore
     compareRolePostion(

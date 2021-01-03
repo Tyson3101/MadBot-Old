@@ -1,9 +1,8 @@
 import { Guild } from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
+import { Command } from "../../interfaces/Command";
+import { GuildDataBase } from "../../structures/DataBase";
 import { DiscordBot } from "../../structures/Client";
-import { guildDataBase } from "../../structures/DataBase";
-export const command: commandInterFace = {
+export const command: Command = {
   name: "resetdb",
   args: [
     {
@@ -19,8 +18,8 @@ export const command: commandInterFace = {
     if (message.args[0]?.value)
       guild = message.getGuild(message.args[0]?.value);
     if (!guild) guild = message.guild;
-    const DBObj: GuildDataBaseInterface = DiscordBot.DEFUALT_DB(message.guild);
-    await guildDataBase.set(message.args[0]?.value ?? guild.id, DBObj);
+    const DBObj: GuildDataBase = DiscordBot.DEFUALT_DB(message.guild);
+    await client.guildDB.set(message.args[0]?.value ?? guild.id, DBObj);
     message.say(JSON.stringify(DBObj, null, 4), {
       split: true,
       code: "json",

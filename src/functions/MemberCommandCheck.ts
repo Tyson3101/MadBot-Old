@@ -1,6 +1,6 @@
 import { Message, TextChannel, PermissionString } from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { commandInterFace } from "../interfaces/Command";
+import { Command } from "../interfaces/Command";
 import {
   dmCommandEmbed,
   ownerCommandEmbed,
@@ -13,7 +13,7 @@ import {
 export default function (
   client: DiscordBot,
   message: Message,
-  command: commandInterFace
+  command: Command
 ) {
   if (command.permission && command.permission[0]) {
     if (command.permission[1] === true) {

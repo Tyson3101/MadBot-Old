@@ -1,7 +1,6 @@
-import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
+import { Command } from "../../interfaces/Command";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "tagcreate",
   description: `Creates a tag`,
   note: 'This command allows random responses. Wrap each response with " "',
@@ -47,7 +46,7 @@ export const command: commandInterFace = {
     const newDB = {
       ...message.guild.DB,
     };
-    await guildDataBase.set(message.guild.id, newDB);
+    await client.guildDB.set(message.guild.id, newDB);
     message.say(`The tag "${message.args[0].value}" has been created!`);
   },
 };

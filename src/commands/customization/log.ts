@@ -1,7 +1,6 @@
-import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
+import { Command } from "../../interfaces/Command";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "log",
   description: "Sets up the logging for the server!",
   run(client, message) {

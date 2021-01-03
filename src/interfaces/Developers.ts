@@ -6,7 +6,7 @@ enum Position { // Enum
   TESTER, // Tester being ...
 }
 
-export interface developerInterface {
+export interface Developer {
   id: string; // User object of that developer
   position: Position; // There postion of the enum
 }

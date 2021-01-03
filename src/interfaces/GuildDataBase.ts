@@ -1,6 +1,6 @@
 import { Collection, Message, Snowflake, User } from "discord.js";
 
-export type infringementType =
+export type InfringementType =
   | "BAN"
   | "KICK"
   | "WARN"
@@ -10,14 +10,14 @@ export type infringementType =
 
 export type ModerationUser = string;
 
-export interface infringementInterface {
+export interface Infringement {
   guildID: string;
   victim: ModerationUser;
   moderator: ModerationUser;
   reason: string;
   typeCaseCount: number;
   caseCount: number;
-  infringementType: infringementType;
+  infringementType: InfringementType;
   startDate: Date;
   endDate?: Date;
   active?: boolean;
@@ -25,7 +25,7 @@ export interface infringementInterface {
   oldRolesID?: string[];
 }
 
-export interface tagInterface {
+export interface Tag {
   name: string;
   replies: string[];
   author: string;
@@ -33,27 +33,22 @@ export interface tagInterface {
   uses: number;
 }
 
-export interface moderationInterface {
-  bans: { [key: string]: infringementInterface[] };
-  kicks: { [key: string]: infringementInterface[] };
-  warns: { [key: string]: infringementInterface[] };
-  mutes: { [key: string]: infringementInterface[] };
-  all: { [key: string]: infringementInterface[] };
-  unbans: { [key: string]: infringementInterface[] };
-  unmutes: { [key: string]: infringementInterface[] };
+export interface DataBaseMethods {
+  set: (key: string, value: any) => Promise<boolean>;
+  get: (key: string) => Promise<any>;
+  clear: () => Promise<undefined>;
+  delete: (key: string) => Promise<boolean>;
+}
+
+export interface Moderation {
+  bans: { [key: string]: Infringement[] };
+  kicks: { [key: string]: Infringement[] };
+  warns: { [key: string]: Infringement[] };
+  mutes: { [key: string]: Infringement[] };
+  all: { [key: string]: Infringement[] };
+  unbans: { [key: string]: Infringement[] };
+  unmutes: { [key: string]: Infringement[] };
   caseCount: number;
   activeCases: number;
   logChannel: string;
 }
-
-export interface GuildDataBaseInterface {
-  name: string;
-  id: string;
-  ownerID: string;
-  memberCount: number;
-  prefix: string;
-  moderation: moderationInterface;
-  tags: { [key: string]: tagInterface };
-  logChannel: string;
-}
-// Setup for GuildDataBase, like Mongoose Schemas (...lol)
