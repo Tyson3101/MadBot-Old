@@ -1,5 +1,5 @@
 import { Message, MessageEmbed, Util as DiscordUtil } from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import hastebin from "hastebin";
 
 async function sendEvaledMessage(
@@ -76,7 +76,9 @@ async function sendEvaledMessage(
   }
 }
 
-export const command: commandInterFace = {
+const evalStringExample = `const Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js'); const {GuildDataBase} = require("../../structures/DataBase")`;
+
+export const command: Command = {
   name: "eval",
   aliases: ["code"],
   args: [
@@ -87,15 +89,23 @@ export const command: commandInterFace = {
   ],
   devOnly: true,
   async run(client, message) {
-    let toEvalFull = message.plainArgs.join(" ").replace(/```(.\n)?/g, "");
+    let toEvalFull = message.plainArgs
+      .join(" ")
+      .replace(/```(js\n)?/g, "")
+      .trim();
     let toEval: string;
     let evaled: string;
     let toEvaledSpilt: string[];
     try {
       const startTime = process.hrtime();
       toEvaledSpilt = toEvalFull.split(/\n/g);
+      console.log(toEvalFull, toEvaledSpilt[0]);
       toEval = toEvaledSpilt.join("\n");
-      let aboutToEval = `(async () => {\nconst Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js');\n${toEval}\n})()`;
+      let aboutToEval: string;
+      if (toEvaledSpilt.length > 1)
+        aboutToEval = `(async () => {\n${evalStringExample}\n${toEval}\n})()`;
+      else
+        aboutToEval = `(async () => {\n${evalStringExample}\nreturn ${toEvaledSpilt[0]}\n})()`;
       evaled = await eval(aboutToEval);
       const timeTook = process.hrtime(startTime);
       let evaledMassed: string;

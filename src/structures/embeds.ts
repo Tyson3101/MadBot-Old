@@ -7,8 +7,8 @@ import {
   Message,
 } from "discord.js";
 import { DiscordBot } from "./Client";
-import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
-import { commandInterFace } from "../interfaces/Command";
+import { GuildDataBase } from "./DataBase";
+import { Command } from "../interfaces/Command";
 import { duration } from "moment";
 import "moment-duration-format";
 
@@ -188,7 +188,7 @@ export const errorCommandEmbed = (
 export const noArgsCommandHelpEmbed = (
   client: DiscordBot,
   user: User,
-  command: commandInterFace,
+  command: Command,
   prefix: string
 ): MessageEmbed => {
   return new MessageEmbed({
@@ -218,7 +218,7 @@ export const noArgsCommandHelpEmbed = (
 export const prefixEmbed = (
   client: DiscordBot,
   member: GuildMember,
-  db: GuildDataBaseInterface,
+  db: GuildDataBase,
   prefix = null
 ): MessageEmbed => {
   let { user } = member;
@@ -320,7 +320,7 @@ export const helpEmbed = (
     },
   });
   let allReady: string[] = [];
-  client.commands.forEach((command: commandInterFace) => {
+  client.commands.forEach((command: Command) => {
     if (allReady.includes(command.catergory)) return;
     allReady.push(command.catergory);
     embed.addField(
@@ -359,7 +359,7 @@ export const helpCatergoryEmbed = (
   client.commands
     .filter((cmd) => cmd.catergory === catergory)
     .filter((cmd) => cmd.public !== false && !cmd.public)
-    .forEach((command: commandInterFace, commandName: string) => {
+    .forEach((command: Command, commandName: string) => {
       embed.addField(
         `${prefix}help ${commandName}`,
         `${

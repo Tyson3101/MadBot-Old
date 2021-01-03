@@ -1,5 +1,5 @@
-import { commandInterFace, SubCommand } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
+import { Command, SubCommand } from "../../interfaces/Command";
+import { GuildDataBase } from "../../structures/DataBase";
 
 export const subCommand: SubCommand = {
   name: "modlog",

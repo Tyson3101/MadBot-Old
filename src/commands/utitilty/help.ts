@@ -1,11 +1,11 @@
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import {
   helpCatergoryEmbed,
   helpEmbed,
   CommandHelpEmbed,
 } from "../../structures/embeds";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "help",
   example: ["help moderation", "help", "help info"],
   args: [

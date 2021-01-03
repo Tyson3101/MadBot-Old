@@ -1,9 +1,8 @@
-import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
-import { GuildDataBaseInterface } from "../../interfaces/GuildDataBase";
+import { Command } from "../../interfaces/Command";
+import { GuildDataBase } from "../../structures/DataBase";
 import { prefixEmbed } from "../../structures/Embeds"; // Import Syntax
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "prefix",
   description: "Gets or changes prefix for a server",
   example: ["prefix ?", "prefix Orange"],
@@ -22,10 +21,10 @@ export const command: commandInterFace = {
     const prefix = message.args[0]?.value;
     if (prefix) {
       guildDB.prefix = prefix;
-      let newDBGUILD: GuildDataBaseInterface = {
+      let newDBGUILD: GuildDataBase = {
         ...guildDB,
       };
-      await guildDataBase.set(message.guild.id, newDBGUILD);
+      await client.guildDB.set(message.guild.id, newDBGUILD);
       message.say({
         embed: prefixEmbed(
           client,

@@ -1,15 +1,14 @@
 import { MessageEmbed, GuildMember, Role, Message } from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import {
   errorCommandEmbed,
   invaildPermissionsCustom,
   sucessPunishEmbed,
 } from "../../structures/embeds";
 import ms from "ms";
-import { guildDataBase } from "../../structures/DataBase";
-import { infringementInterface } from "../../interfaces/GuildDataBase";
+import { Infringement } from "../../interfaces/GuildDataBase";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "mute",
   description: "Mute a members",
   example: [
@@ -125,7 +124,7 @@ export const command: commandInterFace = {
     let typeCaseCount = client.getTypeCaseCount("MUTE", message.guild.DB) + 1;
     let caseCount = ++message.guild.DB.moderation.caseCount;
     message.guild.DB.moderation.activeCases++;
-    const moderationDB: infringementInterface = {
+    const moderationDB: Infringement = {
       guildID: message.guild.id,
       muteRoleID: MutedRole.id,
       oldRolesID: member.roles.cache
@@ -148,7 +147,7 @@ export const command: commandInterFace = {
     message.guild.DB.moderation.all[member.id]
       ? message.guild.DB.moderation.all[member.id].push(moderationDB)
       : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
+    await client.guildDB.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -203,7 +202,7 @@ export const command: commandInterFace = {
       message.say({
         embed: errorCommandEmbed(client, message.author, e),
       });
-      await guildDataBase.set(message.guild.id, backUpDB);
+      await client.guildDB.set(message.guild.id, backUpDB);
       if (timeMuteTimeout) clearTimeout(timeMuteTimeout);
     }
   },

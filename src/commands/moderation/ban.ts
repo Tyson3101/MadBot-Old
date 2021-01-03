@@ -1,14 +1,13 @@
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import { GuildMember, MessageEmbed, Message } from "discord.js";
 import {
   errorCommandEmbed,
   invaildPermissionsCustom,
   sucessPunishEmbed,
 } from "../../structures/embeds";
-import { guildDataBase } from "../../structures/DataBase";
-import { infringementInterface } from "../../interfaces/GuildDataBase";
+import { Infringement } from "../../interfaces/GuildDataBase";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "ban",
   description: "Bans a member from the server.",
   example: ["ban @Tyson Dm Advertising", "ban 53636233242246347"],
@@ -76,7 +75,7 @@ export const command: commandInterFace = {
     let typeCaseCount = client.getTypeCaseCount("BAN", message.guild.DB) + 1;
     let caseCount = ++message.guild.DB.moderation.caseCount;
     let backUpDB = { ...message.guild.DB };
-    const moderationDB: infringementInterface = {
+    const moderationDB: Infringement = {
       guildID: message.guild.id,
       victim: member.id,
       moderator: message.author.id,
@@ -93,7 +92,7 @@ export const command: commandInterFace = {
     message.guild.DB.moderation.all[member.id]
       ? message.guild.DB.moderation.all[member.id].push(moderationDB)
       : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
-    await guildDataBase.set(message.guild.id, { ...message.guild.DB });
+    await client.guildDB.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -133,7 +132,7 @@ export const command: commandInterFace = {
       message.say({
         embed: errorCommandEmbed(client, message.author, null),
       });
-      await guildDataBase.set(message.guild.id, backUpDB);
+      await client.guildDB.set(message.guild.id, backUpDB);
     }
   },
 };

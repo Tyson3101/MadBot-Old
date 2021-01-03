@@ -1,11 +1,10 @@
 import commandCheck from "../functions/MemberCommandCheck";
-import { guildDataBase } from "../structures/DataBase";
 import { errorCommandEmbed, clientInfo } from "../structures/Embeds";
-import { MessageEventInterface } from "../interfaces/Events";
-import { GuildDataBaseInterface } from "../interfaces/GuildDataBase";
+import { MessageEvent } from "../interfaces/Events";
+import { GuildDataBase } from "../structures/DataBase";
 import { TextChannel } from "discord.js";
 
-export const event: MessageEventInterface = {
+export const event: MessageEvent = {
   event: "message",
   async run(client, message) {
     if (message.author.bot || message.webhookID) return;
@@ -77,15 +76,20 @@ export const event: MessageEventInterface = {
             .map((str) => str.toLowerCase())
             .join(" ")}`
         ].uses++;
-        await guildDataBase.set(message.guild.id, message.guild.DB);
+        await client.guildDB.set(message.guild.id, message.guild.DB);
         return message
           .say(tag.replies[Math.floor(Math.random() * tag.replies.length)])
           .catch(console.log);
       }
     }
     if (message.mentions.users.has(client.user.id))
-      return message.say({
-        embed: clientInfo(client, message.author, message.prefix),
-      });
+      return message.say(
+        !message.isDM
+          ? `Your prefix for this server is \`${message.prefix}\``
+          : "",
+        {
+          embed: clientInfo(client, message.author, message.prefix),
+        }
+      );
   },
 };

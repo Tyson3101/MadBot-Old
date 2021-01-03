@@ -1,10 +1,10 @@
 import { MessageEmbed } from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import { DiscordBot } from "../../structures/Client";
 import { TemplatedEmbed } from "../../structures/TemplateEmbed";
 import moment from "moment";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "user",
   example: ["user 96396396346737437", "user @Tyson", "user"],
   args: [

@@ -1,6 +1,5 @@
-import { commandInterFace } from "../../interfaces/Command";
-import { guildDataBase } from "../../structures/DataBase";
-export const command: commandInterFace = {
+import { Command } from "../../interfaces/Command";
+export const command: Command = {
   name: "showdb",
   args: [
     {
@@ -11,7 +10,7 @@ export const command: commandInterFace = {
   public: false,
   devOnly: true,
   async run(client, message) {
-    let guildDB = await guildDataBase.get(message.args[0]?.value);
+    let guildDB = await client.guildDB.get(message.args[0]?.value);
     if (!guildDB) guildDB = message.guild.DB;
     const DBJSON: string = JSON.stringify(guildDB, null, 4);
     message.say(DBJSON, { split: true, code: "json" });

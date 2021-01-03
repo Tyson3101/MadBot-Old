@@ -1,7 +1,7 @@
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import { pingEmbed } from "../../structures/Embeds"; // Import Syntax
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "ping",
   description: "Shows the API Latency.",
   example: ["ping"],

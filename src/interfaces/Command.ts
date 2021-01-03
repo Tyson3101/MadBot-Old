@@ -1,8 +1,8 @@
 import Discord from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { argsInterface as args } from "./Args";
+import { Args as args } from "./Command";
 
-export interface commandInterFace {
+export interface Command {
   // Used to make command setting up easier
   // Interface
   name: string;
@@ -38,4 +38,11 @@ export interface commandInterFace {
 export interface SubCommand {
   name: string;
   run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
+}
+
+export interface Args {
+  // Args Interface makes it easier to follow
+  // Interface
+  name: string;
+  required: boolean;
 }

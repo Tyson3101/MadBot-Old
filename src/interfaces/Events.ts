@@ -62,46 +62,46 @@ export type ClientEvents =  // List of client events (I may be dumb i couldnt se
   | "shardResume"
   | "invalidated"
   | "raw";
-export interface MessageUpdateEventInterface {
+export interface MessageUpdateEvent {
   event: ClientEvents;
   run: (client: DiscordBot, oldMessage: Message, newMessage: Message) => void; // Function typechecking
 }
 
-export interface ReadyEventInterface {
+export interface ReadyEvent {
   event: ClientEvents;
   run: (client: DiscordBot) => void;
 }
 
-export interface guildMemberSpeakingEventInterface {
+export interface guildMemberSpeakingEvent {
   event: ClientEvents;
   run: (client: DiscordBot, member: GuildMember, speaking: Speaking) => void;
 }
 
-export interface voiceStateEventInterface {
+export interface voiceStateEvent {
   event: ClientEvents;
   run: (client: DiscordBot, oldState: VoiceState, newState: VoiceState) => void;
 }
 
-export interface MessageEventInterface {
+export interface MessageEvent {
   event: ClientEvents;
   run: (client: DiscordBot, message: Message) => void;
 }
 
-export interface MessageDeleteEventInterface {
+export interface MessageDeleteEvent {
   event: ClientEvents;
   run: (client: DiscordBot, DeleteDmessage: Message) => void;
 }
 
-export interface messageReactionAddEventInterface {
+export interface messageReactionAddEvent {
   event: ClientEvents;
   run: (client: DiscordBot, reaction: MessageReaction, user: User) => void;
 }
 
 export type EventInterface =  // Union Types, used to check at least event is one of these
-  | MessageUpdateEventInterface
-  | MessageEventInterface
-  | ReadyEventInterface
-  | messageReactionAddEventInterface
-  | MessageDeleteEventInterface
-  | guildMemberSpeakingEventInterface
-  | voiceStateEventInterface;
+  | MessageUpdateEvent
+  | MessageEvent
+  | ReadyEvent
+  | messageReactionAddEvent
+  | MessageDeleteEvent
+  | guildMemberSpeakingEvent
+  | voiceStateEvent;

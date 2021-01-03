@@ -2,10 +2,10 @@ import Discord from "discord.js";
 import { MessageEmbed } from "discord.js";
 import { HTTPError } from "discord.js";
 import { TextChannel } from "discord.js";
-import { commandInterFace } from "../../interfaces/Command";
+import { Command } from "../../interfaces/Command";
 import { noArgsCommandHelpEmbed } from "../../structures/embeds";
 
-export const command: commandInterFace = {
+export const command: Command = {
   name: "purge",
   aliases: ["prune"],
   guildOnly: true,
