@@ -16,7 +16,7 @@ export const command: Command = {
   guildOnly: true,
   devOnly: false,
   permission: ["MANAGE_GUILD", false],
-  async run(client, message) {
+  async run(message) {
     let guildDB = message.guild.DB;
     const prefix = message.args[0]?.value;
     if (prefix) {
@@ -24,10 +24,10 @@ export const command: Command = {
       let newDBGUILD: GuildDataBase = {
         ...guildDB,
       };
-      await client.guildDB.set(message.guild.id, newDBGUILD);
+      await this.client.guildDB.set(message.guild.id, newDBGUILD);
       message.say({
         embed: prefixEmbed(
-          client,
+          this.client,
           message.member,
           message.guild.DB,
           guildDB.prefix
@@ -35,7 +35,7 @@ export const command: Command = {
       });
     } else {
       message.say({
-        embed: prefixEmbed(client, message.member, message.guild.DB),
+        embed: prefixEmbed(this.client, message.member, message.guild.DB),
       });
     }
   },

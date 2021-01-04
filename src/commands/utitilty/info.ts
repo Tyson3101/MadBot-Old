@@ -6,7 +6,9 @@ export const command: Command = {
   name: "info",
   description: "Shows info of MadBot",
   aliases: ["stats"],
-  async run(client, message) {
-    message.say({ embed: clientInfo(client, message.author, message.prefix) }); // Sends Client Info Embed
+  async run(message) {
+    message.say({
+      embed: clientInfo(this.client, message.author, message.prefix),
+    }); // Sends Client Info Embed
   },
 };

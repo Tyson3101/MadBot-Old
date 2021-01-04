@@ -14,19 +14,19 @@ export const command: Command = {
       required: false,
     },
   ],
-  async run(client, message) {
+  async run(message) {
     const { prefix } = message;
     if (!message.args[0]?.value) {
       // Checks if inputted a command or caterogry
       message.say({
-        embed: helpEmbed(client, message.author, prefix),
+        embed: helpEmbed(this.client, message.author, prefix),
       });
     } else {
-      let inputted: any = client.commands.get(
+      let inputted: any = this.client.commands.get(
         message.args[0]?.value.toLowerCase()
       );
       if (!inputted) {
-        let check = client.commands
+        let check = this.client.commands
           .filter(
             (cmd) =>
               cmd.catergory.toLowerCase() ===
@@ -37,7 +37,7 @@ export const command: Command = {
           inputted = message.args[0]?.value;
           message.say({
             embed: helpCatergoryEmbed(
-              client,
+              this.client,
               message.author,
               message.args[0]?.value.toLowerCase(),
               prefix
@@ -47,7 +47,7 @@ export const command: Command = {
       } else {
         message.say({
           embed: CommandHelpEmbed(
-            client,
+            this.client,
             message.author,
             inputted.name,
             prefix

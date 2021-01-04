@@ -12,8 +12,8 @@ import { DiscordBot } from "./Client";
     color: "DARK_VIVID_PINK",
 
     footer: {
-      text: `${client.user.username} ©`,
-      iconURL: client.user.displayAvatarURL({ format: "png" }),
+      text: `${this.client.user.username} ©`,
+      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
     },
     */
 
@@ -24,12 +24,12 @@ export class TemplatedEmbed extends MessageEmbed {
     if (option instanceof DiscordBot === false) {
       embed.footer = {
         text: `${
-          (option as Message | User | GuildMember).client.user.username
+          (option as Message | User | GuildMember).this.client.user.username
         } ©`,
         iconURL: (option as
           | Message
           | User
-          | GuildMember).client.user.displayAvatarURL({ format: "png" }),
+          | GuildMember).this.client.user.displayAvatarURL({ format: "png" }),
       };
     } else {
       embed.footer = {

@@ -21,12 +21,12 @@ export const command: Command = {
   ],
   example: ["purge 52 Too many shitpost", "purge 69"],
   permission: ["MANAGE_MESSAGES", true],
-  async run(client, message) {
+  async run(message) {
     const amount = parseInt(message.args[0].value);
     if (Number.isNaN(amount))
       return message.say({
         embed: noArgsCommandHelpEmbed(
-          client,
+          this.client,
           message.author,
           message.command,
           message.guild.prefix
@@ -35,7 +35,7 @@ export const command: Command = {
     if (amount <= 0 && amount >= 100)
       return message.say({
         embed: noArgsCommandHelpEmbed(
-          client,
+          this.client,
           message.author,
           message.command,
           message.guild.prefix
@@ -57,8 +57,8 @@ export const command: Command = {
             title: "Error",
             description: e.message,
             footer: {
-              text: `${client.user.username} ©`,
-              iconURL: client.user.displayAvatarURL({ format: "png" }),
+              text: `${this.client.user.username} ©`,
+              iconURL: this.client.user.displayAvatarURL({ format: "png" }),
             },
           }),
         });

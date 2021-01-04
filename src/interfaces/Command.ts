@@ -15,6 +15,7 @@ export interface Command {
   guildOnly?: boolean;
   devOnly?: boolean;
   nsfw?: boolean;
+  client?: DiscordBot;
   permission?: [
     Discord.PermissionString,
     boolean | Discord.PermissionString,
@@ -32,12 +33,13 @@ export interface Command {
   public?: boolean;
   catergory?: string;
   subCommands?: Discord.Collection<string, SubCommand>;
-  run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
+  run: (message: Discord.Message) => any | Promise<any>;
 }
 
 export interface SubCommand {
   name: string;
-  run: (client: DiscordBot, message: Discord.Message) => any | Promise<any>;
+  client?: DiscordBot;
+  run: (message: Discord.Message) => any | Promise<any>;
 }
 
 export interface Args {

@@ -13,7 +13,7 @@ export const command: Command = {
       required: false,
     },
   ],
-  async run(client, message) {
+  async run(message) {
     const member = !message.isDM
       ? (await message.getMember(message.plainArgs.join(" "), false)) ??
         message.member
@@ -43,12 +43,12 @@ export const command: Command = {
     if (!message.isDM) {
       userInfo.addField(
         "Owner",
-        client.firstCap((user.id === message.guild.ownerID).toString()),
+        this.client.firstCap((user.id === message.guild.ownerID).toString()),
         true
       );
       userInfo.addField(
         "Bot",
-        client.firstCap(user.bot.toString()),
+        this.client.firstCap(user.bot.toString()),
         !message.isDM ? true : false
       );
       userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
@@ -70,13 +70,13 @@ Time ago: ${DiscordBot.getTimeAgo(member.joinedAt, new Date())} Days ago`,
     }
     userInfo.addField(
       "Status",
-      client.firstCap(user.presence.status),
+      this.client.firstCap(user.presence.status),
       !message.isDM ? true : false
     );
     if (!message.isDM) {
       userInfo.addField(
         "Server Booster",
-        client.firstCap((!!member.premiumSince).toString()),
+        this.client.firstCap((!!member.premiumSince).toString()),
         true
       );
       userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);

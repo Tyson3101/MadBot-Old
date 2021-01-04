@@ -20,7 +20,7 @@ export const command: Command = {
       required: false,
     },
   ],
-  async run(client, message) {
+  async run(message) {
     let member: GuildMember = await message.getMember(message.args[0]?.value);
     if (!member) return;
     let reason = "No reason provided.";
@@ -35,7 +35,7 @@ export const command: Command = {
     ) {
       return message.say({
         embed: noArgsCommandHelpEmbed(
-          client,
+          this.client,
           member.user,
           message.command,
           message.prefix
@@ -45,7 +45,7 @@ export const command: Command = {
     const Case = message.guild.DB.moderation.mutes[member.id].find(
       (Case) => Case.active
     );
-    const handled: boolean = await client.handleEndMute(
+    const handled: boolean = await this.client.handleEndMute(
       member,
       Case.muteRoleID,
       Case.oldRolesID,
@@ -55,14 +55,15 @@ export const command: Command = {
     if (!handled) {
       return message.say({
         embed: noArgsCommandHelpEmbed(
-          client,
+          this.client,
           member.user,
           message.command,
           message.prefix
         ),
       });
     }
-    let typeCaseCount = client.getTypeCaseCount("UNMUTE", message.guild.DB) + 1;
+    let typeCaseCount =
+      this.client.getTypeCaseCount("UNMUTE", message.guild.DB) + 1;
     let caseCount = ++message.guild.DB.moderation.caseCount;
     message.guild.DB.moderation.activeCases++;
     const moderationDB: Infringement = {
@@ -83,7 +84,7 @@ export const command: Command = {
     message.guild.DB.moderation.all[member.id]
       ? message.guild.DB.moderation.all[member.id].push(moderationDB)
       : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
-    await client.guildDB.set(message.guild.id, { ...message.guild.DB });
+    await this.client.guildDB.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -98,13 +99,13 @@ export const command: Command = {
           thumbnail: {
             url:
               message.guild.iconURL({ format: "png", dynamic: true }) ||
-              client.user.displayAvatarURL({ format: "png" }),
+              this.client.user.displayAvatarURL({ format: "png" }),
           },
           title: `Muted from ${message.guild.name}`,
           description: `You have been Unmuted from ${message.guild.name} for "${reason}".\nYou were Unmuted by ${message.author.tag}.`,
           footer: {
-            text: `${client.user.username} ©`,
-            iconURL: client.user.displayAvatarURL({ format: "png" }),
+            text: `${this.client.user.username} ©`,
+            iconURL: this.client.user.displayAvatarURL({ format: "png" }),
           },
         }),
       })
@@ -129,10 +130,10 @@ export const command: Command = {
           },
         ],
         footer: {
-          text: `${client.firstCap(
+          text: `${this.client.firstCap(
             "Unmuted!".slice(0, "Unmuted!".length - 1)
           )} by ${message.author.tag}!`,
-          iconURL: client.user.displayAvatarURL({ format: "png" }),
+          iconURL: this.client.user.displayAvatarURL({ format: "png" }),
         },
       }),
     });

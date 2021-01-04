@@ -31,22 +31,22 @@ export const command: Command = {
     },
   ],
   permission: ["MANAGE_ROLES", "MANAGE_CHANNELS", "MANAGE_ROLES"],
-  async run(client, message) {
+  async run(message) {
     let member: GuildMember = await message.getMember(message.args[0]?.value);
     console.log("Started");
     if (!member) return;
     if (member.id === message.guild.ownerID)
       return message.say({
         embed: invaildPermissionsCustom(
-          client,
+          this.client,
           message.author,
           `I can't perform this action on this member.`
         ),
       });
-    if (member.id === client.user.id)
+    if (member.id === this.client.user.id)
       return message.say({
         embed: invaildPermissionsCustom(
-          client,
+          this.client,
           message.author,
           `I can't perform this action on this member.`
         ),
@@ -70,7 +70,7 @@ export const command: Command = {
     )
       return message.say({
         embed: invaildPermissionsCustom(
-          client,
+          this.client,
           message.author,
           `I can't perform this action on this member.`
         ),
@@ -105,7 +105,7 @@ export const command: Command = {
         });
     } catch (e) {
       return message.say({
-        embed: errorCommandEmbed(client, message.author, e),
+        embed: errorCommandEmbed(this.client, message.author, e),
       });
     }
     let reason = "No reason provided.";
@@ -121,7 +121,8 @@ export const command: Command = {
         .join(" ");
 
     let backUpDB = { ...message.guild.DB };
-    let typeCaseCount = client.getTypeCaseCount("MUTE", message.guild.DB) + 1;
+    let typeCaseCount =
+      this.client.getTypeCaseCount("MUTE", message.guild.DB) + 1;
     let caseCount = ++message.guild.DB.moderation.caseCount;
     message.guild.DB.moderation.activeCases++;
     const moderationDB: Infringement = {
@@ -147,7 +148,7 @@ export const command: Command = {
     message.guild.DB.moderation.all[member.id]
       ? message.guild.DB.moderation.all[member.id].push(moderationDB)
       : (message.guild.DB.moderation.all[member.id] = [moderationDB]);
-    await client.guildDB.set(message.guild.id, { ...message.guild.DB });
+    await this.client.guildDB.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
         embed: new MessageEmbed({
@@ -162,13 +163,13 @@ export const command: Command = {
           thumbnail: {
             url:
               message.guild.iconURL({ format: "png", dynamic: true }) ||
-              client.user.displayAvatarURL({ format: "png" }),
+              this.client.user.displayAvatarURL({ format: "png" }),
           },
           title: `Muted from ${message.guild.name}`,
           description: `You have been Muted from ${message.guild.name} for ${message.args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
           footer: {
-            text: `${client.user.username} ©`,
-            iconURL: client.user.displayAvatarURL({ format: "png" }),
+            text: `${this.client.user.username} ©`,
+            iconURL: this.client.user.displayAvatarURL({ format: "png" }),
           },
         }),
       })
@@ -177,7 +178,7 @@ export const command: Command = {
     if (endTime) {
       timeMuteTimeout = setTimeout(
         async () =>
-          client.handleEndMute(
+          this.client.handleEndMute(
             member,
             MutedRole.id,
             moderationDB.oldRolesID,
@@ -191,7 +192,7 @@ export const command: Command = {
       await member.roles.remove(moderationDB.oldRolesID);
       await member.roles.add(MutedRole, reason);
       await message.say({
-        embed: sucessPunishEmbed(client, member.user, <Message>message, {
+        embed: sucessPunishEmbed(this.client, member.user, <Message>message, {
           title: "Muted!",
           reason: reason,
           casenumber: message.guild.DB.moderation.caseCount,
@@ -200,9 +201,9 @@ export const command: Command = {
     } catch (e) {
       console.log(e);
       message.say({
-        embed: errorCommandEmbed(client, message.author, e),
+        embed: errorCommandEmbed(this.client, message.author, e),
       });
-      await client.guildDB.set(message.guild.id, backUpDB);
+      await this.client.guildDB.set(message.guild.id, backUpDB);
       if (timeMuteTimeout) clearTimeout(timeMuteTimeout);
     }
   },

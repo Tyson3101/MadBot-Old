@@ -62,39 +62,46 @@ export type ClientEvents =  // List of client events (I may be dumb i couldnt se
   | "shardResume"
   | "invalidated"
   | "raw";
-export interface MessageUpdateEvent {
+
+export interface DiscordEvent {
   event: ClientEvents;
-  run: (client: DiscordBot, oldMessage: Message, newMessage: Message) => void; // Function typechecking
+  client?: DiscordBot;
+  run: (...args: any) => Promise<any> | any;
 }
 
-export interface ReadyEvent {
-  event: ClientEvents;
-  run: (client: DiscordBot) => void;
+export interface MessageUpdateEvent extends DiscordEvent {
+  run: (oldMessage: Message, newMessage: Message) => Promise<any> | any; // Function typechecking
 }
 
-export interface guildMemberSpeakingEvent {
-  event: ClientEvents;
-  run: (client: DiscordBot, member: GuildMember, speaking: Speaking) => void;
+export interface ReadyEvent extends DiscordEvent {
+  run: () => Promise<any> | any;
 }
 
-export interface voiceStateEvent {
-  event: ClientEvents;
-  run: (client: DiscordBot, oldState: VoiceState, newState: VoiceState) => void;
+export interface guildMemberSpeakingEvent extends DiscordEvent {
+  run: (member: GuildMember, speaking: Speaking) => Promise<any> | any;
 }
 
-export interface MessageEvent {
+export interface voiceStateEvent extends DiscordEvent {
+  run: (oldState: VoiceState, newState: VoiceState) => Promise<any> | any;
+}
+
+export interface MessageEvent extends DiscordEvent {
   event: ClientEvents;
-  run: (client: DiscordBot, message: Message) => void;
+  run: (message: Message) => Promise<any> | any;
 }
 
 export interface MessageDeleteEvent {
   event: ClientEvents;
-  run: (client: DiscordBot, DeleteDmessage: Message) => void;
+  run: (client: DiscordBot, DeleteDmessage: Message) => Promise<any> | any;
 }
 
 export interface messageReactionAddEvent {
   event: ClientEvents;
-  run: (client: DiscordBot, reaction: MessageReaction, user: User) => void;
+  run: (
+    client: DiscordBot,
+    reaction: MessageReaction,
+    user: User
+  ) => Promise<any> | any;
 }
 
 export type EventInterface =  // Union Types, used to check at least event is one of these

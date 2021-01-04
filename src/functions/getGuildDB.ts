@@ -12,38 +12,12 @@ export async function getGuildDB(
   if (guild) {
     let DBguildRaw: GuildDataBase = await DB.get(guild.id);
     if (DBguildRaw) {
-      const DBguild: GuildDataBase = {
-        ...DBguildRaw,
-        ownerID: guild.ownerID,
-        memberCount: guild.memberCount,
-        name: guild.name,
-      };
-      return DBguild;
+      return new GuildDataBase(guild, DBguildRaw);
     } else {
       await DB.set(guild.id, new GuildDataBase(guild));
       return new GuildDataBase(guild);
     }
   } else {
-    return {
-      name: null,
-      id: null,
-      ownerID: null,
-      memberCount: null,
-      prefix: client.prefix,
-      moderation: {
-        bans: null,
-        kicks: null,
-        mutes: null,
-        warns: null,
-        all: null,
-        unbans: null,
-        unmutes: null,
-        activeCases: 0,
-        caseCount: 0,
-        logChannel: null,
-      },
-      tags: {},
-      logChannel: null,
-    };
+    return new GuildDataBase(guild);
   }
 }

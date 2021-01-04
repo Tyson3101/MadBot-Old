@@ -12,6 +12,7 @@
     "alwaysStrict": true,
     "watch": true,
     "baseUrl": "types",
+    "noImplicitThis": true,
     "typeRoots": ["types"]
   },
   "lib": ["esnext"]

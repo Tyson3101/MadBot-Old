@@ -21,7 +21,7 @@ export const command: Command = {
       required: true,
     },
   ],
-  async run(client, message) {
+  async run(message) {
     const replies: string[] = [];
     for (let i = 1; i < message.args.length; i++) {
       if (message.args[i].raw.startsWith('"')) {
@@ -46,7 +46,7 @@ export const command: Command = {
     const newDB = {
       ...message.guild.DB,
     };
-    await client.guildDB.set(message.guild.id, newDB);
+    await this.client.guildDB.set(message.guild.id, newDB);
     message.say(`The tag "${message.args[0].value}" has been created!`);
   },
 };

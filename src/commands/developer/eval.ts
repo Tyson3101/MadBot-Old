@@ -88,7 +88,7 @@ export const command: Command = {
     },
   ],
   devOnly: true,
-  async run(client, message) {
+  async run(message) {
     let toEvalFull = message.plainArgs
       .join(" ")
       .replace(/```(js\n)?/g, "")
@@ -164,8 +164,8 @@ export const command: Command = {
             },
           ],
           footer: {
-            text: `${client.user.username} ©`,
-            iconURL: client.user.displayAvatarURL({ format: "png" }),
+            text: `${this.client.user.username} ©`,
+            iconURL: this.client.user.displayAvatarURL({ format: "png" }),
           },
         })
       );

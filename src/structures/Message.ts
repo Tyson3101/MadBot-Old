@@ -21,7 +21,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       data: object,
       channel: DMChannel | TextChannel | NewsChannel
     ) {
-      super(client, data, channel);
+      super(this.client, data, channel);
     }
     //@ts-ignore (I am sorrry)
     async say(

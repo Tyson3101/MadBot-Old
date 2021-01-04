@@ -12,7 +12,7 @@ import {
 import { Command, SubCommand } from "../interfaces/Command";
 import fs from "fs";
 import { Developer } from "../interfaces/Developers";
-import { EventInterface } from "../interfaces/Events";
+import { DiscordEvent } from "../interfaces/Events";
 import {
   Infringement,
   DataBaseMethods,
@@ -44,7 +44,7 @@ export class DiscordBot extends Client {
     return new GuildDataBase(guild);
   }
 
-  events: Collection<string, EventInterface>; // Key, Value
+  events: Collection<string, DiscordEvent>; // Key, Value
   commands: Collection<string, Command>; // Key, Value
   developers: Collection<Snowflake, Developer>; // Key, Value
   DBs: Collection<Snowflake, GuildDataBase>;
@@ -76,7 +76,7 @@ export class DiscordBot extends Client {
   public handleMutes(client: DiscordBot): Promise<Infringement[][]> {
     return Promise.all([
       //@ts-ignore
-      ...client.guilds.cache.map((guild) => {
+      ...this.guilds.cache.map((guild) => {
         return this.guildDB.get(guild.id).then((DB: GuildDataBase) => {
           if (!DB || !DB.moderation) return [];
           return [
@@ -248,20 +248,21 @@ export class DiscordBot extends Client {
     return Promise.all(this.guilds.cache.map((_, id) => this.guildDB.get(id)));
   }
 
-  private _eventHandlerInit(client: this): void {
+  private _eventHandlerInit(): void {
     let i = 1; // Counter for console logging
     const events = fs
       .readdirSync("./dist/src/events")
       .filter((file) => file.endsWith(".js"));
     events.forEach(async (fileEvent) => {
-      const event: EventInterface = (await import(`../events/${fileEvent}`))
+      const event: DiscordEvent = (await import(`../events/${fileEvent}`))
         .event;
-      if (!event || client.events.has(event.event)) return;
-      client.events.set(event.event, event);
+      if (!event || this.events.has(event.event)) return;
+      event.client = this;
+      this.events.set(event.event, event);
       if (event.event === "ready") {
-        client.once(<any>event.event, event.run.bind(null, client));
+        this.once(<any>event.event, event.run.bind(null, this));
       } else {
-        client.on(<any>event.event, event.run.bind(null, client));
+        this.on(<any>event.event, event.run.bind(null, this));
       } // Type Casting (Can also do `(event as any).event`) and Function Bind() <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind>
       if (i === 1) console.log(`-----------------  Events  ----------------`);
 
@@ -291,7 +292,7 @@ export class DiscordBot extends Client {
 
     return subCommands?.length ? subCommands : undefined;
   }
-  private _commandHandlerInit(client: this) {
+  private _commandHandlerInit() {
     const catergories = fs.readdirSync("./dist/src/commands"); // From root
     let i = 1;
     catergories.forEach((catergory) => {
@@ -302,13 +303,14 @@ export class DiscordBot extends Client {
         const { command }: { command: Command } = await import(
           `../commands/${catergory}/${fileCommand}`
         ); // From File
-        if (!command || client.commands.has(command.name.toLowerCase())) return;
+        if (!command || this.commands.has(command.name.toLowerCase())) return;
         command.name = command.name.toLowerCase();
         const AllsubCommands = (await this._subCommands(command)) ?? [];
         const subCommands: Collection<string, SubCommand> = new Collection();
-        AllsubCommands.forEach((subCommand) =>
-          subCommands.set(subCommand.name, subCommand)
-        );
+        AllsubCommands.forEach((subCommand) => {
+          subCommand.client = this;
+          subCommands.set(subCommand.name, subCommand);
+        });
         let usage = command.name + " ";
         if (command.args?.length)
           usage += command.args
@@ -316,20 +318,21 @@ export class DiscordBot extends Client {
             .join(" ");
         const addCommand = {
           ...command,
-          catergory: catergory,
-          subCommands, // Adds catergory property here to make it easier, is the folder name of that command file
+          catergory: catergory, // Adds catergory property here to make it easier, is the folder name of that command file
+          client: this,
+          subCommands,
         };
         if (!command.usage) addCommand["usage"] = usage.trim();
         if (i === 1)
           console.log(`-----------------  Commands  ----------------`);
         console.log(
-          `Command ${i}: Loaded ${client.firstCap(
+          `Command ${i}: Loaded ${this.firstCap(
             addCommand.name
           )}! | SubCommands: ${subCommands.size}`
         );
         i++;
 
-        client.commands.set(addCommand.name, addCommand);
+        this.commands.set(addCommand.name, addCommand);
       });
     });
   }
@@ -368,8 +371,8 @@ export class DiscordBot extends Client {
   public async login(token: string) {
     if (!this.user) {
       // Checks if logged in!
-      this._commandHandlerInit(this); // Handles Commands
-      this._eventHandlerInit(this); // Handles Events
+      this._commandHandlerInit(); // Handles Commands
+      this._eventHandlerInit(); // Handles Events
       try {
         let TOKEN = await super.login(token);
         await this.handleAllDBs();

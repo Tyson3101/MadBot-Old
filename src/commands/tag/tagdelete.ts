@@ -10,9 +10,9 @@ export const command: Command = {
       required: true,
     },
   ],
-  async run(client, message) {
+  async run(message) {
     delete message.guild.DB.tags[message.args[0]?.value.toLowerCase()];
-    await client.guildDB.set(message.guild.id, message.guild.DB);
+    await this.client.guildDB.set(message.guild.id, message.guild.DB);
     message.say(`The tag "${message.args[0]?.value}" has been deleted!`);
   },
 };
