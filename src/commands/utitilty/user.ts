@@ -30,68 +30,42 @@ export const command: Command = {
     });
     if (user.id !== message.author.id)
       userInfo.description = `${user.username}'s Info Requested by ${message.author.username}`;
-    userInfo.addField("Username", user.tag, !message.isDM ? true : false);
-    if (!message.isDM) {
-      userInfo.addField(
-        "Nickname",
-        member.nickname || "No Nickname",
-        !message.isDM ? true : false
-      );
-      userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
-    }
-    if (!message.isDM) {
-      userInfo.addField(
-        "Owner",
-        this.client.firstCap((user.id === message.guild.ownerID).toString()),
-        true
-      );
-      userInfo.addField(
-        "Bot",
-        this.client.firstCap(user.bot.toString()),
-        !message.isDM ? true : false
-      );
-      userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
-    }
-    userInfo.addField(
+    userInfo.addField("User Info", `**Username**\n${user.tag}`);
+    userInfo.add(0, ["Bot", this.client.firstCap(user.bot.toString())]);
+    userInfo.add(0, [
       "Created At",
       `Date: ${moment(user.createdAt).format("MMMM Do YYYY")}
 Time ago: ${DiscordBot.getTimeAgo(user.createdAt, new Date())} Days ago`,
-      true
-    );
-    if (!message.isDM) {
-      userInfo.addField(
-        "Joined At",
-        `Date: ${moment(member.joinedAt).format("MMMM Do YYYY")}
-Time ago: ${DiscordBot.getTimeAgo(member.joinedAt, new Date())} Days ago`,
-        true
-      );
-      userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
-    }
-    userInfo.addField(
-      "Status",
-      this.client.firstCap(user.presence.status),
-      !message.isDM ? true : false
-    );
-    if (!message.isDM) {
-      userInfo.addField(
-        "Server Booster",
-        this.client.firstCap((!!member.premiumSince).toString()),
-        true
-      );
-      userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
-    }
+    ]);
+    userInfo.add(0, ["Status", this.client.firstCap(user.presence.status)]);
     if (user.presence.activities[0])
-      userInfo.addField(
+      userInfo.add(0, [
         "Playing",
         user.presence.activities.map((activitiy) =>
           activitiy.type === "CUSTOM_STATUS" ? activitiy.state : activitiy.name
         ),
-        !message.isDM ? true : false
-      );
-    userInfo.addField("ID", user.id, !message.isDM ? true : false);
+      ]);
+    userInfo.add(0, ["ID", user.id]);
     if (!message.isDM) {
-      userInfo.addField("\u200B", "\u200B", !message.isDM ? true : false);
       userInfo.addField(
+        "Member Info",
+        "**Nickname**\n" + member.nickname ?? "No Nickname"
+      );
+      userInfo.add(1, [
+        "Owner",
+        this.client.firstCap((user.id === message.guild.ownerID).toString()),
+      ]);
+
+      userInfo.add(1, [
+        "Joined At",
+        `Date: ${moment(member.joinedAt).format("MMMM Do YYYY")}
+Time ago: ${DiscordBot.getTimeAgo(member.joinedAt, new Date())} Days ago`,
+      ]);
+      userInfo.add(1, [
+        "Server Booster",
+        this.client.firstCap((!!member.premiumSince).toString()),
+      ]);
+      userInfo.add(1, [
         "Roles",
         member.roles.cache.filter((r) => !r.name.startsWith("@")).size
           ? member.roles.cache
@@ -99,9 +73,9 @@ Time ago: ${DiscordBot.getTimeAgo(member.joinedAt, new Date())} Days ago`,
               .map((r) => `\`${r.name}\``)
               .join(" ")
           : "No Roles",
-        true
-      );
+      ]);
     }
+
     message.say(userInfo);
   },
 };

@@ -1,5 +1,6 @@
 import { ReadyEvent } from "../interfaces/Events";
 import { Infringement } from "../interfaces/GuildDataBase";
+import { DiscordBot } from "../structures/Client";
 
 export const event: ReadyEvent = {
   event: "ready",
@@ -11,7 +12,7 @@ export const event: ReadyEvent = {
     });
 
     await client.user.setActivity({
-      name: `${client.prefix}help`,
+      name: `${DiscordBot.DEFUALT_PREFIX()}help`,
       type: "COMPETING",
     });
     console.log(`-----------------  Ready  ----------------

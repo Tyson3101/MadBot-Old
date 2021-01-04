@@ -269,7 +269,7 @@ export const clientInfo = (
       },
       {
         name: `Default Prefix`,
-        value: `\`${client.prefix}\``,
+        value: `\`${DiscordBot.DEFUALT_PREFIX()}\``,
         inline: true,
       },
       {

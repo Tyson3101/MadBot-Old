@@ -27,7 +27,7 @@ export class GuildDataBase {
     this.ownerID = guild?.ownerID ?? null;
     this.memberCount = guild?.memberCount ?? null;
     this.prefix = obj?.prefix ?? DiscordBot.DEFUALT_PREFIX();
-    this.moderation = obj.moderation ?? {
+    this.moderation = obj?.moderation ?? {
       bans: guild ? {} : null,
       kicks: guild ? {} : null,
       mutes: guild ? {} : null,

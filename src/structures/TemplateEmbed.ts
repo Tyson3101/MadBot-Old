@@ -60,4 +60,14 @@ export class TemplatedEmbed extends MessageEmbed {
       ...data,
     });
   }
+
+  add(
+    fieldNumber: number,
+    [FieldTitle, FieldValue]: [Array<string> | string, string | Array<string>]
+  ): TemplatedEmbed {
+    this.fields[fieldNumber].value += `\n**${
+      Array.isArray(FieldTitle) ? FieldTitle.join("\n") : FieldTitle
+    }**\n${Array.isArray(FieldValue) ? FieldValue.join("\n") : FieldValue}`;
+    return this;
+  }
 }

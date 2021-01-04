@@ -16,7 +16,7 @@ async function sendEvaledMessage(
       evaledHasteBin = await hastebin.createPaste(showBin, {
         raw: false,
         contentType: true,
-        server: "https://hastebin.com",
+        server: "https://hasteb.in/",
       });
     }
   } catch (e) {

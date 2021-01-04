@@ -10,6 +10,7 @@ export const command: Command = {
   public: false,
   devOnly: true,
   async run(message) {
-    message.say(this.client.user.username);
+    //@ts-ignore
+    message.say(this.client.constructor.name);
   },
 };

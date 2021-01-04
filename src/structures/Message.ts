@@ -40,11 +40,15 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       } catch {
         if (
           this.client.users.cache.some(
-            (user) => user.username === id || user.tag === mentionID
+            (user) =>
+              user.username.toLowerCase() === mentionID.toLowerCase() ||
+              user.tag.toLowerCase() === mentionID.toLowerCase()
           )
         ) {
           return this.client.users.cache.find(
-            (user) => user.username === id || user.tag === mentionID
+            (user) =>
+              user.username.toLowerCase() === id.toLowerCase() ||
+              user.tag === id.toLowerCase()
           );
         }
         send &&
@@ -84,7 +88,8 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
             .filter(
               (mem) =>
                 //@ts-ignore
-                mem.user.username === id.split("#")[0]
+                mem.user.username.toLowerCase() ===
+                id.split("#")[0].toLowerCase()
             )
             .first();
         }
@@ -106,7 +111,9 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
     getGuild(guildID: string): Guild {
       return (
         this.client.guilds.cache.get(guildID) ??
-        this.client.guilds.cache.find((ch) => ch.name === guildID)
+        this.client.guilds.cache.find(
+          (ch) => ch.name.toLowerCase() === guildID.toLowerCase()
+        )
       );
     }
     //@ts-ignore
@@ -143,8 +150,8 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         ["“", "”"],
       ]);
       const prefix = this.guild
-        ? this.guild.prefix.toLowerCase()
-        : this.client.prefix;
+        ? this.guild.prefix?.toLowerCase()
+        : DiscordBot.DEFUALT_PREFIX();
       const res = lexer.lexCommand((s) =>
         s.toLowerCase().startsWith(prefix) ? prefix.length : null
       );

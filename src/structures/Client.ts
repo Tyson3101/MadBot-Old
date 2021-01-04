@@ -17,6 +17,7 @@ import {
   Infringement,
   DataBaseMethods,
   InfringementType,
+  GuildDataBaseMethods,
 } from "../interfaces/GuildDataBase";
 import { GuildDataBase } from "./DataBase";
 import { getGuildDB } from "../functions/getGuildDB";
@@ -47,7 +48,7 @@ export class DiscordBot extends Client {
   supportServer: string;
   prefix: string;
   tips: string[];
-  guildDB: DataBaseMethods;
+  guildDB: GuildDataBaseMethods;
   constructor(clientOptions?: ClientOptions) {
     super(clientOptions ?? {});
     this.supportServer = "https://discord.gg/uP5VV6H"; // Support Server
@@ -140,11 +141,15 @@ export class DiscordBot extends Client {
     } catch (e) {
       if (
         this.users.cache.some(
-          (user) => user.username === id || user.tag === mentionID
+          (user) =>
+            user.username.toLowerCase() === id.toLowerCase() ||
+            user.tag.toLowerCase() === id.toLowerCase()
         )
       ) {
         return this.users.cache.find(
-          (user) => user.username === id || user.tag === mentionID
+          (user) =>
+            user.username.toLowerCase() === id.toLowerCase() ||
+            user.tag.toLowerCase() === mentionID.toLowerCase()
         );
       }
       send &&
@@ -185,7 +190,7 @@ export class DiscordBot extends Client {
           .filter(
             (mem) =>
               //@ts-ignore
-              mem.user.username === id.split("#")[0]
+              mem.user.username.toLowerCase() === id.split("#")[0].toLowerCase()
           )
           .first();
       }
@@ -208,7 +213,9 @@ export class DiscordBot extends Client {
   getGuild(guildID: string): Guild {
     return (
       this.guilds.cache.get(guildID) ??
-      this.guilds.cache.find((ch) => ch.name === guildID)
+      this.guilds.cache.find(
+        (ch) => ch.name.toLowerCase() === guildID.toLowerCase()
+      )
     );
   }
   //@ts-ignore
@@ -368,7 +375,7 @@ export class DiscordBot extends Client {
       // Checks if logged in!
       this._commandHandlerInit(); // Handles Commands
       this._eventHandlerInit(); // Handles Events
-      this.guildDB.on("error", () => console.log("error from keyv!"));
+      this.guildDB.on("error", (e: any) => console.log("error from keyv!", e));
       try {
         let TOKEN = await super.login(token);
         try {

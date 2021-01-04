@@ -1,3 +1,5 @@
+import { GuildDataBase } from "../structures/DataBase";
+
 export type InfringementType =
   | "BAN"
   | "KICK"
@@ -37,6 +39,10 @@ export interface DataBaseMethods {
   clear: () => Promise<undefined>;
   delete: (key: string) => Promise<boolean>;
   on: (EventName: string, CallBack: Function) => void;
+}
+
+export interface GuildDataBaseMethods extends DataBaseMethods {
+  get: (key: string) => Promise<GuildDataBase>;
 }
 
 export interface Moderation {
