@@ -1,5 +1,4 @@
 import { Command } from "../../interfaces/Command";
-import { pingEmbed } from "../../structures/Embeds"; // Import Syntax
 import ytdl from "ytdl-core";
 
 export const command: Command = {

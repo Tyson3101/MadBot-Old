@@ -1,5 +1,3 @@
-import { User } from "discord.js";
-
 enum Position { // Enum
   OWNER, // Owner being 0,
   DEVELOPER, // DEVELOPER being 1,

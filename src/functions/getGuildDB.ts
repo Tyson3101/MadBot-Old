@@ -1,9 +1,10 @@
 import { Message } from "discord.js";
 import { GuildDataBase } from "../structures/DataBase";
+import { DataBaseMethods } from "../interfaces/GuildDataBase";
 
 export async function getGuildDB(
   message: Message,
-  InputtedDB: any = null // Used to check other DB's I may want to use. Defaults to guild
+  InputtedDB: DataBaseMethods = null // Used to check other DB's I may want to use. Defaults to guild
 ): Promise<GuildDataBase> {
   const { guild, client } = message;
   // Says it returns a promise which resloves into a GuildDataBaseInterface>
@@ -18,6 +19,6 @@ export async function getGuildDB(
       return new GuildDataBase(guild);
     }
   } else {
-    return new GuildDataBase(guild);
+    return new GuildDataBase();
   }
 }

@@ -24,7 +24,10 @@ export const command: Command = {
       let newDBGUILD: GuildDataBase = {
         ...guildDB,
       };
-      await this.client.guildDB.set(message.guild.id, newDBGUILD);
+      await this.client.guildDB.set(
+        message.guild.id,
+        new GuildDataBase(message.guild, newDBGUILD)
+      );
       message.say({
         embed: prefixEmbed(
           this.client,

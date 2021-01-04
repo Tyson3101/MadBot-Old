@@ -3,7 +3,7 @@ import {
   helpCatergoryEmbed,
   helpEmbed,
   CommandHelpEmbed,
-} from "../../structures/embeds";
+} from "../../structures/Embeds";
 
 export const command: Command = {
   name: "help",
@@ -17,7 +17,6 @@ export const command: Command = {
   async run(message) {
     const { prefix } = message;
     if (!message.args[0]?.value) {
-      // Checks if inputted a command or caterogry
       message.say({
         embed: helpEmbed(this.client, message.author, prefix),
       });

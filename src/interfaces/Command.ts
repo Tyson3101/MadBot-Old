@@ -1,6 +1,5 @@
 import Discord from "discord.js";
 import { DiscordBot } from "../structures/Client";
-import { Args as args } from "./Command";
 
 export interface Command {
   // Used to make command setting up easier
@@ -10,7 +9,7 @@ export interface Command {
   note?: string;
   usage?: string;
   example?: string[];
-  args?: args[];
+  args?: Args[];
   aliases?: string[];
   guildOnly?: boolean;
   devOnly?: boolean;

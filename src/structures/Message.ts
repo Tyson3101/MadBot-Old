@@ -10,7 +10,7 @@ import {
   NewsChannel,
   GuildMember,
 } from "discord.js";
-import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./embeds";
+import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./Embeds";
 import * as lexure from "lexure";
 import { DiscordBot } from "./Client";
 
@@ -21,7 +21,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       data: object,
       channel: DMChannel | TextChannel | NewsChannel
     ) {
-      super(this.client, data, channel);
+      super(client, data, channel);
     }
     //@ts-ignore (I am sorrry)
     async say(
@@ -193,7 +193,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
           ) ??
           null,
       };
-      console.log(obj);
+
       return obj;
     }
 

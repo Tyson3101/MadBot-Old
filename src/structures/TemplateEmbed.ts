@@ -1,22 +1,6 @@
 import { MessageEmbed, Message, User, GuildMember } from "discord.js";
 import { DiscordBot } from "./Client";
 
-/* 
-    author: {
-      name: user.tag,
-      iconURL: user.displayAvatarURL({
-        format: "png",
-        dynamic: true,
-      }),
-    },
-    color: "DARK_VIVID_PINK",
-
-    footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
-    },
-    */
-
 export class TemplatedEmbed extends MessageEmbed {
   static DEFUALT_TEMPLATE(option: Message | User | GuildMember | DiscordBot) {
     // @ts-ignore
@@ -24,12 +8,12 @@ export class TemplatedEmbed extends MessageEmbed {
     if (option instanceof DiscordBot === false) {
       embed.footer = {
         text: `${
-          (option as Message | User | GuildMember).this.client.user.username
+          (option as Message | User | GuildMember).client.user.username
         } ©`,
         iconURL: (option as
           | Message
           | User
-          | GuildMember).this.client.user.displayAvatarURL({ format: "png" }),
+          | GuildMember).client.user.displayAvatarURL({ format: "png" }),
       };
     } else {
       embed.footer = {

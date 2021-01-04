@@ -12,7 +12,7 @@ import { Command } from "../interfaces/Command";
 import { duration } from "moment";
 import "moment-duration-format";
 
-// All embeds I want to use. (Allows less typing and resuing, also can input stuff in)
+// All embeds I want to use.
 
 export const dmCommandEmbed = (
   client: DiscordBot,
@@ -30,8 +30,8 @@ export const dmCommandEmbed = (
     title: "Invaild Channel",
     description: ":x: This command cannot be used in a DM Channel. :x:",
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -52,8 +52,8 @@ export const nsfwCommandEmbed = (
     title: "Invaild Channel",
     description: ":x: This command can only be used in a NSFW Channel. :x:",
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -74,8 +74,8 @@ export const ownerCommandEmbed = (
     title: "Invaild Permissions",
     description: ":x: This command can only be used by bot developers. :x:",
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -97,8 +97,8 @@ export const invaildPermissionsMemberCommandEmbed = (
     title: "Invaild Permissions",
     description: `:x: You need the "${permission}" Permission to use this command. :x:`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -121,8 +121,8 @@ export const invaildPermissionsCustom = (
     title: "Invaild Permissions",
     description: `:x: ${msg} :x:${note ? `\n${note}` : ""}`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -146,8 +146,8 @@ export const invaildPermissionsBotCommandEmbed = (
       " **|** "
     )}" Permission(s) to execute this command. :x:`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -171,17 +171,16 @@ export const errorCommandEmbed = (
     title: "Error",
     description: error
       ? `:x: **This command experienced an error:** :x:\nPlease report this error: \`${error}\` to #${
-          (this.client.channels.cache.get("782159661141983243") as TextChannel)
-            .name
-        } in my [Support Server](${this.client.supportServer})!`
-      : `\nPlease report this incident to ${this.client.users
-          .fetch(this.client.developers.find((user) => !user.position).id)
+          (client.channels.cache.get("782159661141983243") as TextChannel).name
+        } in my [Support Server](${client.supportServer})!`
+      : `\nPlease report this incident to ${client.users
+          .fetch(client.developers.find((user) => !user.position).id)
           .then((user) => user.tag)} in my [Support Server](${
-          this.client.supportServer
+          client.supportServer
         })!`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -202,16 +201,16 @@ export const noArgsCommandHelpEmbed = (
     },
     color: "DARK_VIVID_PINK",
     title: "Invaild Arguments",
-    description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}help ${command.name}** for help. **|** Join My **[Support Server](${this.client.supportServer})** for more help.`,
+    description: `:x: You are providing invaild arguments for this command. :x:\nDo **${prefix}help ${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
     fields: [
       {
         name: "Tips:",
-        value: this.client.tips.join("\n"),
+        value: client.tips.join("\n"),
       },
     ],
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -237,8 +236,8 @@ export const prefixEmbed = (
       ? `Prefix for ${member.guild.name} is now \`${prefix}\``
       : `Prefix for ${member.guild.name} is \`${db.prefix}\``,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -257,20 +256,20 @@ export const clientInfo = (
       }),
     },
     color: "DARK_VIVID_PINK",
-    title: `${this.client.user.username} Information`,
+    title: `${client.user.username} Information`,
     url: `https://github.com/Tyson3101/MadBot/tree/main/src`,
-    description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${this.client.supportServer})**`,
+    description: `A Discord Bot written in **[TypeScript](https://www.typescriptlang.org/)** with the Node Module **[Discord.js](https://discord.js.org/#/)**!\nDo **${prefix}help** for help. **| [Join My Support Server](${client.supportServer})**`,
     fields: [
       {
         name: `Uptime`,
-        value: `${(duration(this.client.uptime) as any).format(
+        value: `${(duration(client.uptime) as any).format(
           "d[d ]h[h ]m[m ]s[s]"
         )}`,
         inline: true,
       },
       {
         name: `Default Prefix`,
-        value: `\`${this.client.prefix}\``,
+        value: `\`${client.prefix}\``,
         inline: true,
       },
       {
@@ -281,20 +280,20 @@ export const clientInfo = (
       {
         name: `Stats`,
         value: `**Servers:** \`${
-          this.client.guilds.cache.size
+          client.guilds.cache.size
         }\` **| Channels:** \`${
-          this.client.channels.cache.size
-        }\` **| Users:** \`${this.client.guilds.cache.reduce(
+          client.channels.cache.size
+        }\` **| Users:** \`${client.guilds.cache.reduce(
           (arr: number, { memberCount }) => arr + memberCount,
           0
-        )}\` **| Commands:** \`${
-          this.client.commands.size
-        }\` **| Developers:** \`${this.client.developers.size}\``,
+        )}\` **| Commands:** \`${client.commands.size}\` **| Developers:** \`${
+          client.developers.size
+        }\``,
       },
     ],
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -313,20 +312,20 @@ export const helpEmbed = (
       }),
     },
     color: "DARK_VIVID_PINK",
-    title: `${this.client.user.username} Commands`,
-    description: `**[Join Support Server Here](${this.client.supportServer})**`,
+    title: `${client.user.username} Commands`,
+    description: `**[Join Support Server Here](${client.supportServer})**`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
   let allReady: string[] = [];
-  this.client.commands.forEach((command: Command) => {
+  client.commands.forEach((command: Command) => {
     if (allReady.includes(command.catergory)) return;
     allReady.push(command.catergory);
     embed.addField(
       `${prefix}help ${command.catergory}`,
-      `Shows all commands in the ${this.client.firstCap(
+      `Shows all commands in the ${client.firstCap(
         command.catergory
       )} Catergory`,
       true
@@ -350,16 +349,14 @@ export const helpCatergoryEmbed = (
       }),
     },
     color: "DARK_VIVID_PINK",
-    title: `${this.client.user.username} ${this.client.firstCap(
-      catergory
-    )} Commands`,
-    description: `**[Join Support Server Here](${this.client.supportServer})**`,
+    title: `${client.user.username} ${client.firstCap(catergory)} Commands`,
+    description: `**[Join Support Server Here](${client.supportServer})**`,
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
-  this.client.commands
+  client.commands
     .filter((cmd) => cmd.catergory === catergory)
     .filter((cmd) => cmd.public !== false && !cmd.public)
     .forEach((command: Command, commandName: string) => {
@@ -368,12 +365,12 @@ export const helpCatergoryEmbed = (
         `${
           command.description
             ? command.description
-            : `Help for ${this.client.firstCap(commandName)}`
+            : `Help for ${client.firstCap(commandName)}`
         }`,
         true
       );
     });
-  if (!embed.fields.length) return helpEmbed(this.client, user, prefix);
+  if (!embed.fields.length) return helpEmbed(client, user, prefix);
   return embed;
 };
 
@@ -383,9 +380,9 @@ export const CommandHelpEmbed = (
   commandName: string,
   prefix: string
 ): MessageEmbed => {
-  const command = this.client.commands.get(commandName);
-  if (command.public === false && !this.client.developers.has(user.id))
-    return helpEmbed(this.client, user, prefix);
+  const command = client.commands.get(commandName);
+  if (command.public === false && !client.developers.has(user.id))
+    return helpEmbed(client, user, prefix);
   const { args } = command;
   let embed = new MessageEmbed({
     author: {
@@ -396,12 +393,12 @@ export const CommandHelpEmbed = (
       }),
     },
     color: "DARK_VIVID_PINK", //"FD0061",
-    title: `${this.client.firstCap(command.name)} Help`,
-    description: `Join My **[Support Server](${this.client.supportServer})** for more help.\n**\`[]\`** = Required **|** **\`()\`** = Optional`,
+    title: `${client.firstCap(command.name)} Help`,
+    description: `Join My **[Support Server](${client.supportServer})** for more help.\n**\`[]\`** = Required **|** **\`()\`** = Optional`,
     fields: [
       {
         name: `Command Help`,
-        value: `**Name:** ${this.client.firstCap(command.name)}\n${
+        value: `**Name:** ${client.firstCap(command.name)}\n${
           command.aliases?.length
             ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : ""
@@ -423,8 +420,8 @@ export const CommandHelpEmbed = (
       },
     ],
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
   return embed;
@@ -442,7 +439,7 @@ export const pingEmbed = (
     },
     color: "DARK_VIVID_PINK",
     thumbnail: {
-      url: this.client.user.displayAvatarURL({ format: "png" }),
+      url: client.user.displayAvatarURL({ format: "png" }),
     },
     title: "Pong! 🏓",
     fields: [
@@ -456,8 +453,8 @@ export const pingEmbed = (
       },
     ],
     footer: {
-      text: `${this.client.user.username} ©`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };
@@ -494,10 +491,10 @@ export const sucessPunishEmbed = (
       },
     ],
     footer: {
-      text: `${this.client.firstCap(title.slice(0, title.length - 1))} by ${
+      text: `${client.firstCap(title.slice(0, title.length - 1))} by ${
         message.author.tag
       }!`,
-      iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
     },
   });
 };

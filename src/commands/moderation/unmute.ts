@@ -5,7 +5,7 @@ import { Infringement } from "../../interfaces/GuildDataBase";
 import {
   noArgsCommandHelpEmbed,
   sucessPunishEmbed,
-} from "../../structures/embeds";
+} from "../../structures/Embeds";
 
 export const command: Command = {
   name: "unmute",
@@ -21,7 +21,7 @@ export const command: Command = {
     },
   ],
   async run(message) {
-    let member: GuildMember = await message.getMember(message.args[0]?.value);
+    let member = await message.getMember(message.args[0]?.value);
     if (!member) return;
     let reason = "No reason provided.";
     if (message.args[1].value)

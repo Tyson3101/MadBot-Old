@@ -9,7 +9,7 @@ async function sendEvaledMessage(
   evaled: string,
   showBin: string
 ): Promise<Message | Message[]> {
-  const { client } = message;
+  const client = message.client;
   let evaledHasteBin: string;
   try {
     if (showBin) {

@@ -1,5 +1,4 @@
 import { MessageUpdateEvent } from "../interfaces/Events";
-const prefix: string = "!";
 
 export const event: MessageUpdateEvent = {
   event: "messageUpdate",
