@@ -26,7 +26,7 @@ export class GuildDataBase {
     this.id = guild?.id ?? null;
     this.ownerID = guild?.ownerID ?? null;
     this.memberCount = guild?.memberCount ?? null;
-    this.prefix = obj.prefix ?? DiscordBot.DEFUALT_PREFIX();
+    this.prefix = obj?.prefix ?? DiscordBot.DEFUALT_PREFIX();
     this.moderation = obj.moderation ?? {
       bans: guild ? {} : null,
       kicks: guild ? {} : null,
@@ -39,7 +39,7 @@ export class GuildDataBase {
       caseCount: guild ? 0 : null,
       logChannel: null,
     };
-    this.tags = obj.tags ?? guild ? {} : null;
-    this.logChannel = obj.logChannel ?? null;
+    this.tags = obj?.tags ?? guild ? {} : null;
+    this.logChannel = obj?.logChannel ?? null;
   }
 }

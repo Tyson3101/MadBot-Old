@@ -5,7 +5,7 @@ import { TextChannel } from "discord.js";
 
 export const event: MessageEvent = {
   event: "message",
-  async run(message) {
+  async run(client, message) {
     if (message.author.bot || message.webhookID) return;
 
     const prefix = message.prefix;
@@ -21,7 +21,7 @@ export const event: MessageEvent = {
 
     if (
       (!message.isDM && command) ||
-      (!message.isDM && message.mentions.users.has(this.client.user.id))
+      (!message.isDM && message.mentions.users.has(client.user.id))
     ) {
       if (
         !message.guild.me.hasPermission("EMBED_LINKS") &&
@@ -32,8 +32,8 @@ export const event: MessageEvent = {
     }
     if (command) {
       console.log("Hey! Command starting");
-      let vaildMember = commandCheck(this.client, message, command);
-      command.client = this.client;
+      let vaildMember = commandCheck(client, message, command);
+      command.client = client;
       if (vaildMember !== true) return console.log("Hey! Not a Vaild Member");
       try {
         await command.run(message);
@@ -41,7 +41,7 @@ export const event: MessageEvent = {
       } catch (e) {
         console.log(e);
         return message.say({
-          embed: errorCommandEmbed(this.client, message.author, e),
+          embed: errorCommandEmbed(client, message.author, e),
         });
       }
     }
@@ -76,19 +76,19 @@ export const event: MessageEvent = {
             .map((str) => str.toLowerCase())
             .join(" ")}`
         ].uses++;
-        await this.client.guildDB.set(message.guild.id, message.guild.DB);
+        await client.guildDB.set(message.guild.id, message.guild.DB);
         return message
           .say(tag.replies[Math.floor(Math.random() * tag.replies.length)])
           .catch(console.log);
       }
     }
-    if (message.mentions.users.has(this.client.user.id))
+    if (message.mentions.users.has(client.user.id))
       return message.say(
         !message.isDM
           ? `Your prefix for this server is \`${message.prefix}\``
           : "",
         {
-          embed: clientInfo(this.client, message.author, message.prefix),
+          embed: clientInfo(client, message.author, message.prefix),
         }
       );
   },

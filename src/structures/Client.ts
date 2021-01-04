@@ -253,7 +253,6 @@ export class DiscordBot extends Client {
       const event: DiscordEvent = (await import(`../events/${fileEvent}`))
         .event;
       if (!event || this.events.has(event.event)) return;
-      event.client = this;
       this.events.set(event.event, event);
       if (event.event === "ready") {
         this.once(<any>event.event, event.run.bind(null, this));
@@ -369,10 +368,21 @@ export class DiscordBot extends Client {
       // Checks if logged in!
       this._commandHandlerInit(); // Handles Commands
       this._eventHandlerInit(); // Handles Events
+      this.guildDB.on("error", () => console.log("error from keyv!"));
       try {
         let TOKEN = await super.login(token);
-        await this.handleAllDBs();
-        setInterval(async () => await this.handleAllDBs(), 1);
+        try {
+          await this.handleAllDBs();
+        } catch (e) {
+          console.error(e);
+        }
+        setInterval(async () => {
+          try {
+            await this.handleAllDBs();
+          } catch (e) {
+            console.error(e);
+          }
+        }, 1000);
         return TOKEN;
       } catch (e) {
         throw e;

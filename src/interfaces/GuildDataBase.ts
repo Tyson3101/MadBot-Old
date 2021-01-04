@@ -36,6 +36,7 @@ export interface DataBaseMethods {
   get: (key: string) => Promise<any>;
   clear: () => Promise<undefined>;
   delete: (key: string) => Promise<boolean>;
+  on: (EventName: string, CallBack: Function) => void;
 }
 
 export interface Moderation {

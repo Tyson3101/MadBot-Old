@@ -2,7 +2,7 @@ import { SubCommand } from "../../interfaces/Command";
 
 export const subCommand: SubCommand = {
   name: "modlog",
-  run(this.client, message) {
+  run(message) {
     message.say("Worked!");
   },
 };

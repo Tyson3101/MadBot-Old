@@ -66,37 +66,46 @@ export type ClientEvents =  // List of client events
 export interface DiscordEvent {
   event: ClientEvents;
   client?: DiscordBot;
-  run: (...args: any) => Promise<any> | any;
+  run: (client: DiscordBot, ...args: any) => Promise<any> | any;
 }
 
 export interface MessageUpdateEvent extends DiscordEvent {
-  run: (oldMessage: Message, newMessage: Message) => Promise<any> | any; // Function typechecking
+  run: (
+    client: DiscordBot,
+    oldMessage: Message,
+    newMessage: Message
+  ) => Promise<any> | any; // Function typechecking
 }
 
 export interface ReadyEvent extends DiscordEvent {
-  run: () => Promise<any> | any;
+  run: (client: DiscordBot) => Promise<any> | any;
 }
 
 export interface guildMemberSpeakingEvent extends DiscordEvent {
-  run: (member: GuildMember, speaking: Speaking) => Promise<any> | any;
+  run: (
+    client: DiscordBot,
+    member: GuildMember,
+    speaking: Speaking
+  ) => Promise<any> | any;
 }
 
 export interface voiceStateEvent extends DiscordEvent {
-  run: (oldState: VoiceState, newState: VoiceState) => Promise<any> | any;
+  run: (
+    client: DiscordBot,
+    oldState: VoiceState,
+    newState: VoiceState
+  ) => Promise<any> | any;
 }
 
 export interface MessageEvent extends DiscordEvent {
-  event: ClientEvents;
-  run: (message: Message) => Promise<any> | any;
+  run: (client: DiscordBot, message: Message) => Promise<any> | any;
 }
 
-export interface MessageDeleteEvent {
-  event: ClientEvents;
+export interface MessageDeleteEvent extends DiscordEvent {
   run: (client: DiscordBot, DeleteDmessage: Message) => Promise<any> | any;
 }
 
-export interface messageReactionAddEvent {
-  event: ClientEvents;
+export interface messageReactionAddEvent extends DiscordEvent {
   run: (
     client: DiscordBot,
     reaction: MessageReaction,
