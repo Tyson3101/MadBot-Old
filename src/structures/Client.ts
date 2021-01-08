@@ -21,7 +21,11 @@ import {
 } from "../interfaces/GuildDataBase";
 import { GuildDataBase } from "./DataBase";
 import { getGuildDB } from "../functions/getGuildDB";
-import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./Embeds";
+import {
+  invaildPermissionsCustom,
+  invaildUserEmbed,
+  noArgsCommandHelpEmbed,
+} from "./Embeds";
 import Keyv from "keyv";
 import { config } from "dotenv";
 config();
@@ -154,8 +158,8 @@ export class DiscordBot extends Client {
       }
       send &&
         message.channel.send({
-          embed: noArgsCommandHelpEmbed(
-            message.client,
+          embed: invaildUserEmbed(
+            this,
             message.author,
             message.command,
             message.prefix
@@ -198,7 +202,7 @@ export class DiscordBot extends Client {
     } catch (e) {
       send &&
         message.say({
-          embed: noArgsCommandHelpEmbed(
+          embed: invaildUserEmbed(
             this,
             message.author,
             message.command,
@@ -292,7 +296,7 @@ export class DiscordBot extends Client {
       await Promise.all(subCommandsPromise)
     ).map((sub) => sub.subCommand);
 
-    return subCommands?.length ? subCommands : undefined;
+    return subCommands?.length ? subCommands.filter((sub) => sub) : undefined;
   }
   private _commandHandlerInit() {
     const catergories = fs.readdirSync("./dist/src/commands"); // From root

@@ -10,7 +10,11 @@ import {
   NewsChannel,
   GuildMember,
 } from "discord.js";
-import { invaildPermissionsCustom, noArgsCommandHelpEmbed } from "./Embeds";
+import {
+  invaildPermissionsCustom,
+  invaildUserEmbed,
+  noArgsCommandHelpEmbed,
+} from "./Embeds";
 import * as lexure from "lexure";
 import { DiscordBot } from "./Client";
 
@@ -53,7 +57,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         }
         send &&
           this.channel.send({
-            embed: noArgsCommandHelpEmbed(
+            embed: invaildUserEmbed(
               this.client,
               this.author,
               this.command,
@@ -97,7 +101,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       } catch (e) {
         send &&
           this.channel.send({
-            embed: noArgsCommandHelpEmbed(
+            embed: invaildUserEmbed(
               this.client,
               this.author,
               this.command,
@@ -150,7 +154,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         ["“", "”"],
       ]);
       const prefix = this.guild
-        ? this.guild.prefix?.toLowerCase()
+        ? this.guild.prefix?.toLowerCase() ?? DiscordBot.DEFUALT_PREFIX()
         : DiscordBot.DEFUALT_PREFIX();
       const res = lexer.lexCommand((s) =>
         s.toLowerCase().startsWith(prefix) ? prefix.length : null

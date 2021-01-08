@@ -1,8 +1,8 @@
-import { Command } from "../../interfaces/Command";
+import { SubCommand } from "../../interfaces/Command";
 import { GuildDataBase } from "../../structures/DataBase";
 
-export const command: Command = {
-  name: "tagcreate",
+export const subCommand: SubCommand = {
+  name: "create",
   description: `Creates a tag`,
   note: 'This command allows random responses. Wrap each response with " "',
   usage:
@@ -24,7 +24,7 @@ export const command: Command = {
   ],
   async run(message) {
     const replies: string[] = [];
-    for (let i = 1; i < message.args.length; i++) {
+    for (let i = 2; i < message.args.length; i++) {
       if (message.args[i].raw.startsWith('"')) {
         replies.push(message.args[i].value);
       } else {
@@ -37,8 +37,8 @@ export const command: Command = {
         break;
       }
     }
-    message.guild.DB.tags[message.args[0].value.toLowerCase()] = {
-      name: message.args[0].value.toLowerCase(),
+    message.guild.DB.tags[message.args[1].value.toLowerCase()] = {
+      name: message.args[1].value.toLowerCase(),
       replies: replies,
       createdAt: new Date(),
       author: message.author.id,
@@ -51,6 +51,6 @@ export const command: Command = {
       message.guild.id,
       new GuildDataBase(message.guild, newDB)
     );
-    message.say(`The tag "${message.args[0].value}" has been created!`);
+    message.say(`The tag "${message.args[1].value}" has been created!`);
   },
 };

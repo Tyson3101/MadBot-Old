@@ -215,6 +215,36 @@ export const noArgsCommandHelpEmbed = (
   });
 };
 
+export const invaildUserEmbed = (
+  client: DiscordBot,
+  user: User,
+  command: Command,
+  prefix: string
+): MessageEmbed => {
+  return new MessageEmbed({
+    author: {
+      name: user.tag,
+      iconURL: user.displayAvatarURL({
+        format: "png",
+        dynamic: true,
+      }),
+    },
+    color: "DARK_VIVID_PINK",
+    title: "Invaild Member",
+    description: `:x: You are providing an invaild member for this command. :x:\nDo **${prefix}help ${command.name}** for help. **|** Join My **[Support Server](${client.supportServer})** for more help.`,
+    fields: [
+      {
+        name: "Tips:",
+        value: client.tips.join("\n"),
+      },
+    ],
+    footer: {
+      text: `${client.user.username} ©`,
+      iconURL: client.user.displayAvatarURL({ format: "png" }),
+    },
+  });
+};
+
 export const prefixEmbed = (
   client: DiscordBot,
   member: GuildMember,

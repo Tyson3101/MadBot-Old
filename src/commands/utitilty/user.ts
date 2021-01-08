@@ -13,60 +13,78 @@ export const command: Command = {
     },
   ],
   async run(message) {
-    const member = !message.isDM
+    let member = !message.isDM
       ? (await message.getMember(message.plainArgs.join(" "), false)) ??
-        message.member
+        (await message.getUser(message.plainArgs.join(" "), false))
+        ? undefined
+        : message.member ?? undefined
       : undefined;
-    const user = member?.user ?? message.author;
+    const user =
+      member?.user ??
+      (await message.getUser(message.plainArgs.join(" "), false)) ??
+      message.author;
+
+    if (!message.isDM && !member)
+      member = await message.getMember(user.id, false);
 
     const userInfo = new TemplatedEmbed(user, {
       title: `${user.tag}'s Info`,
       thumbnail: {
         url: user.displayAvatarURL({
           dynamic: true,
-          format: "png",
+          size: 4096,
         }),
       },
     });
     if (user.id !== message.author.id)
       userInfo.description = `${user.username}'s Info Requested by ${message.author.username}`;
-    userInfo.addField("User Info", `**Username**\n${user.tag}`);
-    userInfo.add(0, ["Bot", this.client.firstCap(user.bot.toString())]);
+    userInfo.addField("User Info", `**Username:** ${user.tag}`);
+    userInfo.add(0, ["ID:", user.id]);
+    userInfo.add(0, ["Bot:", this.client.firstCap(user.bot.toString())]);
     userInfo.add(0, [
-      "Created At",
-      `Date: ${moment(user.createdAt).format("MMMM Do YYYY")}
-Time ago: ${DiscordBot.getTimeAgo(user.createdAt, new Date())} Days ago`,
+      "Created At:",
+      `${moment(user.createdAt).format(
+        "MMMM Do YYYY"
+      )} **|** ${DiscordBot.getTimeAgo(user.createdAt, new Date())} Days ago`,
     ]);
-    userInfo.add(0, ["Status", this.client.firstCap(user.presence.status)]);
+    userInfo.add(0, ["Status:", this.client.firstCap(user.presence.status)]);
     if (user.presence.activities[0])
-      userInfo.add(0, [
-        "Playing",
-        user.presence.activities.map((activitiy) =>
-          activitiy.type === "CUSTOM_STATUS" ? activitiy.state : activitiy.name
-        ),
-      ]);
-    userInfo.add(0, ["ID", user.id]);
-    if (!message.isDM) {
+      userInfo.add(
+        0,
+        [
+          "Playing:",
+          (member ?? user).presence.activities.map((activitiy) =>
+            activitiy.type === "CUSTOM_STATUS"
+              ? activitiy.state
+              : activitiy.name
+          ),
+        ],
+        false
+      );
+    if (!message.isDM && member) {
       userInfo.addField(
         "Member Info",
-        "**Nickname**\n" + member.nickname ?? "No Nickname"
+        "**Nickname:** " + (member.nickname ?? "No Nickname")
       );
       userInfo.add(1, [
-        "Owner",
+        "Owner:",
         this.client.firstCap((user.id === message.guild.ownerID).toString()),
       ]);
-
       userInfo.add(1, [
-        "Joined At",
-        `Date: ${moment(member.joinedAt).format("MMMM Do YYYY")}
-Time ago: ${DiscordBot.getTimeAgo(member.joinedAt, new Date())} Days ago`,
+        "Joined At:",
+        `${moment(member.joinedAt).format(
+          "MMMM Do YYYY"
+        )} **|** ${DiscordBot.getTimeAgo(
+          member.joinedAt,
+          new Date()
+        )} Days ago`,
       ]);
       userInfo.add(1, [
-        "Server Booster",
+        "Server Booster:",
         this.client.firstCap((!!member.premiumSince).toString()),
       ]);
       userInfo.add(1, [
-        "Roles",
+        "Roles:",
         member.roles.cache.filter((r) => !r.name.startsWith("@")).size
           ? member.roles.cache
               .filter((r) => !r.name.startsWith("@"))

@@ -63,11 +63,17 @@ export class TemplatedEmbed extends MessageEmbed {
 
   add(
     fieldNumber: number,
-    [FieldTitle, FieldValue]: [Array<string> | string, string | Array<string>]
+    [FieldTitle, FieldValue]: [Array<string> | string, string | Array<string>],
+    inline: boolean = true
   ): TemplatedEmbed {
-    this.fields[fieldNumber].value += `\n**${
-      Array.isArray(FieldTitle) ? FieldTitle.join("\n") : FieldTitle
-    }**\n${Array.isArray(FieldValue) ? FieldValue.join("\n") : FieldValue}`;
+    if (inline)
+      this.fields[fieldNumber].value += `\n**${
+        Array.isArray(FieldTitle) ? FieldTitle.join("\n") : FieldTitle
+      }** ${Array.isArray(FieldValue) ? FieldValue.join("\n") : FieldValue}`;
+    else
+      this.fields[fieldNumber].value += `\n**${
+        Array.isArray(FieldTitle) ? FieldTitle.join("\n") : FieldTitle
+      }**\n${Array.isArray(FieldValue) ? FieldValue.join("\n") : FieldValue}`;
     return this;
   }
 }

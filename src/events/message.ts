@@ -6,7 +6,13 @@ import { TextChannel } from "discord.js";
 export const event: MessageEvent = {
   event: "message",
   async run(client, message) {
-    if (message.author.bot || message.webhookID) return;
+    if (
+      message.author.bot ||
+      message.webhookID ||
+      !message.client.user ||
+      (message.guild && (!message.guild.DB || !message.guild.DB.prefix))
+    )
+      return;
 
     const prefix = message.prefix;
     if (!message.isDM && message.guild) {
@@ -85,7 +91,7 @@ export const event: MessageEvent = {
     if (message.mentions.users.has(client.user.id))
       return message.say(
         !message.isDM
-          ? `Your prefix for this server is \`${message.prefix}\``
+          ? `Prefix for ${message.guild.name} is \`${message.prefix}\``
           : "",
         {
           embed: clientInfo(client, message.author, message.prefix),

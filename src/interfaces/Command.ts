@@ -35,9 +35,7 @@ export interface Command {
   run: (message: Discord.Message) => any | Promise<any>;
 }
 
-export interface SubCommand {
-  name: string;
-  client?: DiscordBot;
+export interface SubCommand extends Command {
   run: (message: Discord.Message) => any | Promise<any>;
 }
 
