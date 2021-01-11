@@ -45,7 +45,7 @@ export const command: Command = {
       "Created At:",
       `${moment(user.createdAt).format(
         "MMMM Do YYYY"
-      )} **|** ${DiscordBot.getTimeAgo(user.createdAt, new Date())} Days ago`,
+      )} **|** ${DiscordBot.getTimeAgo(user.createdAt)}`,
     ]);
     userInfo.add(0, ["Status:", this.client.firstCap(user.presence.status)]);
     if (user.presence.activities[0])
@@ -61,6 +61,7 @@ export const command: Command = {
         ],
         false
       );
+    else userInfo.add(0, ["Playing:", "Nothing"]);
     if (!message.isDM && member) {
       userInfo.addField(
         "Member Info",
@@ -74,10 +75,7 @@ export const command: Command = {
         "Joined At:",
         `${moment(member.joinedAt).format(
           "MMMM Do YYYY"
-        )} **|** ${DiscordBot.getTimeAgo(
-          member.joinedAt,
-          new Date()
-        )} Days ago`,
+        )} **|** ${DiscordBot.getTimeAgo(member.joinedAt)}`,
       ]);
       userInfo.add(1, [
         "Server Booster:",

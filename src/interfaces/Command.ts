@@ -31,6 +31,7 @@ export interface Command {
   ];
   public?: boolean;
   catergory?: string;
+  usageargs?: string[];
   subCommands?: Discord.Collection<string, SubCommand>;
   run: (message: Discord.Message) => any | Promise<any>;
 }
@@ -44,4 +45,5 @@ export interface Args {
   // Interface
   name: string;
   required: boolean;
+  multiple?: boolean;
 }

@@ -9,6 +9,13 @@ import {
   Role,
   User,
 } from "discord.js";
+import {
+  differenceInSeconds,
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+} from "date-fns";
+
 import { Command, SubCommand } from "../interfaces/Command";
 import fs from "fs";
 import { Developer } from "../interfaces/Developers";
@@ -37,12 +44,35 @@ export class DiscordBot extends Client {
     return "m!";
   }
 
-  static getTimeAgo(oldDate: Date, newDate: Date = new Date()): number {
+  static getDaysAgo(oldDate: Date, newDate: Date = new Date()): number {
     return Number(
       ((newDate.getTime() - oldDate.getTime()) / (1000 * 60 * 60 * 24)).toFixed(
         0
       )
     );
+  }
+  static getTimeAgo(
+    oldDate: Date | number,
+    newDate: Date | number = new Date()
+  ): string {
+    let past = new Date(oldDate);
+    let now = new Date(newDate);
+    let days = differenceInDays(now, past);
+    let hours = differenceInHours(now, past);
+    let minutes = differenceInMinutes(now, past);
+    let secends = differenceInSeconds(now, past);
+    if (days >= 1) {
+      if (days === 1) return `${days} Day ago`;
+      else return `${days} Days ago`;
+    } else if (hours >= 1) {
+      if (hours === 1) return `${hours} Hour ago`;
+      else return `${hours} Hours ago`;
+    } else if (minutes >= 1) {
+      if (minutes === 1) return `${minutes} Minute ago`;
+      else return `${minutes} Minutes ago`;
+    } else {
+      return `${secends} Seconds ago`;
+    }
   }
 
   events: Collection<string, DiscordEvent>; // Key, Value
@@ -59,7 +89,6 @@ export class DiscordBot extends Client {
     this.developers = new Collection();
     this.commands = new Collection();
     this.events = new Collection();
-    this.prefix = "m!";
     this.tips = [
       `**Have 2 or more words for one argument?** Join them with " ".\n**Eg:** ?tagcreate "name stillName" response to command *Don't need to for last argument.*`,
     ];
@@ -318,10 +347,19 @@ export class DiscordBot extends Client {
           subCommands.set(subCommand.name, subCommand);
         });
         let usage = command.name + " ";
-        if (command.args?.length)
-          usage += command.args
-            .map((arg) => (arg.required ? `[${arg.name}]` : `(${arg.name})`))
-            .join(" ");
+        let usageargs: string[];
+        if (command.args?.length) {
+          usageargs = command.args.map((arg) =>
+            arg.required
+              ? arg.multiple === true
+                ? `[...${arg.name}]`
+                : `[${arg.name}]`
+              : arg.multiple === true
+              ? `(...${arg.name})`
+              : `(${arg.name})`
+          );
+          usage += usageargs.join(" ");
+        }
         const addCommand = {
           ...command,
           catergory: catergory, // Adds catergory property here to make it easier, is the folder name of that command file
@@ -329,6 +367,7 @@ export class DiscordBot extends Client {
           subCommands,
         };
         if (!command.usage) addCommand["usage"] = usage.trim();
+        if (command.args?.length) addCommand["usageargs"] = usageargs;
         if (i === 1)
           console.log(`-----------------  Commands  ----------------`);
         console.log(

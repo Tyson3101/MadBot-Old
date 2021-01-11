@@ -252,15 +252,6 @@ export function OWNERDATA() {
             "permissions_new": "2147483647"
         },
         {
-            "id": "752857136001712258",
-            "name": "among us nibbas",
-            "icon": null,
-            "owner": false,
-            "permissions": 104320577,
-            "features": [],
-            "permissions_new": "104320577"
-        },
-        {
             "id": "760042533412667422",
             "name": "Tyson3101&#39;s Study Group",
             "icon": null,
@@ -268,22 +259,6 @@ export function OWNERDATA() {
             "permissions": 2147483647,
             "features": [],
             "permissions_new": "2147483647"
-        },
-        {
-            "id": "765757808615489547",
-            "name": "Disturbed Beta Testing Server",
-            "icon": "a_4a8300fa026673fbe5465b83127e1689",
-            "owner": false,
-            "permissions": 37080640,
-            "features": [
-                "COMMUNITY",
-                "VANITY_URL",
-                "BANNER",
-                "INVITE_SPLASH",
-                "NEWS",
-                "ANIMATED_ICON"
-            ],
-            "permissions_new": "37080640"
         },
         {
             "id": "779252338601885707",
@@ -301,7 +276,7 @@ export function OWNERDATA() {
     "discriminator": "3101",
     "public_flags": 576,
     "flags": 576,
-    "email": "tysonpopefernee@gmail.com",
+    "email": "tyson@gmail.com",
     "verified": true,
     "locale": "en-US",
     "mfa_enabled": true,

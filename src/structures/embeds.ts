@@ -413,7 +413,6 @@ export const CommandHelpEmbed = (
   const command = client.commands.get(commandName);
   if (command.public === false && !client.developers.has(user.id))
     return helpEmbed(client, user, prefix);
-  const { args } = command;
   let embed = new MessageEmbed({
     author: {
       name: user.tag,
@@ -425,7 +424,9 @@ export const CommandHelpEmbed = (
     color: "DARK_VIVID_PINK", //"FD0061",
     title: `${client.firstCap(command.name)} Help`,
     description: `Join My **[Support Server](${client.supportServer})** for more help.\n**\`[]\`** = Required **|** **\`()\`** = Optional`,
-    fields: [
+  });
+  if (!command.subCommands.size) {
+    embed["fields"] = [
       {
         name: `Command Help`,
         value: `**Name:** ${client.firstCap(command.name)}\n${
@@ -433,10 +434,8 @@ export const CommandHelpEmbed = (
             ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
             : ""
         }${
-          command.args?.length
-            ? `**Arguments:** ${command.args
-                .map((arg) => arg.name)
-                .join(` **|** `)}\n`
+          command.args?.length && command.usageargs
+            ? `**Arguments:** ${command.usageargs.join(` **|** `)}\n`
             : ""
         }${
           command.permission && command.permission[0]
@@ -447,13 +446,45 @@ export const CommandHelpEmbed = (
             ? `**Examples:**\n${prefix}${command.example.join(`\n${prefix}`)}`
             : ""
         }`,
+        inline: false,
       },
-    ],
-    footer: {
-      text: `${client.user.username} ©`,
-      iconURL: client.user.displayAvatarURL({ format: "png" }),
-    },
-  });
+    ];
+  } else {
+    embed["fields"] = [
+      {
+        name: `Command Help`,
+        value: `**Name:** ${client.firstCap(command.name)}\n${
+          command.aliases?.length
+            ? `**Aliases:** ${command.aliases.join(` **|** `)}\n`
+            : ""
+        }${
+          command.args?.length && command.usageargs
+            ? `**Arguments:** ${command.usageargs.join(` **|** `)}\n`
+            : ""
+        }${
+          command.permission?.[0]
+            ? `**Required Permission:** ${command.permission[0]}\n`
+            : ""
+        }${
+          command.usage && command.usageargs
+            ? `**Usage:** ${prefix}${command.usageargs.map(
+                (arg) => `${arg} **|** ${prefix}help ${command.name} ${arg}`
+              )}\n\n`
+            : "\n"
+        }${
+          command.example
+            ? `**Examples:**\n${prefix}${command.example.join(`\n${prefix}`)}`
+            : ""
+        }`,
+        inline: false,
+      },
+    ];
+  }
+  embed["footer"] = {
+    text: `${client.user.username} ©`,
+    iconURL: client.user.displayAvatarURL({ format: "png" }),
+  };
+
   return embed;
 };
 
