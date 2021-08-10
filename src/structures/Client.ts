@@ -84,7 +84,7 @@ export class DiscordBot extends Client {
   tips: string[];
   guildDB: GuildDataBaseMethods;
   constructor(clientOptions?: ClientOptions) {
-    super(clientOptions ?? {});
+    super(clientOptions);
     this.supportServer = "https://discord.gg/uP5VV6H"; // Support Server
     this.developers = new Collection();
     this.commands = new Collection();
@@ -169,7 +169,7 @@ export class DiscordBot extends Client {
     let idArray = mentionID.match(/\d+/);
     let id = idArray?.[0].length > 16 ? idArray[0] : mentionID;
     try {
-      let User = await this.users.fetch(id);
+      let User = await this.users.fetch(id as `${bigint}`);
       return User;
     } catch (e) {
       if (
@@ -187,12 +187,14 @@ export class DiscordBot extends Client {
       }
       send &&
         message.channel.send({
-          embed: invaildUserEmbed(
-            this,
-            message.author,
-            message.command,
-            message.prefix
-          ),
+          embeds: [
+            invaildUserEmbed(
+              this,
+              message.author,
+              message.command,
+              message.prefix
+            ),
+          ],
         });
       return null;
     }
@@ -213,7 +215,7 @@ export class DiscordBot extends Client {
     try {
       let guildMember: GuildMember;
       if (method === "id") {
-        guildMember = await message.guild.members.fetch(id);
+        guildMember = await message.guild.members.fetch(id as `${bigint}`);
       } else {
         guildMember = (
           await message.guild.members.fetch({
@@ -245,7 +247,7 @@ export class DiscordBot extends Client {
   //@ts-ignore
   getGuild(guildID: string): Guild {
     return (
-      this.guilds.cache.get(guildID) ??
+      this.guilds.cache.get(guildID as `${bigint}`) ??
       this.guilds.cache.find(
         (ch) => ch.name.toLowerCase() === guildID.toLowerCase()
       )
@@ -271,11 +273,13 @@ export class DiscordBot extends Client {
         otherRole.permissions.has("BAN_MEMBERS")
       )
         message.channel.send({
-          embed: invaildPermissionsCustom(
-            this,
-            message.author,
-            `You can't perform this action on this member.`
-          ),
+          embeds: [
+            invaildPermissionsCustom(
+              this,
+              message.author,
+              `You can't perform this action on this member.`
+            ),
+          ],
         });
     }
   }
@@ -350,13 +354,7 @@ export class DiscordBot extends Client {
         let usageargs: string[];
         if (command.args?.length) {
           usageargs = command.args.map((arg) =>
-            arg.required
-              ? arg.multiple === true
-                ? `[...${arg.name}]`
-                : `[${arg.name}]`
-              : arg.multiple === true
-              ? `(...${arg.name})`
-              : `(${arg.name})`
+            arg.required ? `[${arg.name}]` : `(${arg.name})`
           );
           usage += usageargs.join(" ");
         }

@@ -87,27 +87,29 @@ export const command: Command = {
     await this.client.guildDB.set(message.guild.id, { ...message.guild.DB });
     member
       .send({
-        embed: new MessageEmbed({
-          author: {
-            name: member.user.tag,
-            iconURL: member.user.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-            }),
-          },
-          color: "DARK_VIVID_PINK",
-          thumbnail: {
-            url:
-              message.guild.iconURL({ format: "png", dynamic: true }) ||
-              this.client.user.displayAvatarURL({ format: "png" }),
-          },
-          title: `Muted from ${message.guild.name}`,
-          description: `You have been Unmuted from ${message.guild.name} for "${reason}".\nYou were Unmuted by ${message.author.tag}.`,
-          footer: {
-            text: `${this.client.user.username} ©`,
-            iconURL: this.client.user.displayAvatarURL({ format: "png" }),
-          },
-        }),
+        embeds: [
+          new MessageEmbed({
+            author: {
+              name: member.user.tag,
+              iconURL: member.user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+              }),
+            },
+            color: "DARK_VIVID_PINK",
+            thumbnail: {
+              url:
+                message.guild.iconURL({ format: "png", dynamic: true }) ||
+                this.client.user.displayAvatarURL({ format: "png" }),
+            },
+            title: `Muted from ${message.guild.name}`,
+            description: `You have been Unmuted from ${message.guild.name} for "${reason}".\nYou were Unmuted by ${message.author.tag}.`,
+            footer: {
+              text: `${this.client.user.username} ©`,
+              iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+            },
+          }),
+        ],
       })
       .catch((e) => e);
     await message.say({

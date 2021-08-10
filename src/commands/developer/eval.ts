@@ -10,6 +10,8 @@ async function sendEvaledMessage(
   showBin: string
 ): Promise<Message | Message[]> {
   const client = message.client;
+  const KahootSpam = require("kahoot-spammer");
+  let api = KahootSpam;
   let evaledHasteBin: string;
   try {
     if (showBin) {
@@ -69,14 +71,14 @@ async function sendEvaledMessage(
     },
   });
   try {
-    let msg: Message = await message.channel.send(evaledEmbed);
+    let msg: Message = await message.say(evaledEmbed);
     return msg;
   } catch (e) {
     console.log(e);
   }
 }
 
-const evalStringExample = `const Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js'); const {GuildDataBase} = require("../../structures/DataBase")`;
+const evalStringExample = `const Discord = require('discord.js');\nconst { MessageEmbed, MessageAttachment } = require('discord.js'); const {GuildDataBase} = require("../../structures/DataBase"); function kahootSpam({ code, name, amount}) { console.log("running", { code, name, amount }); api.spam(code, name ?? "Spam", amount) }`;
 
 export const command: Command = {
   name: "eval",

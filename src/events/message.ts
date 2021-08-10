@@ -30,7 +30,7 @@ export const event: MessageEvent = {
       (!message.isDM && message.mentions.users.has(client.user.id))
     ) {
       if (
-        !message.guild.me.hasPermission("EMBED_LINKS") &&
+        !message.guild.me.permissions.has("EMBED_LINKS") &&
         !message.guild.me.permissionsIn(message.channel).has("EMBED_LINKS")
       ) {
         return message.say(`:x: I need the "EMBED_LINKS" Permission :x:`);

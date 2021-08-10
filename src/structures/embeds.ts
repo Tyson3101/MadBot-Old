@@ -174,7 +174,9 @@ export const errorCommandEmbed = (
           (client.channels.cache.get("782159661141983243") as TextChannel).name
         } in my [Support Server](${client.supportServer})!`
       : `\nPlease report this incident to ${client.users
-          .fetch(client.developers.find((user) => !user.position).id)
+          .fetch(
+            client.developers.find((user) => !user.position).id as `${bigint}`
+          )
           .then((user) => user.tag)} in my [Support Server](${
           client.supportServer
         })!`,

@@ -11,10 +11,17 @@ export const event: ReadyEvent = {
       position: 0,
     });
 
-    await client.user.setActivity({
+    client.user.setActivity({
       name: `${DiscordBot.DEFUALT_PREFIX()}help`,
       type: "COMPETING",
     });
+
+    let slashCommands = client.commands
+      .filter(({ catergory }) => catergory.toLowerCase() === "music")
+      .map((cmd) => ({ name: cmd.name, description: cmd.description }));
+
+    client.application.commands.set(slashCommands);
+
     console.log(`-----------------  Ready  ----------------
 ${client.user.tag} is Ready!
 Loggen in with the token ${client.token.slice(0, 34)}${"x".repeat(
@@ -34,11 +41,11 @@ Mutes: ${Mutes.reduce((acc, ele) => acc + ele.length, 0)}
 
     Mutes.forEach((MuteGuild: Infringement[]) => {
       MuteGuild.forEach((Case: Infringement) => {
-        const guild = client.guilds.cache.get(Case.guildID);
+        const guild = client.guilds.cache.get(Case.guildID as `${bigint}`);
         if (guild && Case?.active && Case?.endDate) {
           setTimeout(async () => {
             client.handleEndMute(
-              await guild.members.fetch(Case.victim),
+              await guild.members.fetch(Case.guildID as `${bigint}`),
               Case.muteRoleID,
               Case.oldRolesID,
               await client.guildDB.get(guild.id),

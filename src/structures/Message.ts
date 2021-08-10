@@ -1,9 +1,7 @@
 import {
   Message as DiscordMessage,
   APIMessage,
-  StringResolvable,
   MessageOptions,
-  MessageAdditions,
   Role,
   DMChannel,
   TextChannel,
@@ -29,17 +27,16 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
     }
     //@ts-ignore (I am sorrry)
     async say(
-      content: StringResolvable | APIMessage,
-      options: MessageOptions | MessageAdditions
+      content: string | APIMessage | (MessageOptions & { split?: false })
     ) {
-      return await this.channel.send(content, options as any);
+      return await this.channel.send(content);
     }
     //@ts-ignore
     async getUser(mentionID: string, send: boolean = true): Promise<User> {
       let idArray = mentionID.match(/\d+/);
       let id = idArray?.[0].length > 16 ? idArray?.[0] : mentionID;
       try {
-        let User = await this.client.users.fetch(id);
+        let User = await this.client.users.fetch(id as `${bigint}`);
         return User;
       } catch {
         if (
@@ -57,12 +54,14 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
         }
         send &&
           this.channel.send({
-            embed: invaildUserEmbed(
-              this.client,
-              this.author,
-              this.command,
-              this.prefix
-            ),
+            embeds: [
+              invaildUserEmbed(
+                this.client,
+                this.author,
+                this.command,
+                this.prefix
+              ),
+            ],
           });
         return null;
       }
@@ -82,7 +81,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       try {
         let guildMember: GuildMember;
         if (method === "id") {
-          guildMember = await this.guild.members.fetch(id);
+          guildMember = await this.guild.members.fetch(id as `${bigint}`);
         } else {
           guildMember = (
             await this.guild.members.fetch({
@@ -101,12 +100,14 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
       } catch (e) {
         send &&
           this.channel.send({
-            embed: invaildUserEmbed(
-              this.client,
-              this.author,
-              this.command,
-              this.prefix
-            ),
+            embeds: [
+              invaildUserEmbed(
+                this.client,
+                this.author,
+                this.command,
+                this.prefix
+              ),
+            ],
           });
         return null;
       }
@@ -114,7 +115,7 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
     //@ts-ignore
     getGuild(guildID: string): Guild {
       return (
-        this.client.guilds.cache.get(guildID) ??
+        this.client.guilds.cache.get(guildID as `${bigint}`) ??
         this.client.guilds.cache.find(
           (ch) => ch.name.toLowerCase() === guildID.toLowerCase()
         )
@@ -139,11 +140,13 @@ export const extendMessage = (Message: typeof DiscordMessage) =>
           otherRole.permissions.has("BAN_MEMBERS")
         )
           this.channel.send({
-            embed: invaildPermissionsCustom(
-              this.client,
-              this.author,
-              `You can't perform this action on this member.`
-            ),
+            embeds: [
+              invaildPermissionsCustom(
+                this.client,
+                this.author,
+                `You can't perform this action on this member.`
+              ),
+            ],
           });
       }
     }

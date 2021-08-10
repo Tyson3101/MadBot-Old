@@ -2,7 +2,6 @@ import {
   GuildMember,
   Message,
   MessageReaction,
-  Speaking,
   User,
   VoiceState,
 } from "discord.js";
@@ -24,6 +23,7 @@ export type ClientEvents =  // List of client events
   | "guildMemberSpeaking"
   | "guildMembersChunk"
   | "guildIntegrationsUpdate"
+  | "guildMemberUpdate"
   | "roleCreate"
   | "roleDelete"
   | "roleUpdate"
@@ -81,14 +81,6 @@ export interface ReadyEvent extends DiscordEvent {
   run: (client: DiscordBot) => Promise<any> | any;
 }
 
-export interface guildMemberSpeakingEvent extends DiscordEvent {
-  run: (
-    client: DiscordBot,
-    member: GuildMember,
-    speaking: Speaking
-  ) => Promise<any> | any;
-}
-
 export interface voiceStateEvent extends DiscordEvent {
   run: (
     client: DiscordBot,
@@ -105,7 +97,7 @@ export interface MessageDeleteEvent extends DiscordEvent {
   run: (client: DiscordBot, DeleteDmessage: Message) => Promise<any> | any;
 }
 
-export interface messageReactionAddEvent extends DiscordEvent {
+export interface MessageReactionAddEvent extends DiscordEvent {
   run: (
     client: DiscordBot,
     reaction: MessageReaction,
@@ -113,11 +105,23 @@ export interface messageReactionAddEvent extends DiscordEvent {
   ) => Promise<any> | any;
 }
 
+export interface GuildMemberUpdate extends DiscordEvent {
+  run: (
+    client: DiscordBot,
+    oldMember: GuildMember,
+    newMember: GuildMember
+  ) => Promise<any> | any;
+}
+
+export interface GuildMemberAdd extends DiscordEvent {
+  run: (client: DiscordBot, member: GuildMember) => Promise<any> | any;
+}
+
 export type EventInterface =  // Union Types, used to check at least event is one of these
   | MessageUpdateEvent
   | MessageEvent
   | ReadyEvent
-  | messageReactionAddEvent
+  | MessageReactionAddEvent
   | MessageDeleteEvent
-  | guildMemberSpeakingEvent
-  | voiceStateEvent;
+  | voiceStateEvent
+  | GuildMemberUpdate;

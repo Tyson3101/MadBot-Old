@@ -86,23 +86,17 @@ export const command: Command = {
     try {
       if (!MutedRole)
         MutedRole = await message.guild.roles.create({
-          data: {
-            name: "Muted",
-            color: "DARK_BUT_NOT_BLACK",
-            position: message.guild.me.roles.highest.position - 1,
-          },
+          name: "Muted",
+          color: "DARK_BUT_NOT_BLACK",
+          position: message.guild.me.roles.highest.position - 1,
           reason: "Muted Role",
         });
       message.guild.channels.cache
         .filter((ch) => ch.manageable)
         .forEach(async (channel) => {
-          await channel.updateOverwrite(
-            MutedRole,
-            {
-              SEND_MESSAGES: false,
-            },
-            "Mute Command"
-          );
+          await channel.updateOverwrite(MutedRole, {
+            SEND_MESSAGES: false,
+          });
         });
     } catch (e) {
       return message.say({
@@ -155,27 +149,29 @@ export const command: Command = {
     );
     member
       .send({
-        embed: new MessageEmbed({
-          author: {
-            name: member.user.tag,
-            iconURL: member.user.displayAvatarURL({
-              format: "png",
-              dynamic: true,
-            }),
-          },
-          color: "DARK_VIVID_PINK",
-          thumbnail: {
-            url:
-              message.guild.iconURL({ format: "png", dynamic: true }) ||
-              this.client.user.displayAvatarURL({ format: "png" }),
-          },
-          title: `Muted from ${message.guild.name}`,
-          description: `You have been Muted from ${message.guild.name} for ${message.args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
-          footer: {
-            text: `${this.client.user.username} ©`,
-            iconURL: this.client.user.displayAvatarURL({ format: "png" }),
-          },
-        }),
+        embeds: [
+          new MessageEmbed({
+            author: {
+              name: member.user.tag,
+              iconURL: member.user.displayAvatarURL({
+                format: "png",
+                dynamic: true,
+              }),
+            },
+            color: "DARK_VIVID_PINK",
+            thumbnail: {
+              url:
+                message.guild.iconURL({ format: "png", dynamic: true }) ||
+                this.client.user.displayAvatarURL({ format: "png" }),
+            },
+            title: `Muted from ${message.guild.name}`,
+            description: `You have been Muted from ${message.guild.name} for ${message.args[1].value} long and for "${reason}".\nYou were Muted by ${message.author.tag}.`,
+            footer: {
+              text: `${this.client.user.username} ©`,
+              iconURL: this.client.user.displayAvatarURL({ format: "png" }),
+            },
+          }),
+        ],
       })
       .catch((e) => e);
     let timeMuteTimeout: any;

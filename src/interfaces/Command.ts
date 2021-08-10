@@ -1,4 +1,8 @@
-import Discord from "discord.js";
+import Discord, {
+  ApplicationCommandOptionChoice,
+  ApplicationCommandOptionData,
+  ApplicationCommandOptionType,
+} from "discord.js";
 import { DiscordBot } from "../structures/Client";
 
 export interface Command {
@@ -6,6 +10,7 @@ export interface Command {
   // Interface
   name: string;
   description?: string;
+  slashCommand?: boolean;
   note?: string;
   usage?: string;
   example?: string[];
@@ -43,7 +48,9 @@ export interface SubCommand extends Command {
 export interface Args {
   // Args Interface makes it easier to follow
   // Interface
+  type?: ApplicationCommandOptionType;
+  description?: string;
   name: string;
   required: boolean;
-  multiple?: boolean;
+  choices?: ApplicationCommandOptionChoice;
 }

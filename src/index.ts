@@ -10,9 +10,7 @@ extendStructures(); //Extends Discord
 
 const client: DiscordBot = new DiscordBot({
   // Creates the client
-  ws: {
-    intents: Intents.ALL,
-  }, // Intents
+  intents: Intents.ALL,
   partials: ["REACTION", "CHANNEL", "USER", "GUILD_MEMBER"],
 }); // Client Options (Partials));
 
